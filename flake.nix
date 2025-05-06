@@ -25,6 +25,18 @@
             specialArgs = { inherit system; };
           };
         };
+        
+        # Make sure this is the expected output for the system
+        # Expose the system rebuild task
+        systems = {
+          nixos = nixpkgs.lib.nixosSystem {
+            system = system;
+            modules = [
+              ./hosts/home-server/configuration.nix
+            ];
+            specialArgs = { inherit system; };
+          };
+        };
       }
     );
 }
