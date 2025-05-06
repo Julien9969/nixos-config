@@ -31,6 +31,15 @@
   #   enableSSHSupport = true;
   # };
 
+  # Autormove nix stuff after sometimes
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
+    };
+  };
+
   # Don't sleep on lid close
   services.logind.lidSwitchExternalPower = "ignore";
 
