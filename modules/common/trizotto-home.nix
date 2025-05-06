@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, secret, ... }:
 
 {
   home.username = "trizotto";
@@ -69,7 +69,7 @@
   programs.git = {
     enable = true;
     userName = "Trizotto";
-    userEmail = "julein.roux404@gmail.com";
+    userEmail = secret.GIT_EMAIL;
     extraConfig = {
       push.autoSetupRemote = true;
       init.defaultBranch = "main";

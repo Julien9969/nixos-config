@@ -1,6 +1,3 @@
-#let 
-#  secret = import ./modules/variables/secret.nix;
-#in
 {
   description = "Trizottoserver NixOS config";
 
@@ -15,6 +12,7 @@
 
   outputs = inputs@{ self, nixpkgs, flake-utils, home-manager, ... }: 
     let
+      secret = import ./modules/variables/secret.nix;
       pkgs = import nixpkgs {
         config.allowUnfree = true;
       };
@@ -35,13 +33,14 @@
               home-manager.useUserPackages = true;
               
               home-manager.users.trizotto = import ./modules/common/trizotto-home.nix;
+              home-manager.extraSpecialArgs = { inherit secret; };
               
               # Automatically back up conflicting files with `.backup` extension
               home-manager.backupFileExtension = "backup";
-              # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
             } 
           ];
           specialArgs = { inherit inputs; };
+        };
       };
     };
 }
