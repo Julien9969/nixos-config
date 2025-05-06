@@ -4,6 +4,8 @@
   home.username = "trizotto";
   home.homeDirectory = "/home/trizotto";
 
+  home.file.".bashrc".source = pkgs.lib.mkForce ./custom-bashrc;
+
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
     neofetch
@@ -79,13 +81,7 @@
   programs.bash = {
     enable = true;
     enableCompletion = true;
-    # TODO add your custom bashrc here
     
-    # currently done manualy
-    # bashrcExtra = ''
-    #  export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
-    # '';
-
     shellAliases = {
     };
   };
