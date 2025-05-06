@@ -1,4 +1,4 @@
-{ config, pkgs, secret, ... }:
+{ config, pkgs, vars, ... }:
 
 {
   home.username = "trizotto";
@@ -68,8 +68,8 @@
   # basic configuration of git, please change to your own
   programs.git = {
     enable = true;
-    userName = "Trizotto";
-    userEmail = secret.GIT_EMAIL;
+    userName = vars.GIT_USERNAME;
+    userEmail = vars.GIT_EMAIL;
     extraConfig = {
       push.autoSetupRemote = true;
       init.defaultBranch = "main";
