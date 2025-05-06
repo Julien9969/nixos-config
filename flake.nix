@@ -6,37 +6,20 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils, ... }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-        };
-      in {
-        devShells.default = import ./devshell/default.nix { inherit pkgs; };
-        
-        nixosConfigurations = {
-          nixos = nixpkgs.lib.nixosSystem {
-            system = system;
-            modules = [
-              ./hosts/home-server/configuration.nix  
-            ];
-            specialArgs = { inherit system; };
-          };
-        };
-        
-        # Make sure this is the expected output for the system
-        # Expose the system rebuild task
-        systems = {
-          nixos = nixpkgs.lib.nixosSystem {
-            system = system;
-            modules = [
-              ./hosts/home-server/configuration.nix
-            ];
-            specialArgs = { inherit system; };
-          };
-        };
-      }
-    );
+  outputs = inputs@{ self, nixpkgs, flake-utils, ... }: 
+    let
+      pkgs = import nixpkgs {
+        config.allowUnfree = true;
+      };
+    in {
+      devShells.default = import ./devshell/default.nix { inherit pkgs; };
+      
+      nixosConfigurations.trizottoserver = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/home-server/configuration.nix  
+          ];
+          specialArgs = { inherit inputs; };
+      };
+    };
 }
