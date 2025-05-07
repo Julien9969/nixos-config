@@ -40,6 +40,11 @@ nixos-config/
 - **Reproducibility**: Reuse the same configuration across multiple systems.
 - **Customizability**: Modular design allows for adaptability to different use cases.
 
+## TODO
+- [ ] Secret management with sops-nix
+- [ ] nginx reverse proxy
+- [ ] ACME for https
+
 ## Getting Started
 
 ### Prerequisites
