@@ -11,6 +11,8 @@
     neofetch
     # nnn # terminal file manager
 
+	hdparm
+	
     # archives
     zip
     xz
