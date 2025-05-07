@@ -78,6 +78,15 @@
       push.autoSetupRemote = true;
       init.defaultBranch = "main";
     };
+
+    aliases = {
+      co = "checkout";
+      br = "branch";
+      ci = "commit";
+      st = "status";
+      lg = "log --oneline --graph --decorate --all";
+      ac = "!git add . && git commit -m";
+    };
   };
 
   programs.bash = {
