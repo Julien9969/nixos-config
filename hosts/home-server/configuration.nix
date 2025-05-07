@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./firewall.nix
+    ../../modules/common/firewall.nix
     ../../modules/common/users.nix
     ../../modules/common/nix.nix
     ../../modules/services/docker.nix
