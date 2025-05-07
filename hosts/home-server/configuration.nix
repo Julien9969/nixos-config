@@ -7,6 +7,7 @@
     ../../modules/common/nix.nix
     ../../modules/services/docker.nix
     ../../modules/services/openssh.nix
+    ../../modules/services/jellyfin.nix
   ];
 
   networking.hostName = "trizottoserver";
@@ -19,9 +20,19 @@
     # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     micro
-    # htop see betop in home-trizotto
     git
+
+	# Jellyfin
+	jellyfin
+	jellyfin-web
+	jellyfin-ffmpeg
   ];
+
+  system.autoUpgrade = {
+      enable = true;
+      allowReboot = true; # Optional: reboot if needed
+      dates = "Mon 03:00"; # Runs once per week (default Sunday at midnight)
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
