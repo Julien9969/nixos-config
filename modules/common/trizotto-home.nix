@@ -77,6 +77,7 @@
     extraConfig = {
       push.autoSetupRemote = true;
       init.defaultBranch = "main";
+      pull.rebase = true;
     };
 
     aliases = {
