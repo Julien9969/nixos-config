@@ -15,11 +15,18 @@ The repository is structured to ensure clarity and modularity. Here’s a brief 
 
 ```
 nixos-config/
-├── hardware-configuration.nix   # Auto-generated hardware configuration
-├── configuration.nix            # Main system configuration
-├── modules/                     # Custom modules for additional configurations
-├── packages/                    # Custom package definitions
-└── README.md                    # This file
+├── flake.nix                        # Flake entry point
+├── flake.lock                      # Flake lock file (auto-generated)
+├── hosts/
+│   └── home-server/
+│       ├── configuration.nix       # Host-specific system config (imported in flake.nix)
+│       └── hardware-configuration.nix  # Auto-generated hardware config
+├── modules/
+│   ├── common/                     # Reusable modules (e.g., user setup, firewall) 
+│   └── services/                       # Service modules (e.g., openssh, jellyfin) 
+├── packages/                          # Custom derivations or overlays 
+├── devshell/                            # Custom development shells (with `nix develop`) 
+└── README.md                      # Project documentation 
 ```
 
 - **`hardware-configuration.nix`**: System-specific hardware settings.
