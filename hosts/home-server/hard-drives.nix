@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
   fileSystems."/media/HDD" =
     { device = "/dev/disk/by-uuid/E26E78BA6E7888D5";
