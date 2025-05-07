@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
+    ./hard-drives.nix
     ../../modules/common/firewall.nix
     ../../modules/common/users.nix
     ../../modules/common/nix.nix
