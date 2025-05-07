@@ -16,12 +16,14 @@
 
   outputs = inputs@{ self, nixpkgs, flake-utils, home-manager, sops-nix, ... }: 
     let
-      vars = import ./modules/variables.nix;
-      pkgs = import nixpkgs {
-        config.allowUnfree = true;
-      };
+          vars = import ./modules/variables.nix;
+          system = "x86_64-linux";
+          pkgs = import nixpkgs {
+            system = system;
+            config.allowUnfree = true;
+          };
     in {
-      devShells.default = import ./devshell/default.nix { inherit pkgs; };
+      devShells.${system}.default = import ./devshell/default.nix { inherit pkgs; };
       
       nixosConfigurations = {
         trizottoserver = nixpkgs.lib.nixosSystem {
