@@ -96,6 +96,12 @@
       ll = "ls -alF";
       la = "ls -A";
       l = "ls -CF";
+      clean-nix = ''
+        home-manager expire-generations 0 && \
+        sudo nix-collect-garbage -d && \
+        nix-collect-garbage -d && \
+        sudo nix store optimise
+      '';
     };
     
     initExtra = ''
@@ -103,7 +109,12 @@
       echo "Welcome, $USER! Today is $(date +'%A, %B %d, %Y')."
     '';
 
-    # sessionVariables = { TEST =  0};
+    sessionVariables = { 
+      GIT_PS1_SHOWDIRTYSTATE=1;
+      GIT_PS1_SHOWSTASHSTATE=1;
+      GIT_PS1_SHOWUNTRACKEDFILES=1;
+      GIT_PS1_SHOWUPSTREAM="auto";
+    };
     # bashrcExtra = '''';
     # initExtra = "";
     # logoutExtra = "";
