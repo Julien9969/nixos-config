@@ -1,0 +1,11 @@
+# This defines key aliases using YAML anchors (&...)
+keys:
+  - &admin_trizotto age1tme6phn2mx7xz5mwlpr3ahpx9mvvzwvcy500j68vfxl8l5k0tsxqeyhj2p
+creation_rules:
+  # Only files in the secrets/ directory with extension .yaml, .json, .env, or .ini will be matched.
+  # Subdirectories are not matched ([^/]+).
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    # Defines who can decrypt the file match by path_regex
+    key_groups:
+      - age:
+        - *admin_trizotto

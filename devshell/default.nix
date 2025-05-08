@@ -4,6 +4,9 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     git
     vim
+    ssh-to-age
+    age
+    sops
   ];
 
   shellHook = ''

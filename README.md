@@ -70,6 +70,22 @@ nixos-config/
    sudo nixos-rebuild switch
    ```
 
+## Sops-nix secret management
+Create age key from ssh key:
+
+```bash
+mkdir -p ~/.config/sops/age
+nix-shell -p ssh-to-age --run "ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt"
+```
+
+Get the public key:
+```bash
+nix-shell -p age --run "age-keygen -y ~/.config/sops/age/keys.txt"
+
+or
+
+nix-shell -p ssh-to-age --run "ssh-to-age < ~/.ssh/id_ed25519.pub"
+```
 ## Customization
 
 Feel free to modify the configuration files to suit your needs. The modular structure allows you to easily add, remove, or adjust specific aspects of the system.
