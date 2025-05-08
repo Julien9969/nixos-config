@@ -6,6 +6,7 @@
     ../../modules/common/firewall.nix
     ../../modules/common/users.nix
     ../../modules/common/nix.nix
+    ../../modules/services/bash.nix
     ../../modules/services/docker.nix
     ../../modules/services/openssh.nix
     ../../modules/services/jellyfin.nix
@@ -23,10 +24,10 @@
     micro
     git
 
-	# Jellyfin
-	jellyfin
-	jellyfin-web
-	jellyfin-ffmpeg
+    # Jellyfin
+    jellyfin
+    jellyfin-web
+    jellyfin-ffmpeg
   ];
 
   system.autoUpgrade = {

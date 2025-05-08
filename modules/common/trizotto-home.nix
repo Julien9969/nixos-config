@@ -4,20 +4,16 @@
   home.username = "trizotto";
   home.homeDirectory = "/home/trizotto";
 
-  home.file.".bashrc".source = pkgs.lib.mkForce ./custom-bashrc;
-
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
     neofetch
     # nnn # terminal file manager
+	  hdparm
 
-	hdparm
-	
     # archives
     zip
     xz
     unzip
-
     # utils
     # ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
@@ -93,9 +89,26 @@
   programs.bash = {
     enable = true;
     enableCompletion = true;
-    
+    historyIgnore = [ "ls" ];
+    historyControl = [ "ignoredups" "ignorespace" ];
     shellAliases = {
+      sops-edit = "nix-shell -p sops --command 'sops secrets/secrets.yaml'";
+      ll = "ls -alF";
+      la = "ls -A";
+      l = "ls -CF";
     };
+    
+    initExtra = ''
+      neofetch
+      echo "Welcome, $USER! Today is $(date +'%A, %B %d, %Y')."
+    '';
+
+    # sessionVariables = { TEST =  0};
+    # bashrcExtra = '''';
+    # initExtra = "";
+    # logoutExtra = "";
+    # profileExtra = "";
+    # bashrcExtra = '''';
   };
 
   # This value determines the home Manager release that your
