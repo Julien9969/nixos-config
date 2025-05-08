@@ -1,4 +1,4 @@
-# modules/common/docker.nix
+# modules/services/docker.nix
 { config, pkgs, ... }:
 {
   services.jellyfin = {

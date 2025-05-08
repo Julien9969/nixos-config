@@ -1,4 +1,4 @@
-# modules/common/openssh.nix
+# modules/services/openssh.nix
 { config, pkgs, ... }:
 {
   # Enable the OpenSSH daemon.
