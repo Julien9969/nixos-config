@@ -16,6 +16,9 @@
   
   environment.variables.EDITOR = "micro";
 
+  # needed for vscode-server - allowing foreign binaries to run on NixOS
+  programs.nix-ld.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -31,9 +34,9 @@
   ];
 
   system.autoUpgrade = {
-      enable = true;
-      allowReboot = true; # Optional: reboot if needed
-      dates = "Mon 03:00"; # Runs once per week (default Sunday at midnight)
+    enable = true;
+    allowReboot = true; # Optional: reboot if needed
+    dates = "Mon 03:00"; # Runs once per week (default Sunday at midnight)
   };
 
   # Some programs need SUID wrappers, can be configured further or are
