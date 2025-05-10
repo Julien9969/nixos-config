@@ -1,5 +1,5 @@
 # modules/common/users.nix
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   users.users.trizotto = {
@@ -7,18 +7,10 @@
     description = "Trizotto";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [ ];
-    openssh.authorizedKeys.keys = [
-       #"ssh-ed25519 <some-public-key> blabla@blabla"
-    ];
-  };
 
-  #services.openssh = {
-  #  enable = true;
-  #  settings = {
-  #    X11Forwarding = true;
-  #    PermitRootLogin = "no"; # disable root login
-  #    PasswordAuthentication = false; # disable password login
-  #  };
-  #  openFirewall = true;
-  #};
+    # sops-nix will place the authorized_keys file in the home directory at runtime 
+    # openssh.authorizedKeys.keyFiles = [
+    #   config.sops.secrets."authorized_keys".path
+    # ];
+  };
 }

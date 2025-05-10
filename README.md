@@ -74,17 +74,32 @@ nixos-config/
 Create age key from ssh key:
 
 ```bash
-mkdir -p ~/.config/sops/age
-nix-shell -p ssh-to-age --run "ssh-to-age -private-key -i ~/.ssh/id_ed25519 > ~/.config/sops/age/keys.txt"
+sudo mkdir -p /var/lib/sops-nix
+nix-shell -p ssh-to-age --run "ssh-to-age -private-key -i ~/.ssh/id_ed25519 > /var/lib/sops-nix/keys.txt"
 ```
 
 Get the public key:
 ```bash
-nix-shell -p age --run "age-keygen -y ~/.config/sops/age/keys.txt"
+nix-shell -p age --run "age-keygen -y /var/lib/sops-nix/keys.txt"
 
 or
 
 nix-shell -p ssh-to-age --run "ssh-to-age < ~/.ssh/id_ed25519.pub"
+```
+
+You can use the `sops` command to manage your secrets. For example, to edit a secret file:
+```bash
+nix-shell -p sops --run "sops secrets/secrets.yaml" 
+
+or 
+
+sops-edit # (alias)
+```
+
+
+If you add a new host to your .sops.yaml file, you will need to update the keys for all secrets that are used by the new host. This can be done like so:
+```bash
+nix-shell -p sops --run "sops updatekeys secrets/secrets.yaml"
 ```
 ## Customization
 

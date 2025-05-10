@@ -6,6 +6,7 @@
     ../../modules/common/firewall.nix
     ../../modules/common/users.nix
     ../../modules/common/nix.nix
+    ../../modules/sops.nix
     ../../modules/services/bash.nix
     ../../modules/services/docker.nix
     ../../modules/services/openssh.nix
