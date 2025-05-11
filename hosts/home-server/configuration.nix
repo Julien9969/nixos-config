@@ -12,6 +12,7 @@
     ../../modules/services/docker.nix
     ../../modules/services/openssh.nix
     ../../modules/services/jellyfin.nix
+    # ../../modules/services/servarr.nix
     # ../../modules/services/cockpit.nix
     ../../modules/services/reverse-proxy.nix
   ];
@@ -39,6 +40,9 @@
     jellyfin-ffmpeg
 
     # cockpit
+
+    # servarr
+    # sonarr
   ];
 
   system.autoUpgrade = {
