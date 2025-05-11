@@ -41,10 +41,14 @@ nixos-config/
 - **Customizability**: Modular design allows for adaptability to different use cases.
 
 ## TODO
-- [ ] Secret management with sops-nix
-- [ ] nginx reverse proxy
+- [X] Secret management with sops-nix
+- [X] nginx reverse proxy
 - [ ] ACME for https
-
+- [X] cockpit web interface
+- [ ] ail2Ban: Add Fail2Ban to protect against brute-force attacks
+- [ ] automated Backups: restic or borg
+- [ ] Monitoring: Grafana, Prometheus, or Zabbix
+- [ ] Enable and disable services more flexibly 
 ## Getting Started
 
 ### Prerequisites
