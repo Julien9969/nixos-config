@@ -5,7 +5,7 @@
   services.openssh = {
     enable = true;
     settings = {
-      PermitRootLogin = "yes";
+      PermitRootLogin = "no";
       # X11Forwarding = true;
       # PasswordAuthentication = false; # disable password login
     };
