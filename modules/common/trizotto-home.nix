@@ -102,6 +102,8 @@
         nix-collect-garbage -d && \
         sudo nix store optimise
       '';
+      devshell = "cd /etc/nixos &&  nix develop";
+      dir-size = "du -h --max-depth=1 | sort -hr";
     };
     
     initExtra = ''
