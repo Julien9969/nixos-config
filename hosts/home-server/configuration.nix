@@ -55,20 +55,6 @@
   #   enableSSHSupport = true;
   # };
 
-  # Autormove nix stuff after sometimes
-  nix = {
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
-    };
-    package = pkgs.nixFlakes;
-    settings = {
-      experimental-features = "nix-command flakes repl-flake";
-      auto-optimise-store = true;
-    };
-  };
-
   # Don't sleep on lid close
   services.logind.lidSwitchExternalPower = "ignore";
  
