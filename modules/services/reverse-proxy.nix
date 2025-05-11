@@ -98,6 +98,18 @@ in {
     };
   };
 
+  # services.nginx.virtualHosts."192.168.1.250".locations."/app/" = {
+  #   proxyPass = "http://localhost:8082/";
+  #   extraConfig = ''
+  #     proxy_set_header Host $host;
+  #     proxy_set_header X-Real-IP $remote_addr;
+  #     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  #     proxy_set_header X-Forwarded-Proto $scheme;
+  #     proxy_http_version 1.1;
+  #     rewrite ^/app(/.*)$ $1 break;
+  #   '';
+  # };
+
   # 404 for unrecognized hosts
   services.nginx.virtualHosts."*.${mainDomain}" = {
     serverName = "*.localhost"; # Catch-all server name
