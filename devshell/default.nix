@@ -7,6 +7,8 @@ pkgs.mkShell {
     ssh-to-age
     age
     sops
+    home-manager
+    python314
   ];
 
   shellHook = ''
