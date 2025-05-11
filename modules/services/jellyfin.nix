@@ -3,7 +3,7 @@
 {
   services.jellyfin = {
       enable = true;
-      openFirewall = true;
+      openFirewall = true; # TODO disable when using reverse proxy
       user = "jellyfin"; # User that the Jellyfin service will run as
       group = "jellyfin"; # Group for the Jellyfin service
 

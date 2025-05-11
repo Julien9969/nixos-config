@@ -11,6 +11,7 @@
     ../../modules/services/docker.nix
     ../../modules/services/openssh.nix
     ../../modules/services/jellyfin.nix
+    ../../modules/services/reverse-proxy.nix
   ];
 
   networking.hostName = "trizottoserver";
