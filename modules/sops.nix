@@ -14,6 +14,8 @@
           mode = "0600";
         };
         "username" = {};
+        "wifi_ssid" = {};
+        "wifi_passwd" = {};
     };
   };
 }

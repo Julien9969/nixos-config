@@ -51,6 +51,8 @@ nixos-config/
 - [ ] Enable and disable services more flexibly
 - [ ] User name and info from file
 - [ ] Wifi from sops
+- [ ] WireGuard + qbittorrent
+- [ ] Services sonarr, radarr, wizarr, jellyseerr, prowlarr 
 ## Getting Started
 
 ### Prerequisites

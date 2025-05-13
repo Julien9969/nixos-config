@@ -4,6 +4,7 @@
     ./hardware-configuration.nix
     ./hard-drives.nix
     ./nvidia.nix
+    ./wifi.nix
     ../../modules/common/firewall.nix
     ../../modules/common/users.nix
     ../../modules/common/nix.nix
@@ -71,9 +72,6 @@
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/Paris";
