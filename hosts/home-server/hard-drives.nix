@@ -1,15 +1,19 @@
 { config, lib, pkgs, ... }:
 {
+  boot.supportedFilesystems = [ "ntfs" ];
+
   fileSystems."/media/HDD" =
-    { device = "/dev/disk/by-uuid/E26E78BA6E7888D5";
-      fsType = "ntfs3";
-      options = [
-          "umask=0000"        # Allows read, write, and execute for all users
-          "uid=0"             # root ownership, but rwx for all users
-          "gid=0"             # group ownership, but rwx for all users
-        ];
-    };
-  
+  { device = "/dev/disk/by-uuid/E26E78BA6E7888D5";
+    fsType = "ntfs-3g";
+    options = [
+      "uid=1000"    # main user id
+      "gid=${toString config.users.groups.media.gid}"  # group = media
+      "umask=002"
+      "dmask=002"   # Directories = 775
+      "fmask=113"   # Files = 664
+    ];
+  };
+
   services.udev.extraRules = 
    let
      mkRule = as: lib.concatStringsSep ", " as;

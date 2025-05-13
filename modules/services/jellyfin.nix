@@ -13,7 +13,8 @@
       logDir = "/var/log/jellyfin"; # Directory where logs are stored
       # package = pkgs.jellyfin; # Default Jellyfin package from nixpkgs
   };
-
+  
+  users.users.jellyfin.extraGroups = [ "media" ];
 
   # # 1. enable vaapi on OS-level
   # nixpkgs.config.packageOverrides = pkgs: {
