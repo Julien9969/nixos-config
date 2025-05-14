@@ -17,29 +17,14 @@
 
   networking.hostName = "trizottoserver";
   
-  powerManagement.cpuFreqGovernor = "performance";
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    # vim
     wget
     micro
     git
-
-    # Jellyfin
-    jellyfin
-    jellyfin-web
-    jellyfin-ffmpeg
-
-    # cockpit
-
-    # servarr
-    # sonarr
   ];
-
-  # Don't sleep on lid close
-  services.logind.lidSwitchExternalPower = "ignore";
  
   # Bootloader.
   boot.loader.systemd-boot.enable = true;

@@ -15,6 +15,11 @@
     dates = "Mon 03:00"; # Runs once per week (default Sunday at midnight)
   };
   
+  powerManagement.cpuFreqGovernor = "performance";
+  
+  # Don't sleep on lid close
+  services.logind.lidSwitchExternalPower = "ignore";
+
   environment.variables.EDITOR = "micro";
   zramSwap.enable = true;
 
