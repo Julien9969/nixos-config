@@ -19,6 +19,8 @@
       else
         COLOR="01;32"  # Green for user
       fi
+      
+      # trizotto@trizottoserver:/etc/nixos (main)$
       PS1='\[\e['"$COLOR"'m\]\u@\h\[\e[00m\]:\[\e[01;34m\]\w\[\e[38;5;215m\]$(__git_ps1 " (%s)")\[\e[00m\]\$ '
     '';
 
