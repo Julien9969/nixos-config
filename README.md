@@ -48,9 +48,9 @@ nixos-config/
 - [ ] ail2Ban: Add Fail2Ban to protect against brute-force attacks
 - [ ] automated Backups: restic or borg
 - [ ] Monitoring: Grafana, Prometheus, or Zabbix
-- [ ] Enable and disable services more flexibly
+- [X] Enable and disable services more flexibly
 - [ ] User name and info from file
-- [ ] Wifi from sops
+- [X] Wifi from sops
 - [ ] WireGuard + qbittorrent
 - [ ] Services sonarr, radarr, wizarr, jellyseerr, prowlarr 
 ## Getting Started
