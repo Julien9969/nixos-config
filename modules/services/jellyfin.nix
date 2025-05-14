@@ -1,7 +1,17 @@
-# modules/services/docker.nix
-{ config, pkgs, ... }:
+# modules/services/jellyfin.nix
+{ config, lib, pkgs, ... }:
+let
+  enabled = config.services.myServices.enableJellyfin or false;
+in
 {
-  services.jellyfin = {
+  options.services.myServices.enableJellyfin = lib.mkOption {
+    type = lib.types.bool;
+    default = false;
+    description = "Enable the Jellyfin media server";
+  };
+
+  config = lib.mkIf enabled {
+    services.jellyfin = {
       enable = true;
       openFirewall = true; # TODO disable when using reverse proxy
       user = "jellyfin"; # User that the Jellyfin service will run as
@@ -12,10 +22,11 @@
       configDir = "/var/lib/jellyfin/config"; # Directory for Jellyfin configuration
       logDir = "/var/log/jellyfin"; # Directory where logs are stored
       # package = pkgs.jellyfin; # Default Jellyfin package from nixpkgs
+    };
+    users.users.jellyfin.extraGroups = [ "media" ];
   };
   
-  users.users.jellyfin.extraGroups = [ "media" ];
-
+  # Some configurations for hardware acceleration with QuickSync (untested)
   # # 1. enable vaapi on OS-level
   # nixpkgs.config.packageOverrides = pkgs: {
   #   # Only set this if using intel-vaapi-driver

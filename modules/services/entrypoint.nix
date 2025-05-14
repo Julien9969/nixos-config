@@ -5,10 +5,13 @@
     ../../modules/services/docker.nix
     ../../modules/services/openssh.nix
     ../../modules/services/jellyfin.nix
-    # ../../modules/services/servarr.nix
+    ../../modules/services/servarr.nix
     ../../modules/services/reverse-proxy.nix
     ../../modules/services/cockpit.nix
   ];  
 
-  config.services.myServices.enableCockpit = true;
+  config.services.myServices.enableCockpit = false;
+  config.services.myServices.enableJellyfin = true;
+  config.services.myServices.servarr.enableSonarr = false;
+  config.services.myServices.servarr.enableRadarr = false;
 }
