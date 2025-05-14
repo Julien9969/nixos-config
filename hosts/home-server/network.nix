@@ -1,3 +1,4 @@
+# host/home-server/network.nix
 { config, pkgs, ... }:
 let
   ssidPath = config.sops.secrets.wifi_ssid.path;
