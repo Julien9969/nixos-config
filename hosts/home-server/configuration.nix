@@ -4,9 +4,12 @@
     ./hardware-configuration.nix
     ./hard-drives.nix
     ./nvidia.nix
-    ./wifi.nix
+    ./network.nix
+    ../../modules/sops.nix
+
     ../../modules/common/firewall.nix
     ../../modules/common/users.nix
+    ../../modules/common/bash.nix
     ../../modules/common/nix.nix
     ../../modules/sops.nix
     ../../modules/services/bash.nix
