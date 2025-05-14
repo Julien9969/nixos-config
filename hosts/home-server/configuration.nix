@@ -11,14 +11,8 @@
     ../../modules/common/users.nix
     ../../modules/common/bash.nix
     ../../modules/common/nix.nix
-    ../../modules/sops.nix
-    ../../modules/services/bash.nix
-    ../../modules/services/docker.nix
-    ../../modules/services/openssh.nix
-    ../../modules/services/jellyfin.nix
-    # ../../modules/services/servarr.nix
-    # ../../modules/services/cockpit.nix
-    ../../modules/services/reverse-proxy.nix
+
+    ../../modules/services/entrypoint.nix
   ];
 
   networking.hostName = "trizottoserver";
