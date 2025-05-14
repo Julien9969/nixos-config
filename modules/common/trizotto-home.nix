@@ -47,8 +47,8 @@
     glow # markdown previewer in terminal
 
     btop  # replacement of htop/nmon
-    iotop # io monitoring
-    iftop # network monitoring
+    # iotop # io monitoring
+    # iftop # network monitoring
 
     # system call monitoring
     # strace # system call monitoring
@@ -83,6 +83,7 @@
       st = "status";
       lg = "log --oneline --graph --decorate --all";
       ac = "!git add . && git commit -m";
+      ccd = "cd /etc/nixos";
     };
   };
 
