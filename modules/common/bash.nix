@@ -1,4 +1,4 @@
-# modules/services/bash.nix
+# modules/common/bash.nix
 { config, pkgs, ... }:
 {
   programs.bash = {
