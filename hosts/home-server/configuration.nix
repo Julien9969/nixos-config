@@ -20,12 +20,7 @@
 
   networking.hostName = "trizottoserver";
   
-  environment.variables.EDITOR = "micro";
-  zramSwap.enable = true;
   powerManagement.cpuFreqGovernor = "performance";
-
-  # needed for vscode-server - allowing foreign binaries to run on NixOS
-  programs.nix-ld.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -45,20 +40,6 @@
     # servarr
     # sonarr
   ];
-
-  system.autoUpgrade = {
-    enable = true;
-    allowReboot = true; # Optional: reboot if needed
-    dates = "Mon 03:00"; # Runs once per week (default Sunday at midnight)
-  };
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
 
   # Don't sleep on lid close
   services.logind.lidSwitchExternalPower = "ignore";
