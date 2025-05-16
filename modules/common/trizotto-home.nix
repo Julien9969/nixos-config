@@ -83,7 +83,6 @@
       st = "status";
       lg = "log --oneline --graph --decorate --all";
       ac = "!git add . && git commit -m";
-      ccd = "cd /etc/nixos";
     };
   };
 
@@ -105,6 +104,7 @@
       '';
       devshell = "cd /etc/nixos &&  nix develop";
       dir-size = "du -h --max-depth=1 | sort -hr";
+      ccd = "cd /etc/nixos";
     };
     
     initExtra = ''
