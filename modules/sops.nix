@@ -16,6 +16,7 @@
         "username" = {};
         "wifi_ssid" = {};
         "wifi_passwd" = {};
+        "wg_private_key" = {};
     };
   };
 }
