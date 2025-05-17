@@ -3,48 +3,64 @@
 {
   imports =
     [
-      ../../modules/services/qbittorent.nix # Path to your new module
+      ../../modules/services/qbittorrent.nix # Path to your new module
     ];
 
   # ... other configurations ...
 
-  # services.qbittorrent = {
-  #   enable = true;
-  #   user = "root"; # Or keep default "qbittorrent"
-  #   group = "root"; # Or keep default "qbittorrent"
+  services.qbittorrent = {
+    enable = true;
+    dataDir = "/home/trizotto/qbit";
+    # configDir = "";
+    user = "trizotto"; 
+    group = "users"; 
+    
+    webUIPort = 8080;
 
-  #   # Ensure this user/group has write access to download/temp paths
-  #   dataDir = "/var/lib/qbittorrent-data"; # Persistent state for qBittorrent
-  #   configDir = "/var/lib/qbittorrent-data/config"; # Profile directory
+    bittorrent = {
+      listeningPort = 51413;
+      globalDLSpeedLimit = 40000;
+      globalUPSpeedLimit = 3000;
+      alternativeGlobalDLSpeedLimit = 0;
+      alternativeGlobalUPSpeedLimit = 10000;
+      bandwidthSchedulerEnabled = true;
+      btProtocol = "Both";
+      interface = "";
+      defaultSavePath = "/media/HDD/Downloads";
+      finishedTorrentExportDirectory = "/media/HDD/Downloads/Finished";
 
-  #   bittorrent = {
-  #     defaultSavePath = "/media/HDD/torrents/downloading";
-  #     tempPath = "/media/HDD/storage/torrents/incomplete";
-  #     globalDownloadSpeedLimit = 10000; # 10 MiB/s in KiB
-  #     globalUploadSpeedLimit = 5000;   # 5 MiB/s in KiB
-  #     # Set this to your VPN interface name *inside* the namespace
-  #     interface = "wg-vpn"; # Example: if your WireGuard interface is named wg-vpn
-  #     interfaceName = "wg-vpn";
-  #   };
+      maxConnections = 500;
+      maxConnectionsPerTorrent = 100;
+      maxUploadSlots = 20;
+      maxslotsUploadSlotsPerTorrent = 4;
 
-  #   webUI = {
-  #     enable = true;
-  #     port = 8080;
-  #     username = "Trizotto";
-  #     # Generate this with: qbittorrent-nox --webui-password-generate yoursecurepassword
-  #     # password_PBKDF2 = "@ByteArray(GENERATED_HASH_HERE)";
-  #   };
+      queueingSystem = {
+        enabled = false;
+        maxActiveTorrents = 5;
+        maxActiveDownloads = 3;
+        maxActiveUploads = 3;
+      };
+    };
 
-  #   vpn = {
-  #     enable = true;
-  #     namespace = "vpn-ns"; # Same namespace your VPN (e.g. WireGuard) uses
-  #     # manageNamespaceLifecycle = false; # If your VPN module creates/deletes the namespace
-  #     vethHostIp = "10.100.1.1"; # Access WebUI at http://10.100.1.1:8080
-  #     vethVpnIp = "10.100.1.2";   # qBittorrent listens on this IP inside the namespace
-  #     vethNetmask = "24";
-  #   };
-  # };
+    autorun = {
+      onDownloadEnd = true;
+      onDownloadEndCommand = "echo 'Download finished!'";
 
+      onTorrentAdded = true;
+      onTorrentAddedCommand = "echo 'Torrent added!'";
+    };
+
+    preferences = {
+      generalLocale = "fr";
+      webUIPassword = "@ByteArray(LhKP3TEq5kbzfwklH5W0zQ==:OeWrH5CZsGvlOUgd/IPV8cv5HRBp2Na6wfL2oIXlxlQq4VpPyYKFDqcxgA9c8BbqQtELjGD6yk10XyjuOGgQ1A==)";
+      webUIUsername="Trizotto";
+    };
+
+    legalNotice.accepted = true;
+    openFirewall = true;
+  };
+
+  # sudo ip netns exec vpn-ns curl https://api.ipify.org
   # Example WireGuard setup that uses the same namespace
   # This assumes you have a wireguard.nix or similar
   networking.wireguard.interfaces.wg-vpn = {
