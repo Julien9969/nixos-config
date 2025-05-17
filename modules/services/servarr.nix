@@ -23,21 +23,21 @@ in
     description = "Options for Servarr-related services like Sonarr, Radarr, etc.";
   };
 
-config = {
-  services.sonarr = lib.mkIf sonarrEnabled {
-    enable = true;
-    openFirewall = true;
-    dataDir = "/home/trizotto/config/sonarr";
-    user = "trizotto"; #! TODO not sure if correct for security
-    group = "media";
-  };
+  config = {
+    services.sonarr = lib.mkIf sonarrEnabled {
+      enable = true;
+      openFirewall = true;
+      dataDir = "/home/trizotto/config/sonarr";
+      user = "trizotto"; #! TODO not sure if correct for security
+      group = "media";
+    };
 
-  services.radarr = lib.mkIf radarrEnabled {
-    enable = true;
-    openFirewall = true;
-    dataDir = "/home/trizotto/config/radarr";
-    user = "trizotto"; #! TODO not sure if correct for security
-    group = "media";
-  };
+    services.radarr = lib.mkIf radarrEnabled {
+      enable = true;
+      openFirewall = true;
+      dataDir = "/home/trizotto/config/radarr";
+      user = "trizotto"; #! TODO not sure if correct for security
+      group = "media";
+    };
   };
 }
