@@ -17,6 +17,10 @@
   
   powerManagement.cpuFreqGovernor = "performance";
   
+  security.sudo.extraConfig = ''
+    Defaults timestamp_timeout=360
+  '';
+
   # Don't sleep on lid close
   services.logind.lidSwitchExternalPower = "ignore";
 
