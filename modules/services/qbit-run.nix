@@ -3,10 +3,8 @@
 {
   imports =
     [
-      ../../modules/services/qbittorrent.nix # Path to your new module
+      ../../modules/services/qbittorrent.nix 
     ];
-
-  # ... other configurations ...
 
   services.qbittorrent = {
     enable = true;
@@ -102,7 +100,7 @@
       ip -n vpn-ns link set veth-vpn up
       
       #! ip -n vpn-ns route add default via 10.200.200.1
-      #ip -n vpn-ns route add default dev wg-vpn
+      # ip -n vpn-ns route add default dev wg-vpn
 
       #! ip -n vpn-ns route add default dev wg-vpn
       
@@ -165,15 +163,9 @@
         # Forward all the traffic via VPN.
         # allowedIPs = [ "0.0.0.0/0" ]; # "::/0" 
         allowedIPs = ["0.0.0.0/0"]; #"::/0"];
-
-        # Set this to the server IP and port.
-        endpoint = "185.107.44.110:51820"; # ToDo: route to endpoint not automatically configured https://wiki.archlinux.org/index.php/WireGuard#Loop_routing https://discourse.nixos.org/t/solved-minimal-firewall-setup-for-wireguard-client/7577
-
-        # Send keepalives every 25 seconds. Important to keep NAT tables alive.
+        endpoint = "185.107.44.110:51820"; 
         persistentKeepalive = 25;
       }
     ];
   };
 }
-
-# https://github.com/notthebee/nix-config/blob/94ec3a147f93d4f017fbde6e7e961569b48aff4d/homelab/services/wireguard-netns/default.nix
