@@ -18,14 +18,14 @@
     webUIPort = 8080;
 
     bittorrent = {
-      listeningPort = 51413;
+      listeningPort = 6881;
       globalDLSpeedLimit = 40000;
       globalUPSpeedLimit = 3000;
       alternativeGlobalDLSpeedLimit = 0;
       alternativeGlobalUPSpeedLimit = 10000;
       bandwidthSchedulerEnabled = true;
       btProtocol = "Both";
-      interface = "";
+      interface = "wg-vpn";
       defaultSavePath = "/media/HDD/Downloads";
       finishedTorrentExportDirectory = "/media/HDD/Downloads/Finished";
 
@@ -60,14 +60,23 @@
     openFirewall = true;
   };
 
+  networking.firewall = {
+    allowedTCPPorts = [ 51820 ]; # Web UI port
+    allowedUDPPorts = [ 51820 ]; # Clients and peers can use the same port, see listenport
+  };
+
+  environment.etc."netns/vpn-ns/resolv.conf".text = "nameserver 1.1.1.1";
   # sudo ip netns exec vpn-ns curl https://api.ipify.org
   # Example WireGuard setup that uses the same namespace
   # This assumes you have a wireguard.nix or similar
   networking.wireguard.interfaces.wg-vpn = {
     # ... your WireGuard private key, peer public key, endpoint ...
-    ips = [ "10.2.0.2/32" ]; # Example VPN IP
+    ips = [ "10.2.0.2/32" ]; # Example VPN IP #! pas sur de ça
+    
     privateKeyFile = config.sops.secrets.wg_private_key.path;
     # privateKey = "";
+
+    listenPort = 51820;
 
     # CRITICAL: Assign WireGuard interface to the namespace
     interfaceNamespace = "vpn-ns"; # Must match services.qbittorrent.vpn.namespace
@@ -77,25 +86,74 @@
     # The tutorial's example had preSetup/postShutdown for namespace and veth.
     # If WireGuard handles namespace creation, its preSetup could be:
     preSetup = ''
-      # Creates a new network namespace
+      if ip netns list | grep -q vpn-ns; then
+        ip netns del vpn-ns || true
+        ip link del veth-host || true
+      fi
+      
+      # Creates a new network namespace (check: ip netns)
       ip netns add vpn-ns || true
-      # Brings loopback interface for internal networking in ns
+      # Brings loopback interface for internal networking in ns (check: sudo ip netns exec vpn-ns ip a)
       ip -n vpn-ns link set lo up
 
-      # Create a veth pair to link the namespaces
-      # ip link add veth-host type veth peer name veth-vpn
-      # ip link set veth-vpn netns wg-qbittorrent
-      # ip addr add 10.200.200.1/24 dev veth-host
-      # ip netns exec wg-qbittorrent ip addr add 10.200.200.2/24 dev veth-vpn
-      # ip link set veth-host up
-      # ip netns exec wg-qbittorrent ip link set veth-vpn up
-      # ip netns exec wg-qbittorrent ip route add default via 10.200.200.1
+      # # Create a veth pair for the host and the namespace (like a virtual ethernet cable)
+      ip link add veth-host type veth peer name veth-vpn
+      # Send the veth-vpn end to the namespace
+      ip link set veth-vpn netns vpn-ns
+
+      # assign IP addresses to the veth interfaces
+      ip addr add 10.200.200.1/24 dev veth-host
+      ip -n vpn-ns addr add 10.200.200.2/24 dev veth-vpn
+      
+      # Bring up the veth interfaces on the host
+      ip link set veth-host up
+      # Bring up the loopback and veth interfaces in the namespace 
+      # ip -n vpn-ns link set wg-vpn up
+      ip -n vpn-ns link set lo up
+      ip -n vpn-ns link set veth-vpn up
+
+      # ip -n vpn-ns route add default via 10.200.200.1
+      # ip -n vpn-ns route add default dev wg-vpn
+
+      ${pkgs.iptables}/bin/iptables -t nat -A PREROUTING -p tcp --dport 8080 -j DNAT --to-destination 10.200.200.2:8080
+      ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -j MASQUERADE
+      # # ip netns exec vpn-ns ip route add default via 10.200.200.1
+    '';
+
+    postSetup = ''
+      ${pkgs.iptables}/bin/iptables -A FORWARD -i wg-vpn -j ACCEPT
+      ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.10.0.0/24 -o wlp2s0 -j MASQUERADE
+      ip -n vpn-ns link set wg-vpn up
+      ip -n vpn-ns route add default dev wg-vpn
     '';
 
     postShutdown = ''
-      ip netns del vpn-ns || true
+      ${pkgs.iptables}/bin/iptables -D FORWARD -i wg-vpn -j ACCEPT
+      ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.10.0.0/24 -o wlp2s0 -j MASQUERADE
+
+      #${pkgs.iptables}/bin/iptables -t nat -D PREROUTING -p tcp --dport 8080 -j DNAT --to-destination 10.200.200.2:8080
+      #${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -j MASQUERADE
+      
+      # Delete the veth pair
+      ip link del veth-host || true
+      ip netns del vpn-ns || true # Delete the all namespace
     '';
 
+ #? start
+    # sudo ip netns exec vpn-ns your-app2-command --port=8080
+
+# preSetup = ''
+#   if ! ip netns list | grep -q vpn-ns; then
+#     ip netns add vpn-ns
+#   fi
+#   ip -n vpn-ns link set lo up
+# '';
+
+# postShutdown = ''
+#   if ip netns list | grep -q vpn-ns; then
+#     ip netns del vpn-ns
+#   fi
+# '';
     peers = [
       # For a client configuration, one peer entry for the server will suffice.
       {
@@ -103,7 +161,10 @@
         publicKey = "DznTG0WjFUlvggmQ9FsoUvbrU6D9zz1YgdRImKR/+18=";
 
         # Forward all the traffic via VPN.
-        allowedIPs = [ "0.0.0.0/0" ];
+        # allowedIPs = [ "0.0.0.0/0" ]; # "::/0" 
+        allowedIPs = ["0.0.0.0/0" "::/0"];
+        # dns = [ "1.1.1.1" "1.0.0.1" ];
+
         # Or forward only particular subnets
         #allowedIPs = [ "10.100.0.1" "91.108.12.0/22" ];
 
@@ -149,3 +210,5 @@
   #   "d /mnt/storage/torrents/incomplete 0775 your-media-user your-media-group - -"
   # ];
 }
+
+# https://github.com/notthebee/nix-config/blob/94ec3a147f93d4f017fbde6e7e961569b48aff4d/homelab/services/wireguard-netns/default.nix

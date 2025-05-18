@@ -345,7 +345,8 @@ in
 
     systemd.services.qbittorrent = {
       description = "qBittorrent Daemon";
-      after = [ "network.target" ];
+      after = [ "network.target" ] ++ [ "wireguard-wg-vpn.target" ]; # TODO lib.optional cfg.vpn.enable , "network-online.target" 
+      requires = [ "wireguard-wg-vpn.service" ]; # wait for the VPN to be up
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
@@ -362,9 +363,12 @@ in
           legalNotice = if cfg.legalNotice.accepted == true then "--confirm-legal-notice " else "";
         in 
         ''
-          ${lib.getExe cfg.package} --profile=${cfg.configDir} --webui-port=${toString cfg.webUIPort} ${legalNotice}
-        '';
+          ${pkgs.iproute2}/bin/ip netns exec vpn-ns ${lib.getExe cfg.package} --profile=${cfg.configDir} --webui-port=${toString cfg.webUIPort} ${legalNotice}
+        '';# ${cfg.vpn.namespace}
 
+        CapabilityBoundingSet = [ "CAP_NET_ADMIN" "CAP_SYS_ADMIN" ];
+        AmbientCapabilities = [ "CAP_NET_ADMIN" "CAP_SYS_ADMIN" ];
+        
         Restart = "on-failure";
         RestartSec = "10s";
       };
