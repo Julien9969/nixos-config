@@ -14,39 +14,39 @@ let
     cp "$CONFIG_FILE" "$TEMP_FILE"
 
     edit_conf() {
-        local section="$1"
-        local key_prefix="$2"
-        local value="$3"
+      local section="$1"
+      local key_prefix="$2"
+      local value="$3"
 
-        local escaped_key_prefix=$(printf '%s' "$key_prefix" | sed 's/\\/\\\\/g')
-        local full_key="$escaped_key_prefix$value"
+      local escaped_key_prefix=$(printf '%s' "$key_prefix" | sed 's/\\/\\\\/g')
+      local full_key="$escaped_key_prefix$value"
 
-        local operation=""
+      local operation=""
 
-        if grep -q "^\[$section\]" "$TEMP_FILE"; then
-            if grep -q "^$escaped_key_prefix" "$TEMP_FILE"; then
-                if grep -q "^$full_key$" "$TEMP_FILE"; then
-                    operation="$section/$key_prefix : No change"
-                elif [[ $key_prefix == "WebUI\\Password_PBKDF2="* || $key_prefix == "WebUI\\Username="* ]]; then
-                  operation="$section/$key_prefix : No change, avoid resetting password to default" 
-                else
-                    sed -i "s|^$escaped_key_prefix.*|$full_key|" "$TEMP_FILE"
-                    operation="$section/$key_prefix : Updated existing key"
-                fi
-            else
-                sed -i "/^\[$section\]/a $full_key" "$TEMP_FILE"
-                operation="$section/$key_prefix : Added key"
-            fi
+      if grep -q "^\[$section\]" "$TEMP_FILE"; then
+        if grep -q "^$escaped_key_prefix" "$TEMP_FILE"; then
+          if grep -q "^$full_key$" "$TEMP_FILE"; then
+            operation="$section/$key_prefix : No change"
+          elif [[ $key_prefix == "WebUI\\Password_PBKDF2="* || $key_prefix == "WebUI\\Username="* ]]; then
+            operation="$section/$key_prefix : No change, avoid resetting password to default" 
+          else
+            sed -i "s|^$escaped_key_prefix.*|$full_key|" "$TEMP_FILE"
+            operation="$section/$key_prefix : Updated existing key"
+          fi
         else
-            {
-                echo ""
-                echo "[$section]"
-                echo "$key_prefix$value"
-            } >> "$TEMP_FILE"
-            operation="$section/$key_prefix : Created section and added key"
+          sed -i "/^\[$section\]/a $full_key" "$TEMP_FILE"
+          operation="$section/$key_prefix : Added key"
         fi
+      else
+        {
+          echo ""
+          echo "[$section]"
+          echo "$key_prefix$value"
+        } >> "$TEMP_FILE"
+        operation="$section/$key_prefix : Created section and added key"
+      fi
 
-        echo "[edit_conf] $operation"
+      echo "[edit_conf] $operation"
     }
 
     # [Application]

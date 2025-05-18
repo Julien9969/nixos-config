@@ -65,26 +65,18 @@
   };
 
   environment.etc."netns/vpn-ns/resolv.conf".text = "nameserver 1.1.1.1";
-  # sudo ip netns exec vpn-ns curl https://api.ipify.org
-  # Example WireGuard setup that uses the same namespace
-  # This assumes you have a wireguard.nix or similar
+
   networking.wireguard.enable = true;
   networking.wireguard.interfaces.wg-vpn = {
-    # ... your WireGuard private key, peer public key, endpoint ...
-    ips = [ "10.2.0.2/32" ]; #! was 32
+    ips = [ "10.2.0.2/32" ]; 
     
     privateKeyFile = config.sops.secrets.wg_private_key.path;
     # privateKey = "";
 
     listenPort = 51820;
 
-    # CRITICAL: Assign WireGuard interface to the namespace
-    interfaceNamespace = "vpn-ns"; # Must match services.qbittorrent.vpn.namespace
+    interfaceNamespace = "vpn-ns"; 
 
-    # WireGuard module might handle namespace creation/deletion
-    # If so, services.qbittorrent.vpn.manageNamespaceLifecycle should be false.
-    # The tutorial's example had preSetup/postShutdown for namespace and veth.
-    # If WireGuard handles namespace creation, its preSetup could be:
     preSetup = ''
       if ip netns list | grep -q vpn-ns; then
         ip netns del vpn-ns || true
@@ -156,8 +148,8 @@
       # ${pkgs.iptables}/bin/iptables -D FORWARD -i wg-vpn -j ACCEPT
       # ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.10.0.0/24 -o wlp2s0 -j MASQUERADE
 
-      ${pkgs.iptables}/bin/iptables -t nat -D PREROUTING -p tcp --dport 8080 -j DNAT --to-destination 10.200.200.2:8080
-      ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -j MASQUERADE
+      # ${pkgs.iptables}/bin/iptables -t nat -D PREROUTING -p tcp --dport 8080 -j DNAT --to-destination 10.200.200.2:8080
+      # ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -j MASQUERADE
       
       # ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -o eth0 -s 10.200.200.0/24 -j MASQUERADE
       
@@ -166,22 +158,13 @@
       ip netns del vpn-ns || true # Delete the all namespace
     '';
 
- #? start
-    # sudo ip netns exec vpn-ns your-app2-command --port=8080
-
     peers = [
-      # For a client configuration, one peer entry for the server will suffice.
       {
-        # Public key of the server (not a file path).
         publicKey = "YgGdHIXeCQgBc4nXKJ4vct8S0fPqBpTgk4I8gh3uMEg=";
 
         # Forward all the traffic via VPN.
         # allowedIPs = [ "0.0.0.0/0" ]; # "::/0" 
         allowedIPs = ["0.0.0.0/0"]; #"::/0"];
-        # dns = [ "1.1.1.1" "1.0.0.1" ];
-
-        # Or forward only particular subnets
-        #allowedIPs = [ "10.100.0.1" "91.108.12.0/22" ];
 
         # Set this to the server IP and port.
         endpoint = "185.107.44.110:51820"; # ToDo: route to endpoint not automatically configured https://wiki.archlinux.org/index.php/WireGuard#Loop_routing https://discourse.nixos.org/t/solved-minimal-firewall-setup-for-wireguard-client/7577
@@ -190,40 +173,7 @@
         persistentKeepalive = 25;
       }
     ];
-    # The qBittorrent module will then handle its veth pair within this namespace.
   };
-  
-#   networking.wireguard.interface.wg-mullvad = {
-#   # Use a separate network namespace for the VPN.
-#   # sudo ip netns exec wg-qbittorrent curl --interface wg-mullvad https://am.i.mullvad.net/connected
-
-#   privateKey = "my-private-key";
-#   ips = ["my-ip"];
-#   interfaceNamespace = "wg-qbittorrent";
-
-#   preSetup = ''
-# 	ip netns add wg-qbittorrent
-# 	ip -n wg-qbittorrent link set lo up
-#   '';
-
-#   postShutdown = ''
-# 	ip netns delete wg-qbittorrent
-#   '';
-	
-#   peers = [
-#     {
-#       publicKey = "the-public-key";
-#       allowedIPs = ["0.0.0.0/0" "::0/0"];
-#       endpoint = "the-endpoint";
-#     }
-#   ];
-# };
-
-  # Ensure the qbittorrent service user can write to download paths
-  # systemd.tmpfiles.rules = [
-  #   "d /mnt/storage/torrents/downloading 0775 your-media-user your-media-group - -"
-  #   "d /mnt/storage/torrents/incomplete 0775 your-media-user your-media-group - -"
-  # ];
 }
 
 # https://github.com/notthebee/nix-config/blob/94ec3a147f93d4f017fbde6e7e961569b48aff4d/homelab/services/wireguard-netns/default.nix
