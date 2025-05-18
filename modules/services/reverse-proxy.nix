@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  mainDomain = "localhost";
+  mainDomain = "192.168.1.250";
   acmeEmail = "local-test@example.com";
 
   defaultForceSSL = false; # TODO (change) Disable forcing SSL for local HTTP testing
@@ -80,6 +80,11 @@ in {
       "jellyfin.${mainDomain}" = mkProxy {
         backendUrl = "http://localhost:8096";
         proxyWebsockets = true;
+      };
+
+      "${mainDomain}" = mkProxy {
+        backendUrl = "http://10.200.200.2:8080";
+        proxyWebsockets = false;
       };
       
       # some testing services (python3 -m http.server 8082)
