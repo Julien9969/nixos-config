@@ -15,6 +15,8 @@
     
     webUIPort = 8080;
 
+    application.memoryWorkingSetLimit = 512;
+
     bittorrent = {
       listeningPort = 6881;
       globalDLSpeedLimit = 40000;
@@ -24,6 +26,7 @@
       bandwidthSchedulerEnabled = true;
       btProtocol = "Both";
       interface = "wg-vpn";
+      interfaceAddress = "10.2.0.2";
       defaultSavePath = "/media/HDD/Downloads";
       finishedTorrentExportDirectory = "/media/HDD/Downloads/Finished";
 
@@ -39,6 +42,8 @@
         maxActiveUploads = 3;
       };
     };
+
+    network.portForwardingUpnP = false;
 
     autorun = {
       onDownloadEnd = true;

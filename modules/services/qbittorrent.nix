@@ -50,7 +50,7 @@ let
     }
 
     # [Application]
-    edit_conf Application "MemoryWorkingSetLimit=" "511"
+    edit_conf Application "MemoryWorkingSetLimit=" "${toString cfg.application.memoryWorkingSetLimit}"
 
     # [AutoRun]
     ${lib.optionalString (cfg.autorun.onTorrentAdded) ''
@@ -78,6 +78,7 @@ let
     
     edit_conf BitTorrent "Session\\Interface=" "${cfg.bittorrent.interface}"
     edit_conf BitTorrent "Session\\InterfaceName=" "${cfg.bittorrent.interface}"
+    edit_conf BitTorrent "Session\\InterfaceAddress=" "${cfg.bittorrent.interfaceAddress}"
     edit_conf BitTorrent "Session\\Port=" "${toString cfg.bittorrent.listeningPort}"
     edit_conf BitTorrent "Session\\MaxUploadsPerTorrent=" "${toString cfg.bittorrent.maxslotsUploadSlotsPerTorrent}"
     edit_conf BitTorrent "Session\\MaxConnections=" "${toString cfg.bittorrent.maxConnections}"
@@ -90,6 +91,9 @@ let
       edit_conf BitTorrent "Session\\MaxActiveTorrents=" "${toString cfg.bittorrent.queueingSystem.maxActiveTorrents}"
       edit_conf BitTorrent "Session\\MaxActiveUploads=" "${toString cfg.bittorrent.queueingSystem.maxActiveUploads}"
     ''}
+
+    # [Network]
+    edit_conf Network "PortForwardingEnabled=" "${toString cfg.network.portForwardingUpnP}"
 
     # [LegalNotice]
     edit_conf LegalNotice "Accepted=" "${toString cfg.legalNotice.accepted}"
@@ -147,6 +151,14 @@ in
       description = "Port to acces WebUI. Port openned in firewall if openFirewall is true.";
     };
 
+    application = {
+      memoryWorkingSetLimit = lib.mkOption {
+        type = lib.types.int;
+        default = 512;
+        description = "Memory working set limit. (MB)";
+      };
+    };
+
     bittorrent = {
       globalDLSpeedLimit = lib.mkOption {
         type = lib.types.int;
@@ -202,13 +214,28 @@ in
       interface = lib.mkOption {
         type = lib.types.str;
         default = "";
-        description = "Network interface to bind to.";
+        description = '''
+          Network interface to bind to.
+          If WireGuard VPN is used, this will be overridden by the VPN interface.
+        ''; # TODO : voir avec VPN
+      };
+
+      interfaceAddress = lib.mkOption {
+        type = lib.types.str;
+        default = "";
+        description = ''
+          Network interface address to bind to.
+          If WireGuard VPN is used, this will be overridden by the VPN interface address.
+        ''; # TODO : voir avec VPN
       };
 
       listeningPort = lib.mkOption {
         type = lib.types.int;
         default = 6881;
-        description = "Listening port for BitTorrent connections."; # TODO : voir avec VPN
+        description = ''
+          Listening port for BitTorrent connections.
+          If portforwarding is enabled with the VPN, this will be managed by the service.
+        ''; # TODO : voir avec VPN
       };
 
       maxConnections = lib.mkOption {
@@ -293,6 +320,16 @@ in
         type = lib.types.bool;
         default = false;
         description = "Accept the legal notice. This remove startup message.";
+      };
+    };
+
+    network = {
+      portForwardingUpnP = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = ''
+          Enable UPnP/NAT-PMP port forwarding.
+        '';
       };
     };
 
