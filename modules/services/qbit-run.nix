@@ -98,59 +98,14 @@
       # Bring up the veth interfaces
       ip link set veth-host up
       ip -n vpn-ns link set veth-vpn up
-      
-      #! ip -n vpn-ns route add default via 10.200.200.1
-      # ip -n vpn-ns route add default dev wg-vpn
-
-      #! ip -n vpn-ns route add default dev wg-vpn
-      
-      # ${pkgs.iptables}/bin/iptables -t nat -A PREROUTING -p tcp --dport 8080 -j DNAT --to-destination 10.200.200.2:8080
-      # ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -j MASQUERADE
-      
-      # ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -o wlp2s0 -s 10.200.200.0/24 -j MASQUERADE
-      #? # ip netns exec vpn-ns ip route add default via 10.200.200.1
     '';
 
     postSetup = ''
-      # ip -n vpn-ns route add default dev wg-vpn
-
-      #! ${pkgs.iptables}/bin/iptables -A FORWARD -i wg-vpn -j ACCEPT
-      #! ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.10.0.0/24 -o wlp2s0 -j MASQUERADE
-
-
-      # # Setup the basics
-      # ENDPOINT_IP=$(ip netns exec vpn-ns wg show wg-vpn endpoints | awk '{print $2}' | cut -d':' -f1) # 169.150.218.90
-      # DEFAULT_ROUTE=$(ip route | grep default)
-      # GW="$(echo $DEFAULT_ROUTE | cut -d ' ' -f3)" # wg-vpn
-      # DEV="$(echo $DEFAULT_ROUTE | cut -d ' ' -f5)" # link
-
-      # # Check if there are other routes to be removed
-      # if [[ $(ip route | grep $ENDPOINT_IP) ]]; then
-      #     echo "route exists, removing..."
-      #     ip route delete $(ip route | grep $ENDPOINT_IP)
-      # fi
-
-      # # Setup a new route
-      # echo "Adding a new route for active connection...
-      # executing -> ip route add $ENDPOINT_IP via $GW dev $DEV"
-      # ip route add $ENDPOINT_IP via $GW dev $DEV
-
-      # ip -n vpn-ns link set wg-vpn up
-      # ip -n vpn-ns route add default dev wg-vpn
-
-      # Script line
-      # ip netns exec vpn-ns ip route add 169.150.218.90 via wg-vpn dev link
+      # Force the veth-vpn interface to be the default route for the namespace
+      ip -n vpn-ns route add default dev wg-vpn
     '';
 
     postShutdown = ''
-      # ${pkgs.iptables}/bin/iptables -D FORWARD -i wg-vpn -j ACCEPT
-      # ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.10.0.0/24 -o wlp2s0 -j MASQUERADE
-
-      # ${pkgs.iptables}/bin/iptables -t nat -D PREROUTING -p tcp --dport 8080 -j DNAT --to-destination 10.200.200.2:8080
-      # ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -j MASQUERADE
-      
-      # ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -o eth0 -s 10.200.200.0/24 -j MASQUERADE
-      
       # Delete the veth pair
       ip link del veth-host || true
       ip netns del vpn-ns || true # Delete the all namespace
