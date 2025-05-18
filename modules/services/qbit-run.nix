@@ -62,7 +62,7 @@
     allowedUDPPorts = [ 51820 ]; # Clients and peers can use the same port, see listenport
   };
 
-  environment.etc."netns/vpn-ns/resolv.conf".text = "nameserver 1.1.1.1";
+  environment.etc."netns/vpn-ns/resolv.conf".text = "nameserver 10.2.0.1";
 
   networking.wireguard.enable = true;
   networking.wireguard.interfaces.wg-vpn = {
