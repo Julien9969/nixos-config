@@ -10,6 +10,7 @@
     # nnn # terminal file manager
 	  hdparm
 
+    # ffmpeg
     # archives
     zip
     xz
