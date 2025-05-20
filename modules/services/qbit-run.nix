@@ -3,7 +3,7 @@
 {
   imports =
     [
-      ../../modules/services/qbittorrent.nix 
+      ../../modules/services/qbittorrent 
     ];
 
   services.qbittorrent = {
@@ -54,9 +54,27 @@
     };
 
     preferences = {
-      generalLocale = "fr";
+      generalLocale = "en";
       webUIPassword = "@ByteArray(LhKP3TEq5kbzfwklH5W0zQ==:OeWrH5CZsGvlOUgd/IPV8cv5HRBp2Na6wfL2oIXlxlQq4VpPyYKFDqcxgA9c8BbqQtELjGD6yk10XyjuOGgQ1A==)";
       webUIUsername="Trizotto";
+    };
+
+    vpn = {
+      enable = true;
+      wg-interface = "wg-vpn";
+      namespace = "vpn-ns";
+      wg-address = "10.2.0.2/32";
+      dns = "10.2.0.1";
+      portforwarding = false;
+      privateKeyFile = config.sops.secrets.wg_private_key.path;
+
+      peers = [
+        {
+          publicKey = "YgGdHIXeCQgBc4nXKJ4vct8S0fPqBpTgk4I8gh3uMEg=";
+          endpoint = "185.107.44.110:51820";
+          allowedIPs = [ "0.0.0.0/0" ];
+        }
+      ];
     };
 
     legalNotice.accepted = true;

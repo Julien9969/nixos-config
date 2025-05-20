@@ -1,7 +1,15 @@
+# modules/services/qbittorrent/default.nix
 { config, pkgs, lib, ... }:
 
 let
   cfg = config.services.qbittorrent;
+
+  # TODO : str to list
+  address = if cfg.vpn.enable then cfg.vpn.wg-address else cfg.bittorrent.interfaceAddress;
+  cleanAddress = let
+    m = builtins.match "^([0-9.]+)(/[0-9]+)?$" address;
+  in 
+    if m == null then address else builtins.elemAt m 0;
 
   # Configuration update script - runs before starting qBittorrent
   qbitConfigUpdateScript = "${pkgs.bash}/bin/bash ${pkgs.writeShellScript "update-qbittorrent-conf" ''
@@ -26,16 +34,16 @@ let
       if grep -q "^\[$section\]" "$TEMP_FILE"; then
         if grep -q "^$escaped_key_prefix" "$TEMP_FILE"; then
           if grep -q "^$full_key$" "$TEMP_FILE"; then
-            operation="$section/$key_prefix : No change"
+            operation="No change"
           elif [[ $key_prefix == "WebUI\\Password_PBKDF2="* || $key_prefix == "WebUI\\Username="* ]]; then
-            operation="$section/$key_prefix : No change, avoid resetting password to default" 
+            operation="No change, avoid resetting password to default" 
           else
             sed -i "s|^$escaped_key_prefix.*|$full_key|" "$TEMP_FILE"
-            operation="$section/$key_prefix : Updated existing key"
+            operation="Updated existing key"
           fi
         else
           sed -i "/^\[$section\]/a $full_key" "$TEMP_FILE"
-          operation="$section/$key_prefix : Added key"
+          operation="Added key"
         fi
       else
         {
@@ -43,10 +51,10 @@ let
           echo "[$section]"
           echo "$key_prefix$value"
         } >> "$TEMP_FILE"
-        operation="$section/$key_prefix : Created section and added key"
+        operation="Created section and added key"
       fi
 
-      echo "[edit_conf] $operation"
+      echo "[edit_conf] $section/$key_prefix$value : $operation"
     }
 
     # [Application]
@@ -76,10 +84,13 @@ let
       edit_conf BitTorrent "Session\\FinishedTorrentExportDirectory=" "${cfg.bittorrent.finishedTorrentExportDirectory}"
     ''}
     
-    edit_conf BitTorrent "Session\\Interface=" "${cfg.bittorrent.interface}"
-    edit_conf BitTorrent "Session\\InterfaceName=" "${cfg.bittorrent.interface}"
-    edit_conf BitTorrent "Session\\InterfaceAddress=" "${cfg.bittorrent.interfaceAddress}"
+    edit_conf BitTorrent "Session\\Interface=" "${if cfg.vpn.enable then cfg.vpn.wg-interface else cfg.bittorrent.interface}"
+    edit_conf BitTorrent "Session\\InterfaceName=" "${if cfg.vpn.enable then cfg.vpn.wg-interface else cfg.bittorrent.interface}"
+    
+    # Adress could have a subnet mask so we need to clean it for qBittorrent
+    edit_conf BitTorrent "Session\\InterfaceAddress=" "${cleanAddress}"
     edit_conf BitTorrent "Session\\Port=" "${toString cfg.bittorrent.listeningPort}"
+    
     edit_conf BitTorrent "Session\\MaxUploadsPerTorrent=" "${toString cfg.bittorrent.maxslotsUploadSlotsPerTorrent}"
     edit_conf BitTorrent "Session\\MaxConnections=" "${toString cfg.bittorrent.maxConnections}"
     edit_conf BitTorrent "Session\\MaxConnectionsPerTorrent=" "${toString cfg.bittorrent.maxConnectionsPerTorrent}"
@@ -356,10 +367,119 @@ in
         description = "Web UI username.";
       };
     };
+
+    vpn = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false; 
+        description = ''
+          Enable running qBittorrent in a dedicated network namespace. 
+          Allows to use a VPN tunnel for qBittorrent traffic.
+        '';
+      };
+
+      namespace = lib.mkOption {
+        type = lib.types.str;
+        default = "vpn-ns";
+        description = ''
+          Network namespace to use for the VPN tunnel.
+          Handled by the WireGuard service.
+        '';
+      };
+      
+      wg-interface = lib.mkOption {
+        type = lib.types.str;
+        default = "wg-vpn";
+        description = ''
+          Network interface to create for the VPN tunnel.
+          Handled by the WireGuard service.
+        '';
+      };
+
+      portforwarding = lib.mkOption {
+        type = lib.types.bool;
+        default = false; 
+        description = ''
+          Enable port forwarding for the VPN tunnel.
+          This will automatically configure the VPN tunnel to allow incoming connections.
+          Tested with ProtonVPN.
+        '';
+      };
+
+      privateKeyFile = lib.mkOption {
+        type = lib.types.path;
+        description = ''
+          Path to a file that contain only private key string.
+          WireGuard conf : [Interface] -> PrivateKey = xxxxxxxxx
+        '';
+      };
+
+      wg-address = lib.mkOption {
+        type = lib.types.str;
+        description = '''
+          IP addresse/subnet to assign to the VPN interface.
+          WireGuard conf : [Interface] -> Address = x.x.x.x
+          # TODO Should be a list of IPs but hard to manage for qbittorrent 
+        '';
+        example = "10.2.0.2/32";
+      };
+
+      dns = lib.mkOption {
+        type = lib.types.str;
+        description = ''
+          DNS server to assign to the VPN interface.
+          WireGuard conf : [Interface] -> DNS = x.x.x.x
+        '';
+        example = "10.2.0.1";
+      };
+
+      peers = lib.mkOption {
+        type = lib.types.listOf (lib.types.submodule {
+          options = {
+            publicKey = lib.mkOption {
+              type = lib.types.str;
+              description = ''
+                Public key of the peer.
+                WireGuard conf : [Peer] -> PublicKey = xxxxxxxxx
+              '';
+            };
+
+            endpoint = lib.mkOption {
+              type = lib.types.str;
+              description = ''
+                Endpoint of the peer.
+                WireGuard conf : [Peer] -> Endpoint = x.x.x.x:xxxx
+              '';
+            };
+
+            allowedIPs = lib.mkOption {
+              type = lib.types.listOf lib.types.str;
+              default = [ "0.0.0.0/0" ];
+              description = ''
+                List of IP addresses/subnets to allow through the VPN tunnel.
+                WireGuard conf : [Peer] -> AllowedIPs = x.x.x.x/xx
+              '';
+              example = [ "0.0.0.0/0" ];
+            };
+          };
+        });
+        default = [];
+        description = ''
+          List of WireGuard peer configurations.
+          Each peer should be an attribute set with 'publicKey', 'endpoint', and 'allowedIPs'.
+        '';
+        example = [
+          {
+            publicKey = "xxxxxxxxx";
+            endpoint = "x.x.x.x:xxxx";
+            allowedIPs = [ "0.0.0.0/0" ];
+          }
+        ];
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
-
     users.users = lib.mkIf (cfg.user == "qbittorrent") {
       qbittorrent = {
         isSystemUser = true;
@@ -382,8 +502,10 @@ in
 
     systemd.services.qbittorrent = {
       description = "qBittorrent Daemon";
-      after = [ "network.target" ] ++ [ "wireguard-wg-vpn.target" ]; # TODO lib.optional cfg.vpn.enable , "network-online.target" 
-      requires = [ "wireguard-wg-vpn.service" ]; # wait for the VPN to be up
+      after = [ "network.target" ] 
+        ++ lib.optional cfg.vpn.enable "wireguard-wg-vpn.target"; # TODO lib.optional cfg.vpn.enable , "network-online.target" 
+      
+      requires = lib.optional cfg.vpn.enable "wireguard-wg-vpn.service";
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
@@ -392,16 +514,16 @@ in
         Group = cfg.group;
         UMask = "0002";
        
-        # Run configuration update script before starting qbittorrent
         ExecStartPre = [ "${qbitConfigUpdateScript}" ];
 
         ExecStart = 
         let 
-          legalNotice = if cfg.legalNotice.accepted == true then "--confirm-legal-notice " else "";
+          legalNoticeFlag = if cfg.legalNotice.accepted == true then "--confirm-legal-notice " else "";
+          vpnPrefix = if cfg.vpn.enable then "${pkgs.iproute2}/bin/ip netns exec ${cfg.vpn.namespace}" else "";
         in 
         ''
-          ${pkgs.iproute2}/bin/ip netns exec vpn-ns ${lib.getExe cfg.package} --profile=${cfg.configDir} --webui-port=${toString cfg.webUIPort} ${legalNotice}
-        '';# ${cfg.vpn.namespace}
+          ${vpnPrefix} ${lib.getExe cfg.package} --profile=${cfg.configDir} --webui-port=${toString cfg.webUIPort} ${legalNoticeFlag}
+        '';
 
         CapabilityBoundingSet = [ "CAP_NET_ADMIN" "CAP_SYS_ADMIN" ];
         AmbientCapabilities = [ "CAP_NET_ADMIN" "CAP_SYS_ADMIN" ];
@@ -411,6 +533,9 @@ in
       };
       #! TODO VPN
     };
+
+    #! If portforwarding is enabled
+    environment.systemPackages = lib.mkIf cfg.vpn.portforwarding [ pkgs.libnatpmp ];
 
     networking.firewall = lib.mkIf cfg.openFirewall {
       allowedTCPPorts = [ cfg.webUIPort ];
