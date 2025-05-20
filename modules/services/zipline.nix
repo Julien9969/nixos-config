@@ -19,7 +19,7 @@ in
       settings = {
         CORE_HOSTNAME = "0.0.0.0";
         CORE_PORT = 3000;
-        CORE_SECRET = "Secret (echo -n "xxx" | md5sum)";
+        CORE_SECRET = "Secret (echo -n \"xxx\" | md5sum)";
         DATASOURCE_LOCAL_DIRECTORY = "/var/lib/zipline/uploads";
         DATASOURCE_TYPE = "local";
       };
