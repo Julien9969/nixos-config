@@ -4,8 +4,14 @@
 let
   cfg = config.services.qbittorrent;
 
+  selectedVpn = if cfg.vpn.enable 
+    then 
+      config.services.wireguardVpn.exposed.${cfg.vpn.instanceName} 
+    else 
+      null;
+
   # TODO : str to list
-  address = if cfg.vpn.enable then cfg.vpn.wg-address else cfg.bittorrent.interfaceAddress;
+  address = if cfg.vpn.enable then selectedVpn.address else cfg.bittorrent.interfaceAddress;
   cleanAddress = let
     m = builtins.match "^([0-9.]+)(/[0-9]+)?$" address;
   in 
@@ -84,8 +90,8 @@ let
       edit_conf BitTorrent "Session\\FinishedTorrentExportDirectory=" "${cfg.bittorrent.finishedTorrentExportDirectory}"
     ''}
     
-    edit_conf BitTorrent "Session\\Interface=" "${if cfg.vpn.enable then cfg.vpn.wg-interface else cfg.bittorrent.interface}"
-    edit_conf BitTorrent "Session\\InterfaceName=" "${if cfg.vpn.enable then cfg.vpn.wg-interface else cfg.bittorrent.interface}"
+    edit_conf BitTorrent "Session\\Interface=" "${if cfg.vpn.enable then selectedVpn.interface else cfg.bittorrent.interface}"
+    edit_conf BitTorrent "Session\\InterfaceName=" "${if cfg.vpn.enable then selectedVpn.interface else cfg.bittorrent.interface}"
     
     # Adress could have a subnet mask so we need to clean it for qBittorrent
     edit_conf BitTorrent "Session\\InterfaceAddress=" "${cleanAddress}"
@@ -173,31 +179,31 @@ in
     bittorrent = {
       globalDLSpeedLimit = lib.mkOption {
         type = lib.types.int;
-        default = 1;
+        default = 0;
         description = "Global download speed limit. (KiB/s)";
       };
 
       globalUPSpeedLimit = lib.mkOption {
         type = lib.types.int;
-        default = 1;
+        default = 0;
         description = "Global upload speed limit. (KiB/s)";
       };
 
       alternativeGlobalDLSpeedLimit = lib.mkOption {
         type = lib.types.int;
-        default = 1;
+        default = 1000;
         description = "Alternative global download speed limit. (KiB/s)";
       };
 
       alternativeGlobalUPSpeedLimit = lib.mkOption {
         type = lib.types.int;
-        default = 1;
+        default = 1000;
         description = "Alternative global upload speed limit. (KiB/s)";
       };
 
       bandwidthSchedulerEnabled = lib.mkOption {
         type = lib.types.bool;
-        default = true;
+        default = false;
         description = ''Enable bandwidth scheduler.
           This allows you schedule alternative bandwidth limit based on time condition.
           Defaut time is 08:00 to 23:59 every day, edit trough UI Options -> Speed.
@@ -228,7 +234,7 @@ in
         description = '''
           Network interface to bind to.
           If WireGuard VPN is used, this will be overridden by the VPN interface.
-        ''; # TODO : voir avec VPN
+        '';
       };
 
       interfaceAddress = lib.mkOption {
@@ -237,7 +243,7 @@ in
         description = ''
           Network interface address to bind to.
           If WireGuard VPN is used, this will be overridden by the VPN interface address.
-        ''; # TODO : voir avec VPN
+        '';
       };
 
       listeningPort = lib.mkOption {
@@ -246,7 +252,7 @@ in
         description = ''
           Listening port for BitTorrent connections.
           If portforwarding is enabled with the VPN, this will be managed by the service.
-        ''; # TODO : voir avec VPN
+        ''; # TODO : portforwarding
       };
 
       maxConnections = lib.mkOption {
@@ -378,22 +384,13 @@ in
         '';
       };
 
-      namespace = lib.mkOption {
+      instanceName = lib.mkOption {
         type = lib.types.str;
-        default = "vpn-ns";
-        description = ''
-          Network namespace to use for the VPN tunnel.
-          Handled by the WireGuard service.
-        '';
-      };
-      
-      wg-interface = lib.mkOption {
-        type = lib.types.str;
-        default = "wg-vpn";
-        description = ''
-          Network interface to create for the VPN tunnel.
-          Handled by the WireGuard service.
-        '';
+        description = "The name of the WireGuard VPN instance to use for qBittorrent.";
+        # Make sure that config.services.wireguardVpn.exposed.<instanceName> exists
+        apply = instanceName:
+          assert lib.hasAttrByPath [ "services" "wireguardVpn" "exposed" instanceName ] config;
+          instanceName;
       };
 
       portforwarding = lib.mkOption {
@@ -404,77 +401,6 @@ in
           This will automatically configure the VPN tunnel to allow incoming connections.
           Tested with ProtonVPN.
         '';
-      };
-
-      privateKeyFile = lib.mkOption {
-        type = lib.types.path;
-        description = ''
-          Path to a file that contain only private key string.
-          WireGuard conf : [Interface] -> PrivateKey = xxxxxxxxx
-        '';
-      };
-
-      wg-address = lib.mkOption {
-        type = lib.types.str;
-        description = '''
-          IP addresse/subnet to assign to the VPN interface.
-          WireGuard conf : [Interface] -> Address = x.x.x.x
-          # TODO Should be a list of IPs but hard to manage for qbittorrent 
-        '';
-        example = "10.2.0.2/32";
-      };
-
-      dns = lib.mkOption {
-        type = lib.types.str;
-        description = ''
-          DNS server to assign to the VPN interface.
-          WireGuard conf : [Interface] -> DNS = x.x.x.x
-        '';
-        example = "10.2.0.1";
-      };
-
-      peers = lib.mkOption {
-        type = lib.types.listOf (lib.types.submodule {
-          options = {
-            publicKey = lib.mkOption {
-              type = lib.types.str;
-              description = ''
-                Public key of the peer.
-                WireGuard conf : [Peer] -> PublicKey = xxxxxxxxx
-              '';
-            };
-
-            endpoint = lib.mkOption {
-              type = lib.types.str;
-              description = ''
-                Endpoint of the peer.
-                WireGuard conf : [Peer] -> Endpoint = x.x.x.x:xxxx
-              '';
-            };
-
-            allowedIPs = lib.mkOption {
-              type = lib.types.listOf lib.types.str;
-              default = [ "0.0.0.0/0" ];
-              description = ''
-                List of IP addresses/subnets to allow through the VPN tunnel.
-                WireGuard conf : [Peer] -> AllowedIPs = x.x.x.x/xx
-              '';
-              example = [ "0.0.0.0/0" ];
-            };
-          };
-        });
-        default = [];
-        description = ''
-          List of WireGuard peer configurations.
-          Each peer should be an attribute set with 'publicKey', 'endpoint', and 'allowedIPs'.
-        '';
-        example = [
-          {
-            publicKey = "xxxxxxxxx";
-            endpoint = "x.x.x.x:xxxx";
-            allowedIPs = [ "0.0.0.0/0" ];
-          }
-        ];
       };
     };
   };
@@ -503,9 +429,9 @@ in
     systemd.services.qbittorrent = {
       description = "qBittorrent Daemon";
       after = [ "network.target" ] 
-        ++ lib.optional cfg.vpn.enable "wireguard-wg-vpn.target"; # TODO lib.optional cfg.vpn.enable , "network-online.target" 
+        ++ lib.optional cfg.vpn.enable "wireguard-${selectedVpn.interface}.target"; # TODO lib.optional cfg.vpn.enable , "network-online.target" 
       
-      requires = lib.optional cfg.vpn.enable "wireguard-wg-vpn.service";
+      requires = lib.optional cfg.vpn.enable "wireguard-${selectedVpn.interface}.service";
       wantedBy = [ "multi-user.target" ];
 
       serviceConfig = {
@@ -519,7 +445,7 @@ in
         ExecStart = 
         let 
           legalNoticeFlag = if cfg.legalNotice.accepted == true then "--confirm-legal-notice " else "";
-          vpnPrefix = if cfg.vpn.enable then "${pkgs.iproute2}/bin/ip netns exec ${cfg.vpn.namespace}" else "";
+          vpnPrefix = if cfg.vpn.enable then "${pkgs.iproute2}/bin/ip netns exec ${selectedVpn.namespace}" else "";
         in 
         ''
           ${vpnPrefix} ${lib.getExe cfg.package} --profile=${cfg.configDir} --webui-port=${toString cfg.webUIPort} ${legalNoticeFlag}
@@ -531,7 +457,6 @@ in
         Restart = "on-failure";
         RestartSec = "10s";
       };
-      #! TODO VPN
     };
 
     #! If portforwarding is enabled

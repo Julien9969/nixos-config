@@ -83,7 +83,7 @@ in {
       };
 
       "${mainDomain}" = mkProxy {
-        backendUrl = "http://10.200.200.2:8080";
+        backendUrl = "http://10.200.200.1:8080";
         proxyWebsockets = false;
       };
       
