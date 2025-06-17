@@ -6,7 +6,7 @@
     ../../modules/services/openssh.nix
     ../../modules/services/jellyfin.nix
     ../../modules/services/servarr.nix
-    ../../modules/services/reverse-proxy.nix
+    ../../modules/services/reverse-proxy
     ../../modules/services/cockpit.nix
     ../../modules/services/qbit-run.nix
     ../../modules/services/zipline.nix
