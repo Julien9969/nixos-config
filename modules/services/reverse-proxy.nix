@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  mainDomain = "192.168.1.250";
+  mainDomain = "192.168.1.150";
   acmeEmail = "local-test@example.com";
 
   defaultForceSSL = false; # TODO (change) Disable forcing SSL for local HTTP testing
@@ -103,7 +103,7 @@ in {
     };
   };
 
-  # services.nginx.virtualHosts."192.168.1.250".locations."/app/" = {
+  # services.nginx.virtualHosts."192.168.1.150".locations."/app/" = {
   #   proxyPass = "http://localhost:8082/";
   #   extraConfig = ''
   #     proxy_set_header Host $host;
