@@ -26,7 +26,7 @@
       devShells.${system}.default = import ./devshell/default.nix { inherit pkgs; };
       
       nixosConfigurations = {
-        trizottoserver = nixpkgs.lib.nixosSystem {
+        nixtrizottoserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
             ./hosts/home-server/configuration.nix 
