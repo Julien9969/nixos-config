@@ -14,7 +14,7 @@
     ../../modules/services/entrypoint.nix
   ];
 
-  networking.hostName = "trizottoserver";
+  networking.hostName = "nixtrizottoserver";
   
   # List packages installed in system profile. To search, run:
   # $ nix search wget
