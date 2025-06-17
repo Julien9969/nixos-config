@@ -36,9 +36,9 @@ in
     };
 
     dns = lib.mkOption {
-      type = lib.types.str;
+      type = lib.types.listOf lib.types.str;
       description = "DNS server to assign to the VPN interface.";
-      example = "10.2.0.1";
+      example = [ "10.2.0.1" ];
     };
 
     listenPort = lib.mkOption {
@@ -157,7 +157,7 @@ in
       }) cfg.peers;
     };
 
-    environment.etc."netns/${cfg.name}/resolv.conf".text = "nameserver ${cfg.dns}";
+    environment.etc."netns/${cfg.name}/resolv.conf".text = lib.concatStringsSep "\n" (map (ip: "nameserver ${ip}") cfg.dns);
 
     networking.firewall = lib.mkIf cfg.openFirewall {
       allowedUDPPorts = [ cfg.listenPort ];

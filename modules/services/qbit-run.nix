@@ -14,7 +14,13 @@
     name = "proton";
     privateKeyFile = config.sops.secrets.wg_private_key.path;
     address = "10.2.0.2/32";
-    dns = "10.2.0.1";
+    dns = [
+      "9.9.9.9"
+      "149.112.112.112"
+      "2620:fe::9"
+      "2620:fe::10"
+    ];
+    
     listenPort = 51820;
     openFirewall = true;
 
