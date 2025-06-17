@@ -79,6 +79,8 @@ in {
 
         extraConfig = ''
           include ${./block-exploits.conf};
+
+          #! not working because of proxy variables used in the file
           # include ${./cache-asset.conf};
         '';
       };
