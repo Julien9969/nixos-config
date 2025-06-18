@@ -1,8 +1,15 @@
 { config, pkgs, lib, ... }:
 
 let
-  mainDomain = "";
-  acmeEmail = "";
+
+  mkVirtualHost = { locations, forceSSL ? true, useACMEHost ? mainDomain, extraConfig ? "", blockCommonExploit ? false, cacheAssets ? false}: {
+    inherit locations forceSSL useACMEHost;
+    extraConfig = ''
+      ${if blockCommonExploit then "include ${./block-exploits.conf}" else ""};
+      ${if cacheAssets then "set $proxyPass ${locations."/".proxyPass};\ninclude ${./cache-asset.conf};" else ""}
+      ${extraConfig}
+    '';
+  };
 in {
 
   security.acme = {
@@ -35,6 +42,8 @@ in {
     '';
 
     appendHttpConfig = ''
+      proxy_cache_path /var/cache/nginx/public levels=1:2 keys_zone=public-cache:10m max_size=100m inactive=60m use_temp_path=off;
+      
       map $scheme $hsts_header {
         https "max-age=31536000; includeSubdomains; preload";
       }
@@ -52,6 +61,8 @@ in {
 
       # Prevent injection of code in other mime types (XSS Attacks)
       add_header X-Content-Type-Options nosniff;
+
+      add_header X-Cache-Status $upstream_cache_status always;
     '';
 
 
@@ -65,7 +76,7 @@ in {
         };
       };
 
-      "qbit.${mainDomain}" = {
+      "qbit.${mainDomain}" = mkVirtualHost {
         forceSSL = true;
         useACMEHost = mainDomain;
         locations."/" = {
@@ -76,24 +87,16 @@ in {
             proxy_cookie_path  / "/; Secure";
           '';
         };
-
-        extraConfig = ''
-          include ${./block-exploits.conf};
-
-          #! not working because of proxy variables used in the file
-          # include ${./cache-asset.conf};
-        '';
+        blockCommonExploit = true;
+        cacheAssets = true;
       };
 
-      "jellyfin.${mainDomain}" = {
+      "jellyfin.${mainDomain}" = mkVirtualHost{
         forceSSL = true;
         useACMEHost = mainDomain;
         locations."/" = {
           proxyPass = "http://localhost:8096";
           proxyWebsockets = true;
-          # extraConfig = ''
-          #   proxy_cookie_path  / "/; Secure";
-          # '';
         };
 
         locations."/socket" = {
@@ -104,10 +107,10 @@ in {
         extraConfig = ''
           proxy_buffering off;
           sendfile on;
-
-          include ${./block-exploits.conf};
-          # include ${./cache-asset.conf};
         '';
+
+        blockCommonExploit = true;
+        cacheAssets = true;
       };
       
     };
