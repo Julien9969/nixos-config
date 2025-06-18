@@ -38,8 +38,8 @@ in {
     # httpConfig = ''''; 
     # appendConfig = ''''; 
 
-    streamConfig = ''
-    '';
+    #! Check avec RPI 
+    # streamConfig = '''';
 
     appendHttpConfig = ''
       proxy_cache_path /var/cache/nginx/public levels=1:2 keys_zone=public-cache:10m max_size=100m inactive=60m use_temp_path=off;
@@ -64,7 +64,6 @@ in {
 
       add_header X-Cache-Status $upstream_cache_status always;
     '';
-
 
     virtualHosts = {
       "192.168.1.150" = {
@@ -112,7 +111,6 @@ in {
         blockCommonExploit = true;
         cacheAssets = true;
       };
-      
     };
   };
 
