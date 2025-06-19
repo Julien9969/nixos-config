@@ -42,11 +42,11 @@
     "nix-private": {
       "flake": false,
       "locked": {
-        "lastModified": 1750341184,
-        "narHash": "sha256-HwbgCOrMmzWJG+FkcKOrmrpC5MrpBkOSgsOiEBGgaLA=",
+        "lastModified": 1750342580,
+        "narHash": "sha256-WBiHAFTt7DjaJW+sow4id2zfq7q0XEgZ79DJdMOultI=",
         "ref": "refs/heads/master",
-        "rev": "eb1a8c474013556e433ac4214f3c3fe36dc1bc5a",
-        "revCount": 3,
+        "rev": "a3158ace18666a18216418794e7035d4deb34b16",
+        "revCount": 6,
         "type": "git",
         "url": "ssh://git@github.com/Julien9969/nix-private.git"
       },
