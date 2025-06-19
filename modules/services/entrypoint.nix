@@ -18,6 +18,12 @@
     enable = true;
     enableProxy = true; 
   };
+
+  config.services.myServices.qbittorrent-vpn = {
+    enable = true;
+    enableVpn = true;
+    enableProxy = true;
+  };
   
   config.services.myServices.servarr.enableSonarr = false;
   config.services.myServices.servarr.enableRadarr = false;  

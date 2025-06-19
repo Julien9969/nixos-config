@@ -69,21 +69,6 @@ in {
           # extraConfig = '''';
         };
       };
-
-      "qbit.${mainDomain}" = mkVirtualHost {
-        forceSSL = true;
-        useACMEHost = mainDomain;
-        locations."/" = {
-          proxyPass = "http://10.200.200.1:8080";
-          proxyWebsockets = true;
-          extraConfig = ''
-            proxy_set_header Referer $scheme://$host$request_uri;
-            proxy_cookie_path  / "/; Secure";
-          '';
-        };
-        blockCommonExploit = true;
-        cacheAssets = true;
-      };
     };
   };
 

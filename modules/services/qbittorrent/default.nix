@@ -126,7 +126,6 @@ let
 in
 {
   options.services.qbittorrent = {
-
     enable = lib.mkEnableOption "qBittorrent-nox daemon";
 
     package = lib.mkPackageOption pkgs "qbittorrent-nox" {
