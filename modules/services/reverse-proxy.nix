@@ -4,7 +4,7 @@ let
   mainDomain = secrets.main_domain;
   acmeEmail = secrets.acme_email;
 
-  mkVirtualHost = (import ../../../lib/mk-virtualhost);
+  mkVirtualHost = (import ../../lib/mk-virtualhost);
 in {
 
   security.acme = {
