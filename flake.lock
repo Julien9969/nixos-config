@@ -39,13 +39,29 @@
         "type": "github"
       }
     },
+    "nix-private": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1750341184,
+        "narHash": "sha256-HwbgCOrMmzWJG+FkcKOrmrpC5MrpBkOSgsOiEBGgaLA=",
+        "ref": "refs/heads/master",
+        "rev": "eb1a8c474013556e433ac4214f3c3fe36dc1bc5a",
+        "revCount": 3,
+        "type": "git",
+        "url": "ssh://git@github.com/Julien9969/nix-private.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/Julien9969/nix-private.git"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1750005367,
-        "narHash": "sha256-h/aac1dGLhS3qpaD2aZt25NdKY7b+JT0ZIP2WuGsJMU=",
+        "lastModified": 1750133334,
+        "narHash": "sha256-urV51uWH7fVnhIvsZIELIYalMYsyr2FCalvlRTzqWRw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "6c64dabd3aa85e0c02ef1cdcb6e1213de64baee3",
+        "rev": "36ab78dab7da2e4e27911007033713bab534187b",
         "type": "github"
       },
       "original": {
@@ -59,6 +75,7 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
+        "nix-private": "nix-private",
         "nixpkgs": "nixpkgs",
         "sops-nix": "sops-nix"
       }
@@ -70,11 +87,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1746485181,
-        "narHash": "sha256-PxrrSFLaC7YuItShxmYbMgSuFFuwxBB+qsl9BZUnRvg=",
+        "lastModified": 1750119275,
+        "narHash": "sha256-Rr7Pooz9zQbhdVxux16h7URa6mA80Pb/G07T4lHvh0M=",
         "owner": "Mic92",
         "repo": "sops-nix",
-        "rev": "e93ee1d900ad264d65e9701a5c6f895683433386",
+        "rev": "77c423a03b9b2b79709ea2cb63336312e78b72e2",
         "type": "github"
       },
       "original": {

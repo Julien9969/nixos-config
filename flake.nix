@@ -12,16 +12,22 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-private = {
+      url = "git+ssh://git@github.com/Julien9969/nix-private.git";
+      flake = false;
+    };
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-utils, home-manager, sops-nix, ... }: 
+  outputs = inputs@{ self, nixpkgs, flake-utils, home-manager, sops-nix, nix-private, ... }: 
     let
-          vars = import ./modules/variables.nix;
-          system = "x86_64-linux";
-          pkgs = import nixpkgs {
-            system = system;
-            config.allowUnfree = true;
-          };
+      vars = import ./modules/variables.nix;
+      secrets = import "${inputs.nix-private}/secrets.nix";
+      
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        system = system;
+        config.allowUnfree = true;
+      };
     in {
       devShells.${system}.default = import ./devshell/default.nix { inherit pkgs; };
       
@@ -30,6 +36,9 @@
           system = "x86_64-linux";
           modules = [
             ./hosts/home-server/configuration.nix 
+            ({ config, ... }: {
+              _module.args.secrets = secrets;
+            })
             
             sops-nix.nixosModules.sops
 
