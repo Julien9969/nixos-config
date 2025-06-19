@@ -20,8 +20,9 @@
 
   outputs = inputs@{ self, nixpkgs, flake-utils, home-manager, sops-nix, nix-private, ... }: 
     let
-      vars = import ./modules/variables.nix;
       secrets = import "${inputs.nix-private}/secrets.nix";
+      #! A voir si on vire pas secrets de vars
+      vars = (import ./modules/variables.nix) { inherit secrets; };
       
       system = "x86_64-linux";
       pkgs = import nixpkgs {
