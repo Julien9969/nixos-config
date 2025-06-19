@@ -8,7 +8,7 @@
     ../../modules/services/servarr.nix
     ../../modules/services/reverse-proxy.nix
     ../../modules/services/cockpit.nix
-    ../../modules/services/qbit-run.nix
+    ../../modules/services/qbittorrent-vpn.nix
     ../../modules/services/zipline.nix
   ];  
 
