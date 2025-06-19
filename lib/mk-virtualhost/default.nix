@@ -1,4 +1,4 @@
-# lib/mkVirtualHost.nix
+# lib/mk-virtualhost.nix
 { locations, 
   useACMEHost, 
   forceSSL ? true, 
