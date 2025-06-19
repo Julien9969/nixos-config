@@ -1,5 +1,5 @@
 # modules/services/entrypoint.nix
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, secrets, ... }:
 {
   imports = [
     ../../modules/services/docker.nix
@@ -12,7 +12,7 @@
     ../../modules/services/zipline.nix
   ];  
 
-  config.services.myServices.enableCockpit = false;
+  config.services.myServices.enableCockpit = builtins.trace secrets false;
   config.services.myServices.enableJellyfin = true;
   config.services.myServices.servarr.enableSonarr = false;
   config.services.myServices.servarr.enableRadarr = false;  
