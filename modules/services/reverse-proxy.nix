@@ -1,15 +1,10 @@
-{ config, pkgs, lib, ... }:
-
+# module/services/reverse-proxy/default.nix
+{ config, pkgs, lib, secrets, ... }:
 let
+  mainDomain = secrets.main_domain;
+  acmeEmail = secrets.acme_email;
 
-  mkVirtualHost = { locations, forceSSL ? true, useACMEHost ? mainDomain, extraConfig ? "", blockCommonExploit ? false, cacheAssets ? false}: {
-    inherit locations forceSSL useACMEHost;
-    extraConfig = ''
-      ${if blockCommonExploit then "include ${./block-exploits.conf}" else ""};
-      ${if cacheAssets then "set $proxyPass ${locations."/".proxyPass};\ninclude ${./cache-asset.conf};" else ""}
-      ${extraConfig}
-    '';
-  };
+  mkVirtualHost = (import ../../../lib/mk-virtualhost);
 in {
 
   security.acme = {
@@ -86,28 +81,6 @@ in {
             proxy_cookie_path  / "/; Secure";
           '';
         };
-        blockCommonExploit = true;
-        cacheAssets = true;
-      };
-
-      "jellyfin.${mainDomain}" = mkVirtualHost{
-        forceSSL = true;
-        useACMEHost = mainDomain;
-        locations."/" = {
-          proxyPass = "http://localhost:8096";
-          proxyWebsockets = true;
-        };
-
-        locations."/socket" = {
-          proxyPass = "http://localhost:8096";
-          proxyWebsockets = true;
-        };
-
-        extraConfig = ''
-          proxy_buffering off;
-          sendfile on;
-        '';
-
         blockCommonExploit = true;
         cacheAssets = true;
       };
