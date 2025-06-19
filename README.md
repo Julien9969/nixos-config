@@ -44,6 +44,7 @@ nixos-config/
 - [X] Secret management with sops-nix
 - [X] nginx reverse proxy
 - [ ] ACME for https
+- [ ] Proxy from service options
 - [X] cockpit web interface
 - [ ] ail2Ban: Add Fail2Ban to protect against brute-force attacks
 - [ ] automated Backups: restic or borg
@@ -52,6 +53,8 @@ nixos-config/
 - [ ] User name and info from file
 - [X] Wifi from sops
 - [ ] WireGuard + qbittorrent
+- [ ] [Port forwarding](https://github.com/tenseiken/docker-qbittorrent-wireguard/blob/d3ad09a0551194f5d2efc35e637b248d380d6ff7/qbittorrent/portfwd.sh
+) 
 - [ ] Services sonarr, radarr, wizarr, jellyseerr, prowlarr 
 ## Getting Started
 
@@ -109,9 +112,51 @@ If you add a new host to your .sops.yaml file, you will need to update the keys 
 ```bash
 nix-shell -p sops --run "sops updatekeys secrets/secrets.yaml"
 ```
-## Customization
 
-Feel free to modify the configuration files to suit your needs. The modular structure allows you to easily add, remove, or adjust specific aspects of the system.
+## Private secret git repository
+To securely access a private secrets repository from your NixOS host, follow these steps:
+
+#### 1. Start the SSH agent and add your key
+
+```bash
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+#### 2. Configure your SSH client
+
+Edit `~/.ssh/config` to add:
+
+## Root login enable (openssh conf) ?
+
+```ssh
+Host nixserver
+   HostName 192.168.1.150
+   User root
+   ForwardAgent yes
+   IdentityFile ~/.ssh/id_ed25519
+```
+
+#### 3. Connect to your server with agent forwarding
+
+```bash
+ssh nixserver
+```
+
+#### 4. Test GitHub access from the server
+
+```bash
+ssh -T git@github.com
+# You should see: "Hi Julien9969! You've successfully authenticated…"
+```
+
+### 5. Refresh secrets from the repository
+```bash
+nix flake update # update all
+or 
+nix flake update nix-private
+```
+
 
 ### Adding a Module
 
@@ -137,3 +182,9 @@ If you have suggestions or improvements, feel free to open an issue or submit a 
 ## License
 
 This repository does not contain a specific license. Please reach out if you wish to use or adapt these configurations.
+
+
+## Ressources
+https://github.com/notthebee/nix-config/blob/94ec3a147f93d4f017fbde6e7e961569b48aff4d/homelab/services/wireguard-netns/default.nix
+https://www.samkwort.com/qbittorrent_nixos_module
+https://github.com/tenseiken/docker-qbittorrent-wireguard/blob/d3ad09a0551194f5d2efc35e637b248d380d6ff7/qbittorrent/portfwd.sh
