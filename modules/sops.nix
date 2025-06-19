@@ -14,8 +14,6 @@
         mode = "0600";
       };
       "username" = {};
-      "wifi_ssid" = {};
-      "wifi_passwd" = {};
       "wg_private_key" = {};
       "dynu_api_key" = {};
       # "acme_email" = {};
