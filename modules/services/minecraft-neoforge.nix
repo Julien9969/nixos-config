@@ -33,7 +33,7 @@ let
 
     # Ensure the eula.txt file is present
     echo "eula=true" > ${serverDir}/eula.txt
-    ${pkgs.openjdk21_headless}/bin/java -jar /etc/minecraft-neoforge/neoforge.jar nogui > "${serverDir}/install.log" 2>&1
+    ${pkgs.openjdk24_headless}/bin/java -jar /etc/minecraft-neoforge/neoforge.jar nogui > "${serverDir}/install.log" 2>&1
   ''}";
 
   gracefulStopScript = pkgs.writeShellScript "minecraft-graceful-stop" ''
@@ -43,6 +43,7 @@ let
     ${pkgs.screen}/bin/screen -S minecraft -X stuff "stop\r"
     sleep 12
     ${pkgs.screen}/bin/screen -S minecraft -X quit || true
+    echo "Minecraft server stopped gracefully."
   '';
 in 
 {
@@ -50,7 +51,7 @@ in
     lib.mkEnableOption "NeoForge Minecraft server";
 
   config = lib.mkIf config.services.minecraft-neoforge.enable {
-    environment.systemPackages = [ pkgs.openjdk21_headless pkgs.screen ];
+    environment.systemPackages = [ pkgs.openjdk24_headless pkgs.screen ];
 
     users.groups.minecraft = {};
     users.users.minecraft = {
@@ -77,7 +78,7 @@ in
         Group = "minecraft";
         WorkingDirectory = serverDir;
         ExecStartPre = [ "${unzipModpack}" ];
-        ExecStart = "${pkgs.screen}/bin/screen -DmS minecraft ${pkgs.openjdk21_headless}/bin/java -Xms4G -Xmx8G -XX:+UseG1GC -jar ${serverDir}/server.jar nogui";
+        ExecStart = "${pkgs.screen}/bin/screen -DmS minecraft ${pkgs.openjdk24_headless}/bin/java -Xms4G -Xmx8G -XX:+UseG1GC -jar ${serverDir}/server.jar nogui";
         ExecStop = [
           "${gracefulStopScript}"
         ];
