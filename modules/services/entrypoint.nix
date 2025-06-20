@@ -10,9 +10,12 @@
     ../../modules/services/cockpit.nix
     ../../modules/services/qbittorrent-vpn.nix
     ../../modules/services/zipline.nix
+    ../../modules/services/minecraft-neoforge.nix
   ];  
 
   config.services.myServices.enableCockpit = builtins.trace secrets false;
+
+  config.services.minecraft-neoforge.enable = true;
   
   config.services.myServices.jellyfin = {
     enable = true;
