@@ -13,9 +13,10 @@
     ../../modules/services/minecraft-neoforge.nix
   ];  
 
+  # TODO remove logs after dev
   config.services.myServices.enableCockpit = builtins.trace secrets false;
 
-  config.services.minecraft-neoforge.enable = true;
+  config.services.minecraft-neoforge.enable = false;
   
   config.services.myServices.jellyfin = {
     enable = true;
