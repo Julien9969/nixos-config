@@ -10,6 +10,7 @@
     ../../modules/services/cockpit.nix
     ../../modules/services/qbittorrent-vpn.nix
     ../../modules/services/zipline.nix
+    ../../modules/services/filebrowser.nix
     ../../modules/services/minecraft-neoforge.nix
   ];  
 
@@ -35,5 +36,11 @@
     enableProwlarr = true;
     enableProxy = true;
   };
+
+  config.services.myServices.filebrowser = {
+    enable = true;
+    enableProxy = true;
+  };
+
   config.services.myServices.enableZipline = false;
 }
