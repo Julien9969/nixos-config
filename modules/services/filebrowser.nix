@@ -33,6 +33,9 @@ in
       openFirewall = if cfg.enableProxy then false else true;
     };
 
+    # Filebrowser rules breaks other services access to /media
+    systemd.tmpfiles.settings.filebrowser = lib.mkForce {};
+
     services.nginx.virtualHosts."filebrowser.${secrets.main_domain}" = 
       lib.mkIf (cfg.enable && cfg.enableProxy ) (mkVirtualHost {
       forceSSL    = true;
