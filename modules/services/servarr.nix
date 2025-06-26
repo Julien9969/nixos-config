@@ -32,7 +32,7 @@ in
         description = "Enable the Prowlarr service";
       };
 
-      enableProxy = lib.mkOption {
+      options.enableProxy = lib.mkOption {
         type = lib.types.bool;
         default = true;
         description = "Enable reverse proxy for servarr services";
@@ -53,7 +53,7 @@ in
           mechanism = "builtIn";
           automatically = true;
         };
-      }
+      };
     };
 
     services.radarr = lib.mkIf cfg.enableRadarr {
@@ -67,21 +67,19 @@ in
           mechanism = "builtIn";
           automatically = true;
         };
-      }
+      };
     };
 
     services.prowlarr = lib.mkIf cfg.enableProwlarr {
       enable = true;
       openFirewall = if cfg.enableProxy then false else true;
-      dataDir = "/home/trizotto/config/radarr";
-      user = "trizotto"; #! TODO not sure if correct for security
-      group = "media";
+      dataDir = "/home/trizotto/config/prowlarr";
       settings = {
         update = {
           mechanism = "builtIn";
           automatically = true;
         };
-      }
+      };
     };
 
     services.nginx.virtualHosts."sonarr.${secrets.main_domain}" = 

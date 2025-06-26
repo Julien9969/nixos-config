@@ -30,7 +30,7 @@
     enableProxy = true;
   };
   
-  config.services.myServices.servarr {
+  config.services.myServices.servarr = {
     enableSonarr = true;
     enableRadarr = true;
     enableProwlarr = true;
