@@ -42,11 +42,16 @@ in
   };
 
   config = {
-    services.sonarr = lib.mkIf cfg.enableSonarr {
+    users.users.servarr = lib.mkIf (cfg.enableRadarr || cfg.enableSonarr) {
+      isSystemUser = true;
+      group = "media";
+    };
+
+   services.sonarr = lib.mkIf cfg.enableSonarr {
       enable = true;
       openFirewall = if cfg.enableProxy then false else true;
-      dataDir = "/home/trizotto/config/sonarr";
-      user = "trizotto"; #! TODO not sure if correct for security
+      dataDir = "/var/lib/my-config/sonarr";
+      user = "servarr"; 
       group = "media";
       settings = {
         update = {
@@ -59,8 +64,8 @@ in
     services.radarr = lib.mkIf cfg.enableRadarr {
       enable = true;
       openFirewall = if cfg.enableProxy then false else true;
-      dataDir = "/home/trizotto/config/radarr";
-      user = "trizotto"; #! TODO not sure if correct for security
+      dataDir = "/var/lib/my-config/radarr";
+      user = "servarr"; 
       group = "media";
       settings = {
         update = {
@@ -73,7 +78,7 @@ in
     services.prowlarr = lib.mkIf cfg.enableProwlarr {
       enable = true;
       openFirewall = if cfg.enableProxy then false else true;
-      dataDir = "/home/trizotto/config/prowlarr";
+      dataDir = "/var/lib/my-config/prowlarr";
       settings = {
         update = {
           mechanism = "builtIn";
@@ -81,6 +86,19 @@ in
         };
       };
     };
+
+    systemd.services.sonarr.serviceConfig = {
+      ReadWritePaths = [ "/var/lib/my-config/sonarr" ];
+    };
+
+    systemd.services.radarr.serviceConfig = {
+      ReadWritePaths = [ "/var/lib/my-config/radarr" ];
+    };
+
+    systemd.tmpfiles.rules = [
+      "d /var/lib/my-config/radarr 0750 servarr media - -"
+      "d /var/lib/my-config/sonarr 0750 servarr media - -"
+    ];
 
     services.nginx.virtualHosts."sonarr.${secrets.main_domain}" = 
       lib.mkIf (cfg.enableSonarr && cfg.enableProxy ) (mkVirtualHost {

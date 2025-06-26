@@ -21,8 +21,15 @@ let
   # Configuration update script - runs before starting qBittorrent
   qbitConfigUpdateScript = "${pkgs.bash}/bin/bash ${pkgs.writeShellScript "update-qbittorrent-conf" ''
     #!/usr/bin/env bash
-
+    echo "Running as user: $(id -un), group: $(id -gn)"
     CONFIG_FILE="${cfg.configDir}/qBittorrent/config/qBittorrent.conf"
+    
+    if [[ ! -f "$CONFIG_FILE" ]]; then
+      echo "Configuration file $CONFIG_FILE does not exist. Creating a new one."
+      mkdir -p "$(dirname "$CONFIG_FILE")"
+      touch "$CONFIG_FILE"
+    fi
+    
     TEMP_FILE=$(mktemp)
     trap 'rm -f "$TEMP_FILE"' EXIT INT TERM
     cp "$CONFIG_FILE" "$CONFIG_FILE.bak"
@@ -406,12 +413,10 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    users.users = lib.mkIf (cfg.user == "qbittorrent") {
-      qbittorrent = {
-        isSystemUser = true;
-        group = cfg.group;
-        home = cfg.dataDir;
-      };
+    users.users.qbittorrent = lib.mkIf (cfg.user == "qbittorrent") {
+      isSystemUser = true;
+      group = cfg.group;
+      home = cfg.dataDir;
     };
 
     users.groups = lib.mkIf (cfg.group == "qbittorrent") {
@@ -419,12 +424,27 @@ in
     };
 
     # # Create directories with correct permissions
-    # systemd.tmpfiles.rules = [
-    #   "d ${cfg.dataDir} 0750 ${cfg.user} ${cfg.group} - -"
-    #   "d ${cfg.configDir} 0750 ${cfg.user} ${cfg.group} - -"
-    #   "d ${cfg.configDir}/qBittorrent 0750 ${cfg.user} ${cfg.group} - -"
-    #   "d ${cfg.configDir}/qBittorrent/config 0750 ${cfg.user} ${cfg.group} - -"
-    # ];
+    systemd.tmpfiles.rules = [
+      "d ${cfg.dataDir} 0750 ${cfg.user} ${cfg.group} - -"
+      "d ${cfg.configDir} 0750 ${cfg.user} ${cfg.group} - -"
+      "d ${cfg.configDir}/qBittorrent 0750 ${cfg.user} ${cfg.group} - -"
+      "d ${cfg.configDir}/qBittorrent/config 0750 ${cfg.user} ${cfg.group} - -"
+    ];
+
+    # tmpfiles.settings.filebrowser = {
+    #   "${cfg.settings.root}".d = {
+    #     inherit (cfg) user group;
+    #     mode = "0700";
+    #   };
+    #   "${cfg.settings.cache-dir}".d = {
+    #     inherit (cfg) user group;
+    #     mode = "0700";
+    #   };
+    #   "${builtins.dirOf cfg.settings.database}".d = {
+    #     inherit (cfg) user group;
+    #     mode = "0700";
+    #   };
+    # };
 
     systemd.services.qbittorrent = {
       description = "qBittorrent Daemon";

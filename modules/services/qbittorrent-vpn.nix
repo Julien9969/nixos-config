@@ -82,12 +82,12 @@ in {
     (lib.mkIf (cfg.enable) {
       services.qbittorrent = {
         enable = true;
-        dataDir = "/home/trizotto/qbit";
+        dataDir = "/var/lib/my-config/qbittorrent";
         # configDir = "";   
         # todo change user and group to qbittorrent 
         # will need ? users.users.qbittorrent.extraGroups = [ "media" ];
-        user = "trizotto";
-        group = "users";
+        user = "qbittorrent";
+        group = "media";
 
         webUIPort = 8080;
         openFirewall = if cfg.enableProxy then false else true;
