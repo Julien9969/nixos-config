@@ -25,13 +25,13 @@ in {
         enable = true;
         openFirewall = if cfg.enableProxy then false else true;
 
-        user = "jellyfin"; # User that the Jellyfin service will run as
-        group = "jellyfin"; # Group for the Jellyfin service
+        user = "jellyfin"; 
+        group = "jellyfin"; 
 
-        dataDir = "/var/lib/my-config/jellyfin"; # Default directory for media metadata and data
-        configDir = "/var/lib/my-config/jellyfin/config"; # Directory for Jellyfin configuration
-        cacheDir = "/var/cache/my-config/jellyfin"; # Cache directory used by Jellyfin
-        logDir = "/var/log/jellyfin"; # Directory where logs are stored
+        dataDir = "/var/lib/my-config/jellyfin"; 
+        configDir = "/var/lib/my-config/jellyfin/config"; 
+        cacheDir = "/var/cache/my-config/jellyfin"; 
+        logDir = "/var/log/jellyfin"; 
       };
       users.users.jellyfin.extraGroups = [ "media" ];
     })
