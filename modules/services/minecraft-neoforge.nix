@@ -4,7 +4,7 @@
 let
   # ⇩ Pick the Minecraft / NeoForge versions wanted
   # https://projects.neoforged.net/neoforged/neoforge
-  mcVersion = "1.21.1";
+  mcVersion = "1.21.0";
   neoforgeVersion = "21.1.180";
 
   serverDir = "/var/lib/minecraft-neoforge";
@@ -15,7 +15,7 @@ let
     + "neoforge-${neoforgeVersion}-installer.jar";
 
   # Get with nix-prefetch-url --type sha256 "${neoforgeUrl}" (add sha256- prefix)
-  neoforgeSha256 = "sha256-maLlNmoCmNYdRPfuASlkkYd6WD8Z0evu7nDNQj8/cXU="; #lib.fakeSha256;
+  neoforgeSha256 = "sha256-maLlNmoCmNYdRPfuASlkkYd6WD8Z0evu7nDNQj8/cXU="; # "sha256-maLlNmoCmNYdRPfuASlkkYd6WD8Z0evu7nDNQj8/cXU="; #lib.fakeSha256;
   neoforgeModpackUrl = "https://mediafilez.forgecdn.net/files/6642/446/BMC5_Server_Pack_v32.zip";
 
   unzipModpack = "${pkgs.bash}/bin/bash ${pkgs.writeShellScript "unzipModpack" ''
@@ -33,17 +33,20 @@ let
 
     # Ensure the eula.txt file is present
     echo "eula=true" > ${serverDir}/eula.txt
-    ${pkgs.openjdk24_headless}/bin/java -jar /etc/minecraft-neoforge/neoforge.jar nogui > "${serverDir}/install.log" 2>&1
+    ${pkgs.temurin-bin}/bin/java -jar /etc/minecraft-neoforge/neoforge.jar nogui > "${serverDir}/install.log" 2>&1
   ''}";
 
   gracefulStopScript = pkgs.writeShellScript "minecraft-graceful-stop" ''
-    ${pkgs.screen}/bin/screen -S minecraft -X stuff "say SERVER SHUTTING DOWN IN 10 SECONDS. SAVING ALL MAPS...\r"
-    sleep 10
-    ${pkgs.screen}/bin/screen -S minecraft -X stuff "save-all\r"
-    ${pkgs.screen}/bin/screen -S minecraft -X stuff "stop\r"
-    sleep 12
-    ${pkgs.screen}/bin/screen -S minecraft -X quit || true
-    echo "Minecraft server stopped gracefully."
+    if ${pkgs.screen}/bin/screen -list | grep -q "minecraft"; then
+      ${pkgs.screen}/bin/screen -S minecraft -X stuff "say SERVER SHUTTING DOWN IN 10 SECONDS. SAVING ALL MAPS...\r"
+      sleep 10
+      ${pkgs.screen}/bin/screen -S minecraft -X stuff "save-all\r"
+      ${pkgs.screen}/bin/screen -S minecraft -X stuff "stop\r"
+      sleep 12
+      ${pkgs.screen}/bin/screen -S minecraft -X quit || true
+    else
+      echo "No minecraft screen session found. Nothing to stop."
+    fi
   '';
 in 
 {
@@ -51,7 +54,7 @@ in
     lib.mkEnableOption "NeoForge Minecraft server";
 
   config = lib.mkIf config.services.minecraft-neoforge.enable {
-    environment.systemPackages = [ pkgs.openjdk24_headless pkgs.screen ];
+    environment.systemPackages = [ pkgs.temurin-bin pkgs.screen ];
 
     users.groups.minecraft = {};
     users.users.minecraft = {
@@ -64,9 +67,9 @@ in
       pkgs.fetchurl { url = neoforgeUrl; hash = neoforgeSha256; };
 
     systemd.tmpfiles.rules = [
-      "d ${serverDir}          0750 minecraft minecraft -"
-      "d ${serverDir}/mods     0750 minecraft minecraft -"
-      "f ${serverDir}/eula.txt 0640 minecraft minecraft - eula=true"
+      "d ${serverDir}          0751 minecraft minecraft -"
+      "d ${serverDir}/mods     0751 minecraft minecraft -"
+      "f ${serverDir}/eula.txt 0641 minecraft minecraft - eula=true"
     ];
 
     systemd.services.minecraft-neoforge = {
@@ -78,7 +81,7 @@ in
         Group = "minecraft";
         WorkingDirectory = serverDir;
         ExecStartPre = [ "${unzipModpack}" ];
-        ExecStart = "${pkgs.screen}/bin/screen -DmS minecraft ${pkgs.openjdk24_headless}/bin/java -Xms4G -Xmx8G -XX:+UseG1GC -jar ${serverDir}/server.jar nogui";
+        ExecStart = "${pkgs.screen}/bin/screen -DmS minecraft ${pkgs.temurin-bin}/bin/java -Xms4G -Xmx8G -XX:+UseG1GC -jar ${serverDir}/server.jar nogui";
         ExecStop = [
           "${gracefulStopScript}"
         ];
