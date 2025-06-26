@@ -22,6 +22,15 @@ in
   config = {
     services.filebrowser = lib.mkIf cfg.enable {
       enable = true;
+
+      user = "filebrowser";
+      group = "media";
+      settings=  {
+        root = "/media";
+        database = "/var/lib/my-config/filebrowser/database.db";
+      };
+
+      openFirewall = if cfg.enableProxy then false else true;
     };
 
     services.nginx.virtualHosts."filebrowser.${secrets.main_domain}" = 
