@@ -29,7 +29,11 @@
     enableProxy = true;
   };
   
-  config.services.myServices.servarr.enableSonarr = false;
-  config.services.myServices.servarr.enableRadarr = false;  
+  config.services.myServices.servarr {
+    enableSonarr = true;
+    enableRadarr = true;
+    enableProwlarr = true;
+    enableProxy = true;
+  };
   config.services.myServices.enableZipline = false;
 }
