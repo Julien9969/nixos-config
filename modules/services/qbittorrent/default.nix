@@ -431,21 +431,6 @@ in
       "d ${cfg.configDir}/qBittorrent/config 0750 ${cfg.user} ${cfg.group} - -"
     ];
 
-    # tmpfiles.settings.filebrowser = {
-    #   "${cfg.settings.root}".d = {
-    #     inherit (cfg) user group;
-    #     mode = "0700";
-    #   };
-    #   "${cfg.settings.cache-dir}".d = {
-    #     inherit (cfg) user group;
-    #     mode = "0700";
-    #   };
-    #   "${builtins.dirOf cfg.settings.database}".d = {
-    #     inherit (cfg) user group;
-    #     mode = "0700";
-    #   };
-    # };
-
     systemd.services.qbittorrent = {
       description = "qBittorrent Daemon";
       after = [ "network.target" ] 
