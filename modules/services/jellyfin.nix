@@ -34,6 +34,7 @@ in {
         logDir = "/var/log/jellyfin"; 
       };
       users.users.jellyfin.extraGroups = [ "media" ];
+      systemd.services.jellyfin.serviceConfig.IOSchedulingPriority = 0;
     })
 
     # ── reverse‑proxy nginx ──
