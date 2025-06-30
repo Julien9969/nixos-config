@@ -17,4 +17,14 @@
     #   config.sops.secrets."authorized_keys".path
     # ];
   };
+  
+  security.sudo.extraRules = [
+  	{
+  		users = [ "trizotto" ];
+  		commands = [{
+  		  command = "ALL";
+  		  options = [ "NOPASSWD" ];
+  		}];
+  	}
+  ];
 }
