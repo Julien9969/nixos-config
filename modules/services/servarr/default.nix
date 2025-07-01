@@ -1,7 +1,7 @@
 
 {config, pkgs, lib, secrets, ...}:
 let
-  mkVirtualHost = (import ../../lib/mk-virtualhost);
+  mkVirtualHost = (import ../../../lib/mk-virtualhost);
   cfg = config.services.myServices.servarr;
 
   proxyExtraConfig = ''
@@ -11,6 +11,12 @@ let
   '';
 in
 {
+  disabledModules = [ "services/misc/servarr/prowlarr.nix" ];
+  imports =
+    [
+      ./prowlarr.nix
+    ];
+
   options.services.myServices.servarr = lib.mkOption {
     default = { };
     type  = lib.types.submodule {
@@ -79,6 +85,8 @@ in
       enable = true;
       openFirewall = if cfg.enableProxy then false else true;
       dataDir = "/var/lib/my-config/prowlarr";
+      user = "servarr"; 
+      group = "media";
       settings = {
         update = {
           mechanism = "builtIn";
@@ -86,19 +94,6 @@ in
         };
       };
     };
-
-    systemd.services.sonarr.serviceConfig = {
-      ReadWritePaths = [ "/var/lib/my-config/sonarr" ];
-    };
-
-    systemd.services.radarr.serviceConfig = {
-      ReadWritePaths = [ "/var/lib/my-config/radarr" ];
-    };
-
-    systemd.tmpfiles.rules = [
-      "d /var/lib/my-config/radarr 0750 servarr media - -"
-      "d /var/lib/my-config/sonarr 0750 servarr media - -"
-    ];
 
     services.nginx.virtualHosts."sonarr.${secrets.main_domain}" = 
       lib.mkIf (cfg.enableSonarr && cfg.enableProxy ) (mkVirtualHost {
