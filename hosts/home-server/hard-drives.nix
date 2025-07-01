@@ -2,8 +2,8 @@
 {
   boot.supportedFilesystems = [ "ntfs" ];
 
-  fileSystems."/media/HDD" =
-  { device = "/dev/disk/by-uuid/E26E78BA6E7888D5";
+  fileSystems."/media/HDD" = {
+    device = "/dev/disk/by-uuid/E26E78BA6E7888D5";
     fsType = "ntfs-3g";
     options = [
       "uid=1000"    # main user id
@@ -11,6 +11,8 @@
       "umask=002"
       "dmask=002"   # Directories = 775
       "fmask=113"   # Files = 664
+      "allow_other"
+      "nofail"
     ];
   };
 
