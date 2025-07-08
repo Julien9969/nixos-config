@@ -1,73 +1,89 @@
-{config, pkgs, lib, secrets, ...}:
+{ config, lib, pkgs, ... }:
 let
-  mkVirtualHost = (import ../../lib/mk-virtualhost);
-  cfg = config.services.myServices.jellyseerr;
-  myConfigDir = "/var/lib/my-config/jellyseerr";
-in
-{
-  options.services.myServices.jellyseerr = {
+  cfg = config.services.jellyseerr;
+in {
+
+  options.services.jellyseerr = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
-      description = "Enable Jellyseer service";
+      example = true;
+      description = ''
+        Enable jellyseerr service.
+      '';
     };
 
-    enableProxy = lib.mkOption {
+    package = lib.mkPackageOption pkgs "jellyseerr" {};
+
+    user = lib.mkOption {
+      type = lib.types.str;
+      default = "jellyseerr";
+      description = "User account under which jellyseerr runs.";
+    };
+
+    group = lib.mkOption {
+      type = lib.types.str;
+      default = "jellyseerr";
+      description = "Group under which jellyseerr runs.";
+    };
+
+    port = lib.mkOption {
+      type = lib.types.port;
+      default = 5055;
+      description = "jellyseerr Port";
+    };
+
+    configDir = lib.mkOption {
+      type = lib.types.path;
+      default = "/var/lib/jellyseerr";
+      description = "jellyseerr data directory";
+    };
+
+    openFirewall = lib.mkOption {
       type = lib.types.bool;
-      default = true;
-      description = "Enable reverse proxy for Jellyseer";
+      default = false;
+      example = true;
+      description = "Open firewall for jellyseerr";
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    # systemd.services.jellyseerr.serviceConfig = {
-    #   ReadWritePaths = [ 
-    #     "${myConfigDir}/config"
-    #     "${myConfigDir}/logs"
-    #   ];
-    # };
-
-    # systemd.tmpfiles.rules = [
-    #   "d ${myConfigDir}/config 0750 - - - -"
-    #   "d ${myConfigDir}/logs 0750 - - - -"
-    # ];
-
+  config = lib.mkIf (cfg.enable) {
     systemd.tmpfiles.rules = [
-      "d ${myConfigDir} 0755 servarr media - -"
-      "d ${myConfigDir}/config 0750 servarr media - -"
-      "d ${myConfigDir}/logs 0750 servarr media - -"
-      "d ${myConfigDir}/db 0750 servarr media - -"
+      "d '${cfg.configDir}' 0750 ${cfg.user} ${cfg.group} - -"
+      "d '${cfg.configDir}/config' 0750 ${cfg.user} ${cfg.group} - -"
     ];
 
-    # Override jellyseerr systemd service user/group
-    systemd.services.jellyseerr.serviceConfig = {
-      User = "servarr";
-      Group = "media";
-      ReadWritePaths = [
-        "${myConfigDir}/config"
-        "${myConfigDir}/logs"
-        "${myConfigDir}/db"
-      ];
-    };
-
-    services.jellyseerr = {
-      enable = true;
-      openFirewall = if cfg.enableProxy then false else true;
-      configDir = "${myConfigDir}";
-    };
-
-    services.nginx.virtualHosts."jellyseerr.${secrets.main_domain}" = 
-      lib.mkIf (cfg.enable && cfg.enableProxy ) (mkVirtualHost {
-      forceSSL    = true;
-      useACMEHost = secrets.main_domain;
-
-      locations."/" = {
-        proxyPass = "http://localhost:5055";
-        proxyWebsockets = true;
+    systemd.services.jellyseerr = {
+      description = "jellyseerr";
+      after = ["network.target"];
+      wantedBy = ["multi-user.target"];
+      environment = {
+        PORT = toString cfg.port;
+        CONFIG_DIRECTORY = cfg.configDir;
       };
 
-      blockCommonExploit = true;
-      cacheAssets = true;
-    });
+      serviceConfig = {
+        Type = "simple";
+        ReadWritePaths = [ "${cfg.configDir}" ];
+        User = cfg.user;
+        Group = cfg.group;
+        ExecStart = lib.getExe cfg.package;
+        Restart = "on-failure";
+      };
+    };
+
+    networking.firewall = lib.mkIf cfg.openFirewall {
+      allowedTCPPorts = [ cfg.port ];
+    };
+
+    users.users.jellyseerr = lib.mkIf (cfg.user == "jellyseerr") {
+      isSystemUser = true;
+      group = cfg.group;
+      home = cfg.configDir;
+    };
+
+    users.groups = lib.mkIf (cfg.group == "jellyseerr") {
+      jellyseerr = {};
+    };
   };
 }
