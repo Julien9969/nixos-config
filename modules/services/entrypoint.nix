@@ -6,7 +6,7 @@
     ../../modules/services/openssh.nix
     ../../modules/services/jellyfin.nix
     ../../modules/services/servarr
-    # ../../modules/services/jellyseerr.nix
+    ../../modules/services/jellyseerr
     ../../modules/services/reverse-proxy.nix
     ../../modules/services/cockpit.nix
     ../../modules/services/qbittorrent-vpn.nix
@@ -36,6 +36,11 @@
     enableRadarr = true;
     enableProwlarr = true;
     enableProxy = true;
+  };
+
+  config.services.myServices.jellyseerr = {
+    enable = true;
+    enableProxy = true; 
   };
 
   config.services.myServices.filebrowser = {
