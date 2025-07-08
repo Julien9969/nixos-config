@@ -48,12 +48,30 @@ in
   };
 
   config = {
-    users.users.servarr = lib.mkIf (cfg.enableRadarr || cfg.enableSonarr) {
+    users.users.servarr = lib.mkIf (cfg.enableRadarr || cfg.enableSonarr || cfg.enableProwlarr) {
       isSystemUser = true;
       group = "media";
     };
 
-   services.sonarr = lib.mkIf cfg.enableSonarr {
+    systemd.services.sonarr.serviceConfig = lib.mkIf cfg.enableSonarr {
+      ReadWritePaths = [ "/var/lib/my-config/sonarr" ];
+    };
+
+    systemd.services.radarr.serviceConfig = lib.mkIf cfg.enableRadarr {
+      ReadWritePaths = [ "/var/lib/my-config/radarr" ];
+    };
+
+    systemd.services.prowlarr.serviceConfig = lib.mkIf cfg.enableProwlarr {
+      ReadWritePaths = [ "/var/lib/my-config/prowlarr" ];
+    };
+
+    systemd.tmpfiles.rules = lib.mkIf (cfg.enableRadarr || cfg.enableSonarr || cfg.enableProwlarr) [
+      "d /var/lib/my-config/radarr 0750 servarr media - -"
+      "d /var/lib/my-config/sonarr 0750 servarr media - -"
+      "d /var/lib/my-config/prowlarr 0750 servarr media - -"
+    ];
+    
+    services.sonarr = lib.mkIf cfg.enableSonarr {
       enable = true;
       openFirewall = if cfg.enableProxy then false else true;
       dataDir = "/var/lib/my-config/sonarr";
