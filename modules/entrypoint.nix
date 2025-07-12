@@ -13,6 +13,7 @@
     ./services/zipline.nix
     ./services/filebrowser.nix
     ./services/minecraft-neoforge.nix
+    ./service/restic.nix
   ];  
 
   # TODO remove logs after dev
@@ -48,5 +49,7 @@
     enableProxy = true;
   };
 
+  config.services.myServices.restic-backup.enable = true;
+  
   config.services.myServices.enableZipline = false;
 }
