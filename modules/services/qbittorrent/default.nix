@@ -41,35 +41,36 @@ let
       local value="$3"
 
       local escaped_key_prefix=$(printf '%s' "$key_prefix" | sed 's/\\/\\\\/g')
-      local full_key="$escaped_key_prefix$value"
+      local escaped_value=$(printf '%s' "$value" | sed 's/\"/\\\"/g' | sed 's/\\/\\\\/g')
+      local full_key="$escaped_key_prefix$escaped_value"
 
       local operation=""
 
       if grep -q "^\[$section\]" "$TEMP_FILE"; then
-        if grep -q "^$escaped_key_prefix" "$TEMP_FILE"; then
-          if grep -q "^$full_key$" "$TEMP_FILE"; then
+          if grep -q "^$escaped_key_prefix" "$TEMP_FILE"; then
+              if grep -q "^$full_key$" "$TEMP_FILE"; then
             operation="No change"
-          elif [[ $key_prefix == "WebUI\\Password_PBKDF2="* || $key_prefix == "WebUI\\Username="* ]]; then
+              elif [[ $key_prefix == "WebUI\\Password_PBKDF2="* || $key_prefix == "WebUI\\Username="* ]]; then
             operation="No change, avoid resetting password to default" 
-          else
-            sed -i "s|^$escaped_key_prefix.*|$full_key|" "$TEMP_FILE"
+              else
+                  sed -i "s|^$escaped_key_prefix.*|$full_key|" "$TEMP_FILE"
             operation="Updated existing key"
-          fi
-        else
-          sed -i "/^\[$section\]/a $full_key" "$TEMP_FILE"
+              fi
+          else
+              sed -i "/^\[$section\]/a $full_key" "$TEMP_FILE"
           operation="Added key"
-        fi
+          fi
       else
-        {
-          echo ""
-          echo "[$section]"
-          echo "$key_prefix$value"
-        } >> "$TEMP_FILE"
+          {
+              echo ""
+              echo "[$section]"
+              echo "$key_prefix$escaped_value"
+          } >> "$TEMP_FILE"
         operation="Created section and added key"
       fi
 
       echo "[edit_conf] $section/$key_prefix$value : $operation"
-    }
+  }
 
     # [Application]
     edit_conf Application "MemoryWorkingSetLimit=" "${toString cfg.application.memoryWorkingSetLimit}"
@@ -127,6 +128,7 @@ let
     edit_conf Preferences "General\\Locale=" "${cfg.preferences.generalLocale}"
     edit_conf Preferences "WebUI\\Password_PBKDF2=" "\"${cfg.preferences.webUIPassword}\""
     edit_conf Preferences "WebUI\\Username=" "${cfg.preferences.webUIUsername}"
+    edit_conf Preferences "WebUI\\CSRFProtection=" "${toString cfg.preferences.CSRFProtection}"
     
     mv "$TEMP_FILE" "$CONFIG_FILE"
   ''}";
@@ -378,6 +380,12 @@ in
         type = lib.types.str;
         default = "admin";
         description = "Web UI username.";
+      };
+
+      CSRFProtection = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Enable CRF proctection (can break reverse proxy access)";
       };
     };
 

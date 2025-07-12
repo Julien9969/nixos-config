@@ -2,6 +2,7 @@
 { config, pkgs, lib, secrets, ... }:
 let 
   mkVirtualHost = (import ../../lib/mk-virtualhost);
+  notify-qb = import ../../scripts/notify-qb.nix { inherit secrets pkgs; };
   cfg = config.services.myServices.qbittorrent-vpn;
 in {
   imports =
@@ -38,10 +39,11 @@ in {
         privateKeyFile = config.sops.secrets.wg_private_key.path;
         address = "10.2.0.2/32";
         dns = [
-          "9.9.9.9"
-          "149.112.112.112"
-          "2620:fe::9"
-          "2620:fe::10"
+          "10.2.0.1"
+          # "9.9.9.9"
+          # "149.112.112.112"
+          # "2620:fe::9"
+          # "2620:fe::10"
         ];
         
         listenPort = 51820;
@@ -91,31 +93,31 @@ in {
 
         webUIPort = 8080;
         openFirewall = if cfg.enableProxy then false else true;
-        application.memoryWorkingSetLimit = 512;
+        application.memoryWorkingSetLimit = 1024;
 
         bittorrent = {
           listeningPort = 6881;
           globalDLSpeedLimit = 40000;
-          globalUPSpeedLimit = 3000;
+          globalUPSpeedLimit = 4000;
           alternativeGlobalDLSpeedLimit = 0;
-          alternativeGlobalUPSpeedLimit = 10000;
+          alternativeGlobalUPSpeedLimit = 0;
           bandwidthSchedulerEnabled = true;
           btProtocol = "Both";
           # interface = "";
           # interfaceAddress = "";
-          defaultSavePath = "/media/HDD/Downloads";
-          finishedTorrentExportDirectory = "/media/HDD/Downloads/Finished";
+          defaultSavePath = "/media/DSK/downloads";
+          finishedTorrentExportDirectory = "/media/DSK/torrent-save";
 
-          maxConnections = 500;
+          maxConnections = 400;
           maxConnectionsPerTorrent = 100;
           maxUploadSlots = 20;
-          maxslotsUploadSlotsPerTorrent = 4;
+          maxslotsUploadSlotsPerTorrent = 5;
 
           queueingSystem = {
-            enabled = false;
-            maxActiveTorrents = 5;
-            maxActiveDownloads = 3;
-            maxActiveUploads = 3;
+            enabled = true;
+            maxActiveTorrents = 100;
+            maxActiveDownloads = 7;
+            maxActiveUploads = 10;
           };
         };
 
@@ -123,15 +125,16 @@ in {
 
         autorun = {
           onDownloadEnd = true;
-          onDownloadEndCommand = "echo 'Download finished!'";
+          onDownloadEndCommand = ''${notify-qb.script}/bin/notify-qb add \"%N\" \"%L\" \"%D\" \"%C\" \"%T\"'';
           onTorrentAdded = true;
-          onTorrentAddedCommand = "echo 'Torrent added!'";
+          onTorrentAddedCommand = ''${notify-qb.script}/bin/notify-qb done \"%N\" \"%L\" \"%D\" \"%C\" \"%Z\"'';
         };
 
         preferences = {
           generalLocale = "fr";
           webUIPassword = "@ByteArray(LhKP3TEq5kbzfwklH5W0zQ==:OeWrH5CZsGvlOUgd/IPV8cv5HRBp2Na6wfL2oIXlxlQq4VpPyYKFDqcxgA9c8BbqQtELjGD6yk10XyjuOGgQ1A==)";
-          webUIUsername="Trizotto";
+          webUIUsername = "Trizotto";
+          CSRFProtection = false;
         };
 
         vpn = {
