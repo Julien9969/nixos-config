@@ -80,7 +80,7 @@ in
       settings = {
         update = {
           mechanism = "builtIn";
-          automatically = true;
+          automatically = false; # TRUE not working because can't access nix store
         };
       };
     };
@@ -94,7 +94,7 @@ in
       settings = {
         update = {
           mechanism = "builtIn";
-          automatically = true;
+          automatically = false;
         };
       };
     };
@@ -108,7 +108,7 @@ in
       settings = {
         update = {
           mechanism = "builtIn";
-          automatically = true;
+          automatically = false;
         };
       };
     };
