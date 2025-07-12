@@ -14,7 +14,7 @@
     ../../modules/common/bash.nix
     ../../modules/common/nix.nix
 
-    ../../modules/services/entrypoint.nix
+    ../../modules/entrypoint.nix
   ];
 
   networking.hostName = "nixtrizottoserver";
