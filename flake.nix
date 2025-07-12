@@ -37,7 +37,17 @@
         nixtrizottoserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            ./hosts/home-server/configuration.nix 
+            ./hosts/home-server/configuration.nix
+            ./overlays/jellyfin-overlay.nix
+
+            ./modules/sops.nix
+            ./modules/entrypoint.nix
+            
+            ./modules/common/firewall.nix
+            ./modules/common/users.nix
+            ./modules/common/bash.nix
+            ./modules/common/nix.nix
+
             ({ config, ... }: {
               _module.args.secrets = secrets;
             })

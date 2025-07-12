@@ -4,23 +4,10 @@
     ./hardware-configuration.nix
     ./hard-drives.nix
     ./nvidia.nix
-
-    ../../overlays/jellyfin-overlay.nix
-
-    ../../modules/sops.nix
-
-    ../../modules/common/firewall.nix
-    ../../modules/common/users.nix
-    ../../modules/common/bash.nix
-    ../../modules/common/nix.nix
-
-    ../../modules/entrypoint.nix
   ];
 
   networking.hostName = "nixtrizottoserver";
   
-  
- 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [

@@ -2,17 +2,17 @@
 { config, lib, pkgs, secrets, ... }:
 {
   imports = [
-    ../../modules/services/docker.nix
-    ../../modules/services/openssh.nix
-    ../../modules/services/jellyfin.nix
-    ../../modules/services/servarr
-    ../../modules/services/jellyseerr
-    ../../modules/services/reverse-proxy.nix
-    ../../modules/services/cockpit.nix
-    ../../modules/services/qbittorrent-vpn.nix
-    ../../modules/services/zipline.nix
-    ../../modules/services/filebrowser.nix
-    ../../modules/services/minecraft-neoforge.nix
+    ./services/docker.nix
+    ./services/openssh.nix
+    ./services/jellyfin.nix
+    ./services/servarr
+    ./services/jellyseerr
+    ./services/reverse-proxy.nix
+    ./services/cockpit.nix
+    ./services/qbittorrent-vpn.nix
+    ./services/zipline.nix
+    ./services/filebrowser.nix
+    ./services/minecraft-neoforge.nix
   ];  
 
   # TODO remove logs after dev
