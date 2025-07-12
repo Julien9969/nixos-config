@@ -43,19 +43,20 @@ nixos-config/
 ## TODO
 - [X] Secret management with sops-nix
 - [X] nginx reverse proxy
-- [ ] ACME for https
-- [ ] Proxy from service options
+- [X] ACME for https
+- [X] Proxy from service options
 - [X] cockpit web interface
-- [ ] ail2Ban: Add Fail2Ban to protect against brute-force attacks
-- [ ] automated Backups: restic or borg
-- [ ] Monitoring: Grafana, Prometheus, or Zabbix
 - [X] Enable and disable services more flexibly
-- [ ] User name and info from file
-- [X] Wifi from sops
-- [ ] WireGuard + qbittorrent
+- [X] Services sonarr, radarr, jellyseerr, prowlarr 
+- [X] WireGuard + qbittorrent 
+- [ ] automated Backups: restic or borg
 - [ ] [Port forwarding](https://github.com/tenseiken/docker-qbittorrent-wireguard/blob/d3ad09a0551194f5d2efc35e637b248d380d6ff7/qbittorrent/portfwd.sh
+- [ ] Docker services wizarr
+- [ ] Multiple WireGuard clients
+- [ ] User name and info from file
+- [ ] Monitoring: Grafana, Prometheus, or Zabbix
+- [ ] ail2Ban: Add Fail2Ban to protect against brute-force attacks
 ) 
-- [ ] Services sonarr, radarr, wizarr, jellyseerr, prowlarr 
 ## Getting Started
 
 ### Prerequisites
@@ -174,10 +175,6 @@ To add a new module:
 To define custom packages:
 1. Add package definitions under the `packages/` directory.
 2. Include the packages in your system configuration.
-
-## Contributing
-
-If you have suggestions or improvements, feel free to open an issue or submit a pull request.
 
 ## License
 
