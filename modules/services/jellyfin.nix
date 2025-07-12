@@ -4,6 +4,7 @@ let
   mkVirtualHost = (import ../../lib/mk-virtualhost);
   cfg = config.services.myServices.jellyfin;
 in {
+
   options.services.myServices.jellyfin = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -15,12 +16,16 @@ in {
       type = lib.types.bool;
       default = true;
       description = "Enable reverse proxy for Jellyfin";
-    };
+    };   
   };
 
   config = lib.mkMerge [
     # ── start jellyfin ──
     (lib.mkIf cfg.enable {
+      systemd.services.prowlarr.serviceConfig =  {
+        ReadWritePaths = [ "/var/lib/my-config/jellyfin" ];
+      };
+
       services.jellyfin = {
         enable = true;
         openFirewall = if cfg.enableProxy then false else true;
