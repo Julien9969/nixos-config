@@ -5,7 +5,7 @@
         jellyfin-web = prev.jellyfin-web.overrideAttrs (finalAttrs: previousAttrs: {
           installPhase = ''
             runHook preInstall
-
+            
             # Inject the Editor's Choice script before </body>
             sed -i 's#</body>#<script plugin=\"EditorsChoice\" defer=\"defer\" version=\"1.0.0.0\" src=\"/EditorsChoice/script\"></script></body>#' dist/index.html
 
