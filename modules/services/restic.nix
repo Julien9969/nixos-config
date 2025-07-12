@@ -11,13 +11,13 @@ in
       description = "Enable restic backup service";
     };
   };
-  
+
   config = {
     services.restic.backups."server-config" = lib.mkIf cfg.enable {
       initialize = true;
       user = "root";
       repository = "/media/backups/";
-      # passwordFile = "/etc/nixos/secrets/restic.env";
+      passwordFile = config.sops.secrets.restic_passwd.path;
       paths = [
         "/home/trizotto/compose-files"
         "/var/lib/my-config"
@@ -32,7 +32,7 @@ in
         "**/qBittorrent/cache/**"
       ];
       timerConfig = {
-        OnCalendar = "Sun *-*-* 03:00:00" # "weeks"; 
+        OnCalendar = "Sun *-*-* 03:00:00"; # "weeks"; 
         Persistent = true;
       };
       extraOptions = [

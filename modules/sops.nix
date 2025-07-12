@@ -16,6 +16,7 @@
       "username" = {};
       "wg_private_key" = {};
       "dynu_api_key" = {};
+      "restic_passwd" = {};
       # "acme_email" = {};
     };
   };

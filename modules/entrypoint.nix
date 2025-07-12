@@ -13,7 +13,7 @@
     ./services/zipline.nix
     ./services/filebrowser.nix
     ./services/minecraft-neoforge.nix
-    ./service/restic.nix
+    ./services/restic.nix
   ];  
 
   # TODO remove logs after dev
