@@ -1,4 +1,3 @@
-/services/openssh.nix
 { config, pkgs, ... }:
 {
   services.openssh = {
