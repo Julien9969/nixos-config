@@ -2,11 +2,10 @@
 {
   # boot.supportedFilesystems = [ "ntfs" ];
   
-  systemd.tmpfiles.settings.root."/media".z = { # z fix the perms event if folder exist (d not)
-    user = "root";
-    group = "media";
-    mode = "0775"; 
-  };
+  systemd.tmpfiles.rules = [
+    "d /media 0775 root media - -"
+    "d /media/DSK 0775 root media - -"
+  ];
 
   fileSystems."/media/DSK" = {
     device = "/dev/disk/by-uuid/E26E78BA6E7888D5";
@@ -14,12 +13,6 @@
     options = [
       "nofail"
     ];
-  };
-
-  systemd.tmpfiles.settings.root."/media/DSK".z = {
-    user = "root";
-    group = "media";
-    mode = "0775"; 
   };
 
   services.udev.extraRules = 
