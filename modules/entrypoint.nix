@@ -38,6 +38,13 @@
     enableProxy = true;
   };
 
+  config.services.myServices.flaresolverr.enable = true;
+
+  config.services.myServices.wizarr = {
+    enable = true;
+    enableProxy = true; 
+  };
+
   config.services.myServices.jellyseerr = {
     enable = true;
     enableProxy = true; 
