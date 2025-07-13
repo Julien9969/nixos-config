@@ -1,4 +1,3 @@
-# modules/services/zipline.nix
 { config, lib, pkgs, ... }:
 let
   enabled = config.services.myServices.enableZipline or false;

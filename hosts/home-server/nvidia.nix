@@ -1,6 +1,4 @@
-# host/home-server/nvidia.nix
 { config, pkgs, ... }:
-
 {
   hardware.graphics.enable = true;
 

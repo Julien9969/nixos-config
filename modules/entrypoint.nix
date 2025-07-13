@@ -1,4 +1,3 @@
-# modules/services/entrypoint.nix
 { config, lib, pkgs, secrets, ... }:
 {
   imports = [

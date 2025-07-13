@@ -1,4 +1,3 @@
-# modules/sops.nix
 { config, pkgs, ... }:
 {
   sops = {

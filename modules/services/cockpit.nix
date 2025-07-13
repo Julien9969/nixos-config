@@ -1,4 +1,3 @@
-# modules/services/cockpit.nix
 { config, lib, pkgs, ... }:
 let
   enabled = config.services.myServices.enableCockpit or false;

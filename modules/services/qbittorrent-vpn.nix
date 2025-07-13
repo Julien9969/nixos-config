@@ -1,4 +1,3 @@
-# modules/services/qbit-run.nix
 { config, pkgs, lib, secrets, ... }:
 let 
   mkVirtualHost = (import ../../lib/mk-virtualhost);

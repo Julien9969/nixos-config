@@ -1,4 +1,3 @@
-# modules/services/filebrowser.nix
 { config, lib, pkgs, secrets, ... }:
 let
   mkVirtualHost = (import ../../lib/mk-virtualhost);

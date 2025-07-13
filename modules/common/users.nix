@@ -1,6 +1,4 @@
-# modules/common/users.nix
 { config, pkgs, lib, ... }:
-
 {
   users.groups.media = {
     gid = 1001;

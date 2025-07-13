@@ -1,4 +1,3 @@
-# modules/services/docker.nix
 { config, pkgs, ... }:
 {
   virtualisation = {

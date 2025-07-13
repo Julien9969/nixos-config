@@ -1,4 +1,3 @@
-# /etc/nixos/variables.nix
 { secrets }:
 {
   GIT_USERNAME = "Trizotto";
