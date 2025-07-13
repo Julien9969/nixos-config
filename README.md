@@ -49,9 +49,10 @@ nixos-config/
 - [X] Enable and disable services more flexibly
 - [X] Services sonarr, radarr, jellyseerr, prowlarr 
 - [X] WireGuard + qbittorrent 
-- [ ] automated Backups: restic or borg
+- [X] Automated Backups: restic ~~or borg~~
+- [ ] Auto reboot
 - [ ] [Port forwarding](https://github.com/tenseiken/docker-qbittorrent-wireguard/blob/d3ad09a0551194f5d2efc35e637b248d380d6ff7/qbittorrent/portfwd.sh
-- [ ] Docker services wizarr
+- [ ] Docker services wizarr, flaresolverr
 - [ ] Multiple WireGuard clients
 - [ ] User name and info from file
 - [ ] Monitoring: Grafana, Prometheus, or Zabbix
@@ -158,23 +159,21 @@ or
 nix flake update nix-private
 ```
 
+### Trigger Restic backup and restore
+To trigger a Restic backup : 
+```bash
+sudo systemctl start restic-backups-server-config.service
+```
 
-### Adding a Module
+restore a backup:
+```bash
+nix-shell -p restic
+# list the snapshots:
+sudo restic -r /media/DSK/backups/restic snapshots
 
-To add a new module:
-1. Create a `.nix` file under the `modules/` directory.
-2. Import the module in `configuration.nix`:
-   ```nix
-   imports = [
-     ./modules/<module-name>.nix
-   ];
-   ```
-
-### Adding Custom Packages
-
-To define custom packages:
-1. Add package definitions under the `packages/` directory.
-2. Include the packages in your system configuration.
+# restore the latest snapshot:
+sudo restic -r /media/DSK/backups/restic restore <latest or id> --target <destination_directory> # --include <path_to_restore>
+```
 
 ## License
 
