@@ -15,6 +15,12 @@
     #   config.sops.secrets."authorized_keys".path
     # ];
   };
+
+  users.users.servarr = {
+    isSystemUser = true;
+    group = "media";
+    uid = 989;
+  };
   
   security.sudo.extraRules = [
   	{

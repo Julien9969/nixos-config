@@ -48,11 +48,6 @@ in
   };
 
   config = {
-    users.users.servarr = lib.mkIf (cfg.enableRadarr || cfg.enableSonarr || cfg.enableProwlarr) {
-      isSystemUser = true;
-      group = "media";
-    };
-
     systemd.services.sonarr.serviceConfig = lib.mkIf cfg.enableSonarr {
       ReadWritePaths = [ "/var/lib/my-config/sonarr" ];
     };
