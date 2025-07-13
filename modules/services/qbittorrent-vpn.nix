@@ -46,7 +46,7 @@ in {
         ];
         
         listenPort = 51820;
-        openFirewall = true;
+        openFirewall = true; #? maybe unecessary
 
         peers = [
           {
@@ -84,9 +84,6 @@ in {
       services.qbittorrent = {
         enable = true;
         dataDir = "/var/lib/my-config/qbittorrent";
-        # configDir = "";   
-        # todo change user and group to qbittorrent 
-        # will need ? users.users.qbittorrent.extraGroups = [ "media" ];
         user = "qbittorrent";
         group = "media";
 

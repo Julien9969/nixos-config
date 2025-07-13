@@ -440,7 +440,7 @@ in
     systemd.services.qbittorrent = {
       description = "qBittorrent Daemon";
       after = [ "network.target" ] 
-        ++ lib.optional cfg.vpn.enable "wireguard-${selectedVpn.interface}.target"; # TODO lib.optional cfg.vpn.enable , "network-online.target" 
+        ++ lib.optional cfg.vpn.enable "wireguard-${selectedVpn.interface}.target"; 
       
       requires = lib.optional cfg.vpn.enable "wireguard-${selectedVpn.interface}.service";
       wantedBy = [ "multi-user.target" ];
