@@ -2,6 +2,7 @@
 let
   notify-backup = import ../../scripts/notify-backup.nix { inherit secrets pkgs; };
   cfg = config.services.myServices.restic-backup;
+  backup-folder = "/media/DSK/backups/restic";
 in
 {
   options.services.myServices.restic-backup = {
@@ -16,7 +17,7 @@ in
     services.restic.backups."server-config" = lib.mkIf cfg.enable {
       initialize = true;
       user = "root";
-      repository = "/media/backups/";
+      repository = backup-folder;
       passwordFile = config.sops.secrets.restic_passwd.path;
       paths = [
         "/home/trizotto/compose-files"
@@ -39,6 +40,7 @@ in
         "--verbose"
       ];
       backupCleanupCommand = ''
+        ${pkgs.restic}/bin/restic forget --keep-last 3 --prune --repo ${backup-folder} --password-file ${config.sops.secrets.restic_passwd.path}
         ${notify-backup.script}/bin/notify-backup backup-server
       '';
     };
