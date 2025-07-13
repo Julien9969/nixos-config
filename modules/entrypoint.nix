@@ -1,7 +1,7 @@
 { config, lib, pkgs, secrets, ... }:
 {
   imports = [
-    ./services/docker.nix
+    ./services/docker
     ./services/openssh.nix
     ./services/jellyfin.nix
     ./services/servarr
