@@ -61,7 +61,7 @@ in {
     '';
 
     virtualHosts = {
-      "192.168.1.150" = {
+      "192.168.1.200" = {
         forceSSL = false;
         locations."/" = {
           proxyPass = "http://10.200.200.1:8080";
