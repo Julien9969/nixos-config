@@ -13,7 +13,9 @@ in
   
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.flaresolverr = {
-      image = "ghcr.io/flaresolverr/flaresolverr:latest";
+      # image = "ghcr.io/flaresolverr/flaresolverr:latest";
+      # image = "21hsmw/flaresolverr:nodriver";
+      image = "alexfozor/flaresolverr:pr-1300-experimental";
       pull = "always";
 
       hostname = "flaresolverr";
