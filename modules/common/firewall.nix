@@ -6,6 +6,15 @@
     "2620:fe::9"
     "2620:fe::10"
   ];
+
+  # Set manualy lan adress because it broken with DHCP for some reason 
+  networking.interfaces.enp3s0f1 = {
+    ipv4.addresses = [{
+      address = "192.168.1.200";
+      prefixLength = 24;
+    }];
+  };
+
   networking.networkmanager.dns = "none"; # Empêche NM de gérer le DNS
   
   # Open ports in the firewall.
