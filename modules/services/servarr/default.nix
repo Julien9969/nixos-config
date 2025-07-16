@@ -80,6 +80,10 @@ in
       };
     };
 
+    systemd.services.sonarr = {
+      after = [ "prowlarr.service" ];
+    };
+
     services.radarr = lib.mkIf cfg.enableRadarr {
       enable = true;
       openFirewall = if cfg.enableProxy then false else true;
@@ -92,6 +96,10 @@ in
           automatically = false;
         };
       };
+    };
+
+    systemd.services.radarr = {
+      after = [ "prowlarr.service" ];
     };
 
     services.prowlarr = lib.mkIf cfg.enableProwlarr {

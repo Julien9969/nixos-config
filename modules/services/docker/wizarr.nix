@@ -44,6 +44,7 @@ in
       };
 
       ports = [ "5690:5690" ];
+      # networks = [];
 
       volumes = [
         "/var/lib/my-config/wizarr/database:/data/database"
@@ -52,7 +53,8 @@ in
 
       extraOptions = [ 
         "--memory=512m" 
-        "--tmpfs=/.cache:exec,mode=0777" 
+        "--tmpfs=/.cache:exec,mode=0777"
+        # "--add-host=host.docker.internal:172.17.0.1" # firewalled
       ];
 
       privileged = false;

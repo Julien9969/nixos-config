@@ -58,10 +58,15 @@ in {
 
     systemd.services.prowlarr = {
       description = "prowlarr";
-      after = ["network.target"];
-      wantedBy = ["multi-user.target"];
+      after = [ "network.target" "flaresolverr.service" ];
+      wants = [ "flaresolverr.service" ];
+      wantedBy = [ "multi-user.target" ];
       environment = servarr-utils.mkServarrSettingsEnvVars "PROWLARR" cfg.settings;
 
+      preStart= ''
+      	sleep 10 # wait for flaresolverr
+      '';
+      
       serviceConfig = {
         Type = "simple";
         User = cfg.user;
@@ -75,6 +80,7 @@ in {
       allowedTCPPorts = [ cfg.port ];
     };
 
+    #! TODO : check if correct
     users.users = lib.mkIf (cfg.user == "prowlarr") {
       prowlarr = {
         group = cfg.group;
