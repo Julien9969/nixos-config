@@ -50,7 +50,6 @@ in {
   config = lib.mkIf (cfg.enable) {
     systemd.tmpfiles.rules = [
       "d '${cfg.configDir}' 0750 ${cfg.user} ${cfg.group} - -"
-      "d '${cfg.configDir}/config' 0750 ${cfg.user} ${cfg.group} - -"
     ];
 
     systemd.services.jellyseerr = {

@@ -2,7 +2,6 @@
 let
   mkVirtualHost = (import ../../../lib/mk-virtualhost);
   cfg = config.services.myServices.jellyseerr;
-  myConfigDir = "/var/lib/my-config/jellyseerr";
 in
 {
   disabledModules = [ "services/misc/jellyseerr.nix" ];
@@ -29,7 +28,7 @@ in
     services.jellyseerr = {
       enable = true;
       openFirewall = if cfg.enableProxy then false else true;
-      configDir = "${myConfigDir}/config";
+      configDir = "/var/lib/my-config/jellyseerr";
     };
 
     services.nginx.virtualHosts."jellyseerr.${secrets.main_domain}" = 
