@@ -34,7 +34,7 @@ in
       ];
       timerConfig = {
         OnCalendar = "Sun *-*-* 03:00:00"; # "weeks"; 
-        Persistent = true;
+        Persistent = false;
       };
       extraOptions = [
         "--verbose"
