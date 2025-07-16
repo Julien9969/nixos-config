@@ -33,14 +33,19 @@ in
         "**/qBittorrent/cache/**"
       ];
       timerConfig = {
-        OnCalendar = "Sun *-*-* 03:00:00"; # "weeks"; 
-        Persistent = false;
+        OnCalendar = "Mon *-*-* 00:00:00"; 
+        Persistent = true;
       };
       extraOptions = [
         "--verbose"
       ];
+
+      pruneOpts = [
+        "--keep-last 3"
+      ];
+
       backupCleanupCommand = ''
-        ${pkgs.restic}/bin/restic forget --keep-last 3 --prune --repo ${backup-folder} --password-file ${config.sops.secrets.restic_passwd.path}
+        # ${pkgs.restic}/bin/restic forget --keep-last 3 --prune --repo ${backup-folder} --password-file ${config.sops.secrets.restic_passwd.path}
         ${notify-backup.script}/bin/notify-backup backup-server
       '';
     };
