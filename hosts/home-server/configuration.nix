@@ -15,6 +15,8 @@
     wget
     micro
     git
+    net-tools
+    tree
   ];
  
   # Bootloader.
