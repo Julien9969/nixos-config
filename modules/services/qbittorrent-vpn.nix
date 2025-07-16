@@ -121,9 +121,9 @@ in {
 
         autorun = {
           onDownloadEnd = true;
-          onDownloadEndCommand = ''${notify-qb.script}/bin/notify-qb add \"%N\" \"%L\" \"%D\" \"%C\" \"%T\"'';
+          onDownloadEndCommand = ''${notify-qb.script}/bin/notify-qb done \"%N\" \"%L\" \"%D\" \"%C\" \"%T\"'';
           onTorrentAdded = true;
-          onTorrentAddedCommand = ''${notify-qb.script}/bin/notify-qb done \"%N\" \"%L\" \"%D\" \"%C\" \"%Z\"'';
+          onTorrentAddedCommand = ''${notify-qb.script}/bin/notify-qb add \"%N\" \"%L\" \"%D\" \"%C\" \"%Z\"'';
         };
 
         preferences = {
