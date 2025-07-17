@@ -13,6 +13,8 @@
     ./services/filebrowser.nix
     ./services/minecraft-neoforge.nix
     ./services/restic.nix
+
+    ./services/global-scripts.nix
   ];  
 
   # TODO remove logs after dev
