@@ -110,7 +110,7 @@ in {
           maxslotsUploadSlotsPerTorrent = 5;
 
           queueingSystem = {
-            enabled = true;
+            enabled = false;
             maxActiveTorrents = 100;
             maxActiveDownloads = 7;
             maxActiveUploads = 10;
