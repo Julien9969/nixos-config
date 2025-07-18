@@ -70,7 +70,22 @@ in {
         };
       };
     };
+
+    virtualHosts."infos.${mainDomain}" = {
+      useACMEHost = mainDomain;
+      forceSSL = true;
+      locations."/" = {
+        root = "/var/lib/my-config/nginx/infos/default_www";
+        index = "index.html";
+        extraConfig = "rewrite ^/* /index.html break;";
+      };
+
+      locations."/images/" = {
+        alias = "/var/lib/my-config/nginx/infos/default_www/images/";
+      };
+    };
   };
+
 
   # 404 for unrecognized hosts
   services.nginx.virtualHosts."*.${mainDomain}" = {
