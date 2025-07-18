@@ -17,6 +17,7 @@
     git
     net-tools
     tree
+    smartmontools 
   ];
  
   # Bootloader.
