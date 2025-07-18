@@ -18,8 +18,11 @@
   networking.networkmanager.dns = "none"; # Empêche NM de gérer le DNS
   
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 443 ];
-  networking.firewall.allowedUDPPorts = [ 443 ];
-  # Or disable the firewall altogether.
+  networking.firewall = {
+    enable = false;
+    allowedTCPPorts = [ 80 443 ];
+    allowedUDPPorts = [ 443 ];
+  };
+  # # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 }
