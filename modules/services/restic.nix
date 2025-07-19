@@ -25,10 +25,14 @@ in
       ];
       exclude = [
         "**/.cache/**"
+        "**/cache/**"
         "**/node_modules/**"
         "**/jellyfin/metadata/**"
         "**/jellyfin/data/subtitles/**"
         "**/jellyfin/data/keyframes/**"
+        "**/jellyfin/data/introskipper/chromaprints/**"
+        "**/jellyfin/data/attachments/**"
+        "**/MediaCover/**"
         "**/logs/**"
         "**/qBittorrent/cache/**"
       ];
