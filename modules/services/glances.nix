@@ -7,7 +7,9 @@ in
     enable = true;
     openFirewall = false;
     # https://glances.readthedocs.io/en/latest/cmds.html
-    # extraArgs = ;
+    extraArgs = [
+      "--webserver"
+    ];
     port = 5678;
   };
 

@@ -15,10 +15,12 @@
   };
 
   virtualisation.oci-containers.backend = "docker";
+  hardware.nvidia-container-toolkit.enable = true;
 
   imports = 
   [
     ./flaresolverr.nix
     ./wizarr.nix
+    ./dash.nix
   ];
 }

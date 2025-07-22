@@ -13,8 +13,11 @@
     ./services/filebrowser.nix
     ./services/minecraft-neoforge.nix
     ./services/restic.nix
+    # ./services/netdata.nix
+    ./services/glances.nix
 
     ./services/global-scripts.nix
+    # ./services/dashy.nix
   ];  
 
   # TODO remove logs after dev
@@ -47,6 +50,11 @@
     enableProxy = true; 
   };
 
+  config.services.myServices.dash = {
+    enable = true;
+    enableProxy = true; 
+  };
+
   config.services.myServices.jellyseerr = {
     enable = true;
     enableProxy = true; 
@@ -56,6 +64,11 @@
     enable = true;
     enableProxy = true;
   };
+
+  # config.services.myServices.dashy = {
+  #   enable = true;
+  #   enableProxy = true;
+  # };
 
   config.services.myServices.restic-backup.enable = true;
   
