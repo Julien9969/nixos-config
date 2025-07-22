@@ -1,6 +1,6 @@
 { pkgs, secrets }:
 {
-    script = pkgs.writeShellScriptBin "notify-backup" '' 
+    script = pkgs.writeShellScriptBin "notify-discord" '' 
         #!/usr/bin/env bash
 
         discord_url="${secrets.static_notif_webhook}"
