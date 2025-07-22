@@ -141,7 +141,7 @@
             exit 0
         fi
 
-        current_date_time=$(date +"%Y-%m-%d %H:%M:%S")
+        current_date_time=$(TZ="Europe/Paris" date +"%Y-%m-%d %H:%M:%S")
         # POST request to Discord Webhook
         ${pkgs.curl}/bin/curl -H "Content-Type: application/json" -X POST -d "$(embed "$@")" $discord_url
 

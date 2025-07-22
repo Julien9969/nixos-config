@@ -28,7 +28,7 @@
                     "url": "$7"
                 },
                 "url": "$6",
-                "timestamp": "$(date +"%Y-%m-%d %H:%M:%S")"
+                "timestamp": "$(TZ="Europe/Paris" date +"%Y-%m-%d %H:%M:%S")"
             }]
         }
         EOF
@@ -37,50 +37,38 @@
         embed() {
             case $1 in
                 reboot)
-                    avatar_url="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/raspberrypi.png"
-                    username="RPi 5"
+                    avatar_url="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/nixos.png"
+                    username="NixOS trizottoserver"
                     title="Redémarage terminé"
                     description="> $(date +"%Y-%m-%d")\n> $(date +"%H:%M:%S")"
                     color="65280"
-                    url="https://homarr.${secrets.main_domain}"
+                    url="https://dash.${secrets.main_domain}"
                     thumbnail=""
                     footer_text=""
                     footer_image=""
                     sleep 20
                     echo "$(json "$avatar_url" "$username" "$title" "$description" "$color" "$url" "$thumbnail" "$footer_text" "$footer_image")"
                     ;;
-                jellyfin-restart)
-                    avatar_url="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyfin.png"
-                    username="Jellyfin"
-                    title="Redémarage de Jellyfin"
+                services-restart)
+                    avatar_url="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/nixos.png"
+                    username="Jellyfin & Qbittorrent"
+                    title="Redémarage de Jellyfin et Qbittorrent"
                     description="> $(date +"%Y-%m-%d")\n> $(date +"%H:%M:%S")"
                     color="65280"
                     url="https://jellyfin.${secrets.main_domain}"
-                    thumbnail=""
+                    thumbnail="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/jellyfin.png"
                     footer_text=""
-                    footer_image=""
+                    footer_image="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/qbittorrent.png"
                     echo "$(json "$avatar_url" "$username" "$title" "$description" "$color" "$url" "$thumbnail" "$footer_text" "$footer_image")"
                     ;;
                 backup-server)
-                    avatar_url="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/backblaze.png"
+                    avatar_url="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/nixos.png"
                     username="Server Backup"
                     title="Sauvegarde du serveur"
                     description="\`\`\`scp -P 52222 -r trizotto@${secrets.ssh_host}:/media/DSK/backups/ <out-dir>\`\`\`\n> $(date +"%Y-%m-%d")\n> $(date +"%H:%M:%S")"
                     color="15105570"
                     url="https://filebrowser.${secrets.main_domain}/files/DSK/backups/"
-                    thumbnail=""
-                    footer_text=""
-                    footer_image=""
-                    echo "$(json "$avatar_url" "$username" "$title" "$description" "$color" "$url" "$thumbnail" "$footer_text" "$footer_image")"
-                    ;;
-                backup-jellyfin)
-                    avatar_url="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/backblaze.png"
-                    username="Backup"
-                    title="Sauvegarde de /etc/jellyfin"
-                    description="||test||\`\`\`scp -P 52222 -r trizotto@${secrets.ssh_host}:/media/DSK/backups/jellyfin.tgz <out-dir>\`\`\`\n> $(date +"%Y-%m-%d")\n> $(date +"%H:%M:%S")"
-                    color="15105570"
-                    url="https://filebrowser.${secrets.main_domain}/files/DSK/backups/"
-                    thumbnail=""
+                    thumbnail="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/restic.png"
                     footer_text=""
                     footer_image=""
                     echo "$(json "$avatar_url" "$username" "$title" "$description" "$color" "$url" "$thumbnail" "$footer_text" "$footer_image")"
