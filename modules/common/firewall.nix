@@ -1,28 +1,39 @@
 { config, pkgs, ... }:
 {
-  networking.nameservers = [
-    "9.9.9.9"
-    "149.112.112.112"
-    "2620:fe::9"
-    "2620:fe::10"
-  ];
+  networking.useDHCP = false;
 
-  # Set manualy lan adress because it broken with DHCP for some reason 
   networking.interfaces.enp3s0f1 = {
     ipv4.addresses = [{
       address = "192.168.1.200";
       prefixLength = 24;
     }];
+    ipv6.addresses = [{
+      address = "2a01:e0a:99b:8820::200"; 
+      prefixLength = 64;
+    }];
   };
 
-  networking.networkmanager.dns = "none"; # Empêche NM de gérer le DNS
+  networking.nameservers = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
+
+  services.resolved = {
+    enable = true;
+    dnssec = "true";
+    domains = [ "~." ];
+    fallbackDns = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
+    dnsovertls = "true";
+  };
+
+  networking.interfaces.wlp2s0.useDHCP = true;
+
+  networking.defaultGateway = { 
+    address =  "192.168.1.254";
+    interface = "enp3s0f1";
+  };
+
   
-  # Open ports in the firewall.
   networking.firewall = {
-    enable = false;
+    enable = true;
     allowedTCPPorts = [ 80 443 ];
     allowedUDPPorts = [ 443 ];
   };
-  # # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 }
