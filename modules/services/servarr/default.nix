@@ -124,6 +124,11 @@ in
       locations."/" = {
         proxyPass = "http://localhost:8989";
         proxyWebsockets = true;
+        extraConfig = ''
+          proxy_set_header Accept-Encoding "";
+          sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.dev/css/base/sonarr/nord.css"></body>';
+          sub_filter_once on;
+        '';
       };
 
       extraConfig = proxyExtraConfig;
@@ -140,6 +145,11 @@ in
       locations."/" = {
         proxyPass = "http://localhost:7878";
         proxyWebsockets = true;
+        extraConfig = ''
+          proxy_set_header Accept-Encoding "";
+          sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.dev/css/base/radarr/nord.css"></body>';
+          sub_filter_once on;
+        '';
       };
 
       extraConfig = proxyExtraConfig;
@@ -156,6 +166,11 @@ in
       locations."/" = {
         proxyPass = "http://localhost:9696";
         proxyWebsockets = true;
+        extraConfig = ''
+          proxy_set_header Accept-Encoding "";
+          sub_filter '</body>' '<link rel="stylesheet" type="text/css" href="https://theme-park.dev/css/base/prowlarr/nord.css"></body>';
+          sub_filter_once on;
+        '';
       };
 
       extraConfig = proxyExtraConfig;
