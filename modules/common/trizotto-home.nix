@@ -20,11 +20,11 @@
     # yq-go # yaml processor https://github.com/mikefarah/yq
     # eza # A modern replacement for ‘ls’
     # fzf # A command-line fuzzy finder
-
+    restic
     # networking tools
     # mtr # A network diagnostic tool
     # iperf3
-    # dnsutils  # `dig` + `nslookup`
+    dnsutils  # `dig` + `nslookup`
     # ldns # replacement of `dig`, it provide the command `drill`
     # aria2 # A lightweight multi-protocol & multi-source command-line download utility
     # socat # replacement of openbsd-netcat
@@ -57,11 +57,11 @@
 
     # system tools
     # sysstat
-    # lm_sensors # for `sensors` command
+    lm_sensors # for `sensors` command
     # ethtool
     # pciutils # lspci
     # usbutils # lsusb
-
+    unzip
     # vscode-fhs	# Allows extensions to be added directly via the code UI
   ];
 
@@ -105,6 +105,9 @@
       devshell = "cd /etc/nixos &&  nix develop";
       dir-size = "du -h --max-depth=1 | sort -hr";
       ccd = "cd /etc/nixos";
+      exos = "cd /media/EXOS";
+      dsk = "cd /media/DSK";
+      nas = "cd /media/NAS";
     };
     
     initExtra = ''
