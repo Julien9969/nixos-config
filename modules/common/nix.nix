@@ -11,7 +11,7 @@
   system.autoUpgrade = {
     enable = true;
     allowReboot = true; # Reboot if needed
-    dates = "Mon 03:00"; # Runs once per week (default Sunday at midnight)
+    dates = "Mon 05:00"; # Runs once per week (default Sunday at midnight)
   };
   
   powerManagement.cpuFreqGovernor = "performance";
