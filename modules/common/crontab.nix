@@ -28,7 +28,7 @@ in
   systemd.timers."jellyfin-qbit-every-2-days" = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnCalendar = "Mon *-*-* 00:00/48";  # Every 2 days at midnight
+      OnCalendar = "Mon..Sun *-*-01,03,05,07,09,11,13,15,17,19,21,23,25,27,29,31 06:00";  # Every 2 days at 6am
       Persistent = true; 
       Unit = "restart-jellyfin-qbit.service";
     };
