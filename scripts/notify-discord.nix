@@ -28,7 +28,7 @@
                     "url": "$7"
                 },
                 "url": "$6",
-                "timestamp": "$(TZ="Europe/Paris" date +"%Y-%m-%d %H:%M:%S")"
+                "timestamp": "$(date +"%Y-%m-%d %H:%M:%S")"
             }]
         }
         EOF
@@ -92,8 +92,8 @@
             display_help
             exit 0
         fi
-
-        current_date_time=$(date +"%Y-%m-%d %H:%M:%S")
+        export TZ="Europe/Paris"
+        current_date_time=$(date +"%Y-%m-%d %H:%M:%S%:z")
 
         echo "$(embed "$@")"
         ${pkgs.curl}/bin/curl -H "Content-Type: application/json" -X POST -d "$(embed "$@")" $discord_url
