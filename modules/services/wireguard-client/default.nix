@@ -1,6 +1,4 @@
-#! TODO Create a repo for this service
 { config, pkgs, lib, ... }:
-
 let
   cfg = config.services.wireguardVpn;
 in
@@ -136,6 +134,30 @@ in
         # Bring up the veth interfaces
         ip link set vt-host-${cfg.name} up
         ip -n ${cfg.name} link set vt-${cfg.name} up
+
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -A INPUT -i ${cfg.interfaceName} -j ACCEPT
+         
+        ################ TODO
+        # Default DROP
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -P INPUT DROP
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -P OUTPUT DROP
+
+        # # Loopback
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -A INPUT -i lo -j ACCEPT
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -A OUTPUT -o lo -j ACCEPT
+
+        # # Conntrack state
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -A OUTPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+        # # Allow WireGuard handshake out
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -A OUTPUT -o vt-${cfg.name} -p udp -d 185.107.44.110 --dport 51820 -j ACCEPT
+
+        # # Allow everything through the VPN
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -A OUTPUT -o ${cfg.interfaceName} -j ACCEPT
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -A INPUT -i ${cfg.interfaceName} -j ACCEPT
+        
+        ################ 
       '';
 
       postSetup = ''
@@ -147,6 +169,8 @@ in
         # Delete the veth pair and the namespace on shutdown
         ip link del vt-host-${cfg.name} || true
         ip netns del ${cfg.name} || true
+        # ip netns exec ${cfg.name} ${pkgs.iptables}/bin/iptables -D INPUT -i ${cfg.interfaceName} -j ACCEPT || true
+        # TODO le reste ?
       '';
 
       peers = lib.map (peer: {
