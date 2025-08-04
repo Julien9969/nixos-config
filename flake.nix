@@ -17,9 +17,10 @@
       url = "git+ssh://git@github.com/Julien9969/nix-private.git";
       flake = false;
     };
+    vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-utils, home-manager, sops-nix, nix-private, ... }: 
+  outputs = inputs@{ self, nixpkgs, flake-utils, home-manager, sops-nix, nix-private, vpn-confinement, ... }: 
     let
       secrets = import "${inputs.nix-private}/secrets.nix";
       #! A voir si on vire pas secrets de vars
@@ -54,6 +55,7 @@
             })
             
             sops-nix.nixosModules.sops
+            vpn-confinement.nixosModules.default
 
             # make home-manager as a module of nixos
             # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
