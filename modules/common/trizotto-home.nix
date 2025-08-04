@@ -63,6 +63,7 @@
     # usbutils # lsusb
     unzip
     # vscode-fhs	# Allows extensions to be added directly via the code UI
+    nvd
   ];
 
   # basic configuration of git, please change to your own
