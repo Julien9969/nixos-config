@@ -32,7 +32,8 @@ in
 
       hostname = "wizarr";
       serviceName = "wizarr";
-      user = "${toString config.users.users.servarr.uid}:${toString config.users.groups.media.gid}";
+      # TODO don't use root if possible
+      user = "${toString config.users.users.root.uid}:${toString config.users.groups.media.gid}";
       autoStart = true;
       autoRemoveOnStop = false;
 
