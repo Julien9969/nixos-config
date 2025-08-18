@@ -92,7 +92,7 @@ in {
           "--confirm-legal-notice"
         ];
         webuiPort = 8085;
-        torrentingPort = 6881;
+        # torrentingPort = 6881;
         serverConfig = {
           Application = {
             FileLogger = {
