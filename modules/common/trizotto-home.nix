@@ -64,6 +64,8 @@
     unzip
     # vscode-fhs	# Allows extensions to be added directly via the code UI
     nvd
+    ffmpeg
+    micromamba
   ];
 
   # basic configuration of git, please change to your own
@@ -109,6 +111,9 @@
       exos = "cd /media/EXOS";
       dsk = "cd /media/DSK";
       nas = "cd /media/NAS";
+      mambaenv = ''
+        eval "$(micromamba shell hook --shell bash)"
+      '';
     };
     
     initExtra = ''
@@ -121,6 +126,7 @@
       GIT_PS1_SHOWSTASHSTATE=1;
       GIT_PS1_SHOWUNTRACKEDFILES=1;
       GIT_PS1_SHOWUPSTREAM="auto";
+      MAMBA_ROOT_PREFIX="/home/trizotto/micromamba";
     };
     # bashrcExtra = '''';
     # initExtra = "";
