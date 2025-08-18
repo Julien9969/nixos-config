@@ -30,10 +30,14 @@
     interface = "enp3s0f1";
   };
 
-  
+  # Needed for rstp live TV
+  networking.firewall.trustedInterfaces = [ "enp3s0f1" ];
+
   networking.firewall = {
     enable = true;
-    allowedTCPPorts = [ 80 443 ];
-    allowedUDPPorts = [ 443 ];
+    # 80 & 443 : nginx
+    # 554 : rstp (live tv)
+    allowedTCPPorts = [ 80 443 554];
+    allowedUDPPorts = [ 443 554 ]; 
   };
 }
