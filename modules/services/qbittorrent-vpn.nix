@@ -52,9 +52,9 @@ in {
 
         peers = [
           {
-            publicKey = "YgGdHIXeCQgBc4nXKJ4vct8S0fPqBpTgk4I8gh3uMEg=";
-            endpoint = "185.107.44.110:51820";
-            allowedIPs = [ "0.0.0.0/0" ];
+            publicKey = "buYqE3X8Wf8X/v5NtHVXYgLk45+2og8MVEbgQAkEyBw="; # "YgGdHIXeCQgBc4nXKJ4vct8S0fPqBpTgk4I8gh3uMEg=";
+            endpoint = "5.253.204.162:51820"; # "185.107.44.110:51820";
+            allowedIPs = [ "0.0.0.0/0" "::/0" ];
             persistentKeepalive = 25;
           }
         ];

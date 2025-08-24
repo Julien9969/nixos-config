@@ -39,14 +39,14 @@ in {
           sed -i -r "s/^(Session\\\\Port=).*/\\1$port/" /var/lib/my-config/qbittorrent/qBittorrent/config/qBittorrent.conf
           cat 
         else
-          echo "Failed to retrieve port"
-          exit 1
+          echo "[WARN] Failed to retrieve port"
+          port=6881
         fi
         vpnIP=$(${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.2.0.1 | ${pkgs.gawk}/bin/awk -F': ' '/Public IP address/ { print $2 }' | tr -d '\n')
         if [ -n "$vpnIP" ]; then
           echo "VPN IP: $vpnIP"
         else
-          echo "Failed to retrieve vpn IP"
+          echo "[ERROR] Failed to retrieve vpn IP"
           exit 1
         fi
 
