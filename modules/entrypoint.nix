@@ -65,6 +65,11 @@
     enableProxy = true;
   };
 
+  config.services.myServices.filebrowser-quantum = {
+    enable = true;
+    enableProxy = true;
+  };
+
   # config.services.myServices.dashy = {
   #   enable = true;
   #   enableProxy = true;

@@ -22,5 +22,6 @@
     ./flaresolverr.nix
     ./wizarr.nix
     ./dash.nix
+    ./filebrowser-quantum.nix
   ];
 }
