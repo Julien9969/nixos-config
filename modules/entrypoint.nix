@@ -43,7 +43,7 @@
     enableProxy = true;
   };
 
-  config.services.myServices.flaresolverr.enable = true;
+  config.services.myServices.flaresolverr.enable = false;
 
   config.services.myServices.wizarr = {
     enable = true;
