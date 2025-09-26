@@ -33,22 +33,31 @@ in {
       ];
       ExecStart = pkgs.writeShellScript "qbittorrent-firewall" ''
         echo [PortForward] Retrieve forwarded port
-        port=$(${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.2.0.1 | ${pkgs.gawk}/bin/awk '/Mapped public port/ {print $4}')
-        if [ -n "$port" ]; then
-          echo "Using NAT-PMP port: $port"
-          sed -i -r "s/^(Session\\\\Port=).*/\\1$port/" /var/lib/my-config/qbittorrent/qBittorrent/config/qBittorrent.conf
-          cat 
-        else
-          echo "[WARN] Failed to retrieve port"
-          port=6881
-        fi
-        vpnIP=$(${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.2.0.1 | ${pkgs.gawk}/bin/awk -F': ' '/Public IP address/ { print $2 }' | tr -d '\n')
-        if [ -n "$vpnIP" ]; then
-          echo "VPN IP: $vpnIP"
-        else
-          echo "[ERROR] Failed to retrieve vpn IP"
-          exit 1
-        fi
+        
+        for i in {1..2}; do 
+          port=$(${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.2.0.1 | ${pkgs.gawk}/bin/awk '/Mapped public port/ {print $4}')
+          if [ -n "$port" ]; then
+            echo "Using NAT-PMP port: $port"
+            sed -i -r "s/^(Session\\\\Port=).*/\\1$port/" /var/lib/my-config/qbittorrent/qBittorrent/config/qBittorrent.conf
+            cat 
+          else
+            echo "[WARN] Failed to retrieve port"
+            port=6881
+            sleep 5
+          fi
+          vpnIP=$(${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.2.0.1 | ${pkgs.gawk}/bin/awk -F': ' '/Public IP address/ { print $2 }' | tr -d '\n')
+          if [ -n "$vpnIP" ]; then
+            echo "VPN IP: $vpnIP"
+          else
+            echo "[ERROR] Failed to retrieve vpn IP"
+            sleep 5
+          fi
+
+          if [ -n "$port" ] && [ -n "$vpnIP" ]; then
+            echo "[INFO] Successfully retrieved port and VPN IP, exiting loop."
+            break
+          fi
+        done
 
         ${pkgs.iptables}/bin/iptables -F
         ${pkgs.iptables}/bin/iptables -P INPUT DROP
