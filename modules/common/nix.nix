@@ -21,7 +21,8 @@
   '';
 
   # Don't sleep on lid close
-  services.logind.lidSwitchExternalPower = "ignore";
+  #services.logind.lidSwitchExternalPower = "ignore";
+  services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
 
   environment.variables.EDITOR = "micro";
   zramSwap.enable = true;
