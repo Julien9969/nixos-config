@@ -122,10 +122,10 @@ in {
           AutoRun = {
             OnTorrentAdded = {
               Enabled = true;
-              Program = ''${notify-qb.script}/bin/notify-qb add \"%N\" \"%L\" \"%D\" \"%C\" \"%Z\"'';
+              Program = ''${notify-qb.script}/bin/notify-qb add \"%N\" \"%L\" \"%D\" \"%C\" \"%T\"'';
             };
             enabled = true;
-            program = ''${notify-qb.script}/bin/notify-qb done \"%N\" \"%L\" \"%D\" \"%C\" \"%T\"'';
+            program = ''${notify-qb.script}/bin/notify-qb done \"%N\" \"%L\" \"%D\" \"%C\" \"%Z\"'';
           };
 
           BitTorrent = {
