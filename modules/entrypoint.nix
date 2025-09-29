@@ -13,6 +13,7 @@
     ./services/filebrowser.nix
     ./services/minecraft-neoforge.nix
     ./services/restic.nix
+    ./services/immich.nix
     # ./services/netdata.nix
     ./services/glances.nix
 
@@ -66,6 +67,11 @@
   };
 
   config.services.myServices.filebrowser-quantum = {
+    enable = true;
+    enableProxy = true;
+  };
+
+  config.services.myServices.immich = {
     enable = true;
     enableProxy = true;
   };
