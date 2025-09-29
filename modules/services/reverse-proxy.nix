@@ -71,6 +71,17 @@ in {
       };
     };
 
+    virtualHosts."random.${mainDomain}" = mkVirtualHost {
+      useACMEHost = mainDomain;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://localhost:4321";
+        proxyWebsockets = true;
+      };
+      blockCommonExploit = true;
+      cacheAssets = true;
+    };
+
     virtualHosts."infos.${mainDomain}" = {
       useACMEHost = mainDomain;
       forceSSL = true;
