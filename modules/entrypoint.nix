@@ -76,10 +76,10 @@
     enableProxy = true;
   };
 
-  # config.services.myServices.dashy = {
-  #   enable = true;
-  #   enableProxy = true;
-  # };
+  config.services.myServices.omniTools = {
+    enable = true;
+    enableProxy = true;
+  };
 
   config.services.myServices.restic-backup.enable = true;
   

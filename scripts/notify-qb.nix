@@ -3,8 +3,6 @@
     script = pkgs.writeShellScriptBin "notify-qb" '' 
         #!/usr/bin/env bash
 
-        discord_url="${secrets.qb_notif_webhook}"
-
         octets_to_gio() {
             bytes=$1
             gigabytes=$(( bytes / (1024 * 1024 * 1024) ))
@@ -143,6 +141,8 @@
 
         export TZ="Europe/Paris"
         current_date_time=$(date +"%Y-%m-%d %H:%M:%S%:z")
+        discord_url=$([[ "$3" == */temp* ]] && echo "${secrets.static_notif}" || echo "${secrets.qb_notif_webhook}")
+
         # POST request to Discord Webhook
         ${pkgs.curl}/bin/curl -H "Content-Type: application/json" -X POST -d "$(embed "$@")" $discord_url
 
