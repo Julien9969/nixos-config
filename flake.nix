@@ -2,10 +2,11 @@
   description = "Trizottoserver NixOS config";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";  
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
-      url = "github:nix-community/home-manager"; # /release-25.05";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
@@ -20,7 +21,7 @@
     vpn-confinement.url = "github:Maroka-chan/VPN-Confinement";
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-utils, home-manager, sops-nix, nix-private, vpn-confinement, ... }: 
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, flake-utils, home-manager, sops-nix, nix-private, ... }: 
     let
       secrets = import "${inputs.nix-private}/secrets.nix";
       #! A voir si on vire pas secrets de vars
@@ -31,9 +32,14 @@
         system = system;
         config.allowUnfree = true;
       };
+
+      unstable-pkgs = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
     in {
       devShells.${system}.default = import ./devshell/default.nix { inherit pkgs; };
-      
+
       nixosConfigurations = {
         nixtrizottoserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
@@ -55,7 +61,7 @@
             })
             
             sops-nix.nixosModules.sops
-            vpn-confinement.nixosModules.default
+  #          vpn-confinement.nixosModules.default
 
             # make home-manager as a module of nixos
             # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
@@ -71,7 +77,7 @@
               home-manager.backupFileExtension = "backup";
             } 
           ];
-          specialArgs = { inherit inputs; };
+          specialArgs = { inherit inputs unstable-pkgs; };
         };
       };
     };

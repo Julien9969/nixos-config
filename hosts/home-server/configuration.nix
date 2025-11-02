@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./hard-drives.nix
+    #./hard-drives.nix
     ./nvidia.nix
   ];
 
@@ -15,7 +15,7 @@
     wget
     micro
     git
-    net-tools
+#    net-tools
     tree
     smartmontools 
   ];
@@ -63,5 +63,5 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.11"; # Did you read the comment?
+  system.stateVersion = "25.05"; # Did you read the comment?
 }
