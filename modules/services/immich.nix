@@ -1,4 +1,4 @@
-{ config, lib, pkgs, secrets, ... }:
+{ config, lib, pkgs, unstable-pkgs, secrets, ... }:
 let
   mkVirtualHost = (import ../../lib/mk-virtualhost);
   cfg = config.services.myServices.immich;
@@ -21,6 +21,8 @@ in
   config = {
     services.immich = {
     enable = true;
+    package = unstable-pkgs.immich;
+
 
     user = "immich";
     group = "media";

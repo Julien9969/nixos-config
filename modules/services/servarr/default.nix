@@ -1,5 +1,5 @@
 
-{config, pkgs, lib, secrets, ...}:
+{config, pkgs, lib, secrets, unstable-pkgs, ...}:
 let
   mkVirtualHost = (import ../../../lib/mk-virtualhost);
   cfg = config.services.myServices.servarr;
@@ -68,6 +68,8 @@ in
     
     services.sonarr = lib.mkIf cfg.enableSonarr {
       enable = true;
+      package = unstable-pkgs.sonarr;
+
       openFirewall = if cfg.enableProxy then false else true;
       dataDir = "/var/lib/my-config/sonarr";
       user = "servarr"; 
@@ -86,6 +88,8 @@ in
 
     services.radarr = lib.mkIf cfg.enableRadarr {
       enable = true;
+      package = unstable-pkgs.radarr;
+
       openFirewall = if cfg.enableProxy then false else true;
       dataDir = "/var/lib/my-config/radarr";
       user = "servarr"; 
@@ -104,6 +108,8 @@ in
 
     services.prowlarr = lib.mkIf cfg.enableProwlarr {
       enable = true;
+      package = unstable-pkgs.prowlarr;
+
       openFirewall = if cfg.enableProxy then false else true;
       dataDir = "/var/lib/my-config/prowlarr";
       user = "servarr"; 

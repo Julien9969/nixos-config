@@ -1,4 +1,4 @@
-{ config, lib, pkgs, secrets, ... }:
+{ config, lib, pkgs, secrets, unstable-pkgs, ... }:
 let
   mkVirtualHost = (import ../../lib/mk-virtualhost);
   cfg = config.services.myServices.jellyfin;
@@ -29,6 +29,8 @@ in {
         enable = true;
         openFirewall = if cfg.enableProxy then false else true;
 
+        package = unstable-pkgs.jellyfin;
+        
         user = "jellyfin"; 
         group = "jellyfin"; 
 

@@ -1,4 +1,4 @@
-{config, pkgs, lib, secrets, ...}:
+{config, pkgs, unstable-pkgs, lib, secrets, ...}:
 let
   mkVirtualHost = (import ../../../lib/mk-virtualhost);
   cfg = config.services.myServices.jellyseerr;
@@ -27,6 +27,7 @@ in
   config = lib.mkIf cfg.enable {
     services.jellyseerr = {
       enable = true;
+      package = unstable-pkgs.jellyseerr;
       openFirewall = if cfg.enableProxy then false else true;
       configDir = "/var/lib/my-config/jellyseerr";
     };

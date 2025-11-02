@@ -1,4 +1,4 @@
-{ config, pkgs, lib, secrets, ... }:
+{ config, pkgs, unstable-pkgs, lib, secrets, ... }:
 let 
   mkVirtualHost = (import ../../lib/mk-virtualhost);
   notify-qb = import ../../scripts/notify-qb.nix { inherit secrets pkgs; };
@@ -96,6 +96,8 @@ in {
     (lib.mkIf (cfg.enable) {
       services.qbittorrent = {
         enable = true;
+        package = unstable-pkgs.qbittorrent-nox;
+
         user = "qbittorrent";
         group = "media";
         profileDir = "/var/lib/my-config/qbittorrent";

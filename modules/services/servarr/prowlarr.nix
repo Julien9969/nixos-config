@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, unstable-pkgs, ... }:
 let
   cfg = config.services.prowlarr;
   servarr-utils = import ./settings-options.nix { inherit lib pkgs; };
