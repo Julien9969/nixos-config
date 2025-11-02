@@ -68,27 +68,46 @@
     micromamba
   ];
 
-  # basic configuration of git, please change to your own
-  programs.git = {
-    enable = true;
-    settings = {
-      user = {
-        name = vars.GIT_USERNAME;
-        email = vars.GIT_EMAIL;
-      };
+  # programs.git = {
+  #   enable = true;
+  #   settings = {
+  #     user = {
+  #       name = vars.GIT_USERNAME;
+  #       email = vars.GIT_EMAIL;
+  #     };
 
+  #     push.autoSetupRemote = true;
+  #     init.defaultBranch = "main";
+  #     pull.rebase = true;
+
+  #     alias = {
+  #       co = "checkout";
+  #       br = "branch";
+  #       ci = "commit";
+  #       st = "status";
+  #       lg = "log --oneline --graph --decorate --all";
+  #       ac = "!git add . && git commit -m";
+  #     };
+  #   };
+  # };
+
+ programs.git = {
+    enable = true;
+    userName = vars.GIT_USERNAME;
+    userEmail = vars.GIT_EMAIL;
+    extraConfig = {
       push.autoSetupRemote = true;
       init.defaultBranch = "main";
       pull.rebase = true;
+    };
 
-      alias = {
-        co = "checkout";
-        br = "branch";
-        ci = "commit";
-        st = "status";
-        lg = "log --oneline --graph --decorate --all";
-        ac = "!git add . && git commit -m";
-      };
+    aliases = {
+      co = "checkout";
+      br = "branch";
+      ci = "commit";
+      st = "status";
+      lg = "log --oneline --graph --decorate --all";
+      ac = "!git add . && git commit -m";
     };
   };
 
