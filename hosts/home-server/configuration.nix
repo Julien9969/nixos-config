@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    #./hard-drives.nix
+    ./hard-drives.nix
     ./nvidia.nix
   ];
 
