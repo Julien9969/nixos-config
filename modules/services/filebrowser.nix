@@ -1,9 +1,13 @@
-{ config, lib, pkgs, secrets, ... }:
+{ config, lib, pkgs, secrets, inputs, ... }:
 let
   mkVirtualHost = (import ../../lib/mk-virtualhost);
   cfg = config.services.myServices.filebrowser;
 in
 {
+  imports = [
+    "${inputs.nixpkgs-unstable}/nixos/modules/services/web-apps/filebrowser.nix"
+  ];
+
   options.services.myServices.filebrowser = {
     enable = lib.mkOption {
       type = lib.types.bool;
