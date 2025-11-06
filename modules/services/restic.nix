@@ -22,6 +22,9 @@ in
       paths = [
         "/home/trizotto/compose-files"
         "/var/lib/my-config"
+        "${config.users.users.trizotto.home}/.config/sops/age/keys.txt"
+        "${config.users.users.trizotto.home}/.ssh"
+        "/etc/nixos"
       ];
       exclude = [
         "**/.cache/**"
@@ -38,7 +41,7 @@ in
         "**/qBittorrent/cache/**"
       ];
       timerConfig = {
-        OnCalendar = "Mon *-*-* 00:00:00"; 
+        OnCalendar = "Sun,Wed,Fri *-*-* 03:00:00";
         Persistent = true;
       };
       extraOptions = [
@@ -46,11 +49,11 @@ in
       ];
 
       pruneOpts = [
-        "--keep-last 3"
+        "--keep-last 5"
       ];
 
       backupCleanupCommand = ''
-        # ${pkgs.restic}/bin/restic forget --keep-last 3 --prune --repo ${backup-folder} --password-file ${config.sops.secrets.restic_passwd.path}
+        # ${pkgs.restic}/bin/restic forget --keep-last 5 --prune --repo ${backup-folder} --password-file ${config.sops.secrets.restic_passwd.path}
         ${notify-discord.script}/bin/notify-discord backup-server
       '';
     };
