@@ -65,49 +65,29 @@
     # vscode-fhs	# Allows extensions to be added directly via the code UI
     nvd
     ffmpeg
-    micromamba
+    # micromamba
   ];
 
-  # programs.git = {
-  #   enable = true;
-  #   settings = {
-  #     user = {
-  #       name = vars.GIT_USERNAME;
-  #       email = vars.GIT_EMAIL;
-  #     };
-
-  #     push.autoSetupRemote = true;
-  #     init.defaultBranch = "main";
-  #     pull.rebase = true;
-
-  #     alias = {
-  #       co = "checkout";
-  #       br = "branch";
-  #       ci = "commit";
-  #       st = "status";
-  #       lg = "log --oneline --graph --decorate --all";
-  #       ac = "!git add . && git commit -m";
-  #     };
-  #   };
-  # };
-
- programs.git = {
+  programs.git = {
     enable = true;
-    userName = vars.GIT_USERNAME;
-    userEmail = vars.GIT_EMAIL;
-    extraConfig = {
+    settings = {
+      user = {
+        name = vars.GIT_USERNAME;
+        email = vars.GIT_EMAIL;
+      };
+
       push.autoSetupRemote = true;
       init.defaultBranch = "main";
       pull.rebase = true;
-    };
 
-    aliases = {
-      co = "checkout";
-      br = "branch";
-      ci = "commit";
-      st = "status";
-      lg = "log --oneline --graph --decorate --all";
-      ac = "!git add . && git commit -m";
+      alias = {
+        co = "checkout";
+        br = "branch";
+        ci = "commit";
+        st = "status";
+        lg = "log --oneline --graph --decorate --all";
+        ac = "!git add . && git commit -m";
+      };
     };
   };
 
@@ -133,9 +113,9 @@
       exos = "cd /media/EXOS";
       dsk = "cd /media/DSK";
       nas = "cd /media/NAS";
-      mambaenv = ''
-        eval "$(micromamba shell hook --shell bash)"
-      '';
+      # mambaenv = ''
+      #   eval "$(micromamba shell hook --shell bash)"
+      # '';
     };
     
     initExtra = ''
@@ -148,7 +128,7 @@
       GIT_PS1_SHOWSTASHSTATE=1;
       GIT_PS1_SHOWUNTRACKEDFILES=1;
       GIT_PS1_SHOWUPSTREAM="auto";
-      MAMBA_ROOT_PREFIX="/home/trizotto/micromamba";
+      # MAMBA_ROOT_PREFIX="/home/trizotto/micromamba";
     };
     # bashrcExtra = '''';
     # initExtra = "";
