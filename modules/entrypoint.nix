@@ -16,6 +16,7 @@
     ./services/immich.nix
     # ./services/netdata.nix
     ./services/glances.nix
+    ./services/paperless.nix
 
     ./services/global-scripts.nix
     # ./services/dashy.nix
@@ -79,6 +80,12 @@
   config.services.myServices.omniTools = {
     enable = true;
     enableProxy = true;
+  };
+
+  config.services.myServices.paperless = {
+    enable = true;
+    enableProxy = true;
+    enableTika = true;
   };
 
   config.services.myServices.restic-backup.enable = true;
