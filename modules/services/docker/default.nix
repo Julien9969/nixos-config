@@ -24,5 +24,6 @@
     ./dash.nix
     ./filebrowser-quantum.nix
     ./omni-tools.nix
+    ./ygege.nix
   ];
 }

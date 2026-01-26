@@ -57,6 +57,11 @@
     enableProxy = true; 
   };
 
+  config.services.myServices.ygege = {
+    enable = true;
+    enableProxy = true; 
+  };
+
   config.services.myServices.jellyseerr = {
     enable = true;
     enableProxy = true; 
