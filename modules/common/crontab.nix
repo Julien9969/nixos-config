@@ -68,4 +68,33 @@ in
     };
   };
   ###################
+
+  #### Sonarr healthcheck ####
+  systemd.timers."sonarr-healthcheck" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "hourly";
+      Persistent = true;
+      Unit = "sonarr-healthcheck.service";
+    };
+  };
+
+  systemd.services."sonarr-healthcheck" = {
+    script = ''
+      set -eu
+      HTTP_CODE=$(${pkgs.curl}/bin/curl -s -o /dev/null -w "%{http_code}" --max-time 10 http://localhost:8989/ping || true)
+      if [ "$HTTP_CODE" != "200" ]; then
+        echo "Sonarr healthcheck failed (HTTP $HTTP_CODE), restarting..."
+        systemctl restart sonarr.service
+        ${notify-discord.script}/bin/notify-discord sonarr-restart
+      else
+        echo "Sonarr is healthy (HTTP $HTTP_CODE)"
+      fi
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+  ###################
 }

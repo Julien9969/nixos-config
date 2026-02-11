@@ -73,6 +73,18 @@
                     footer_image=""
                     echo "$(json "$avatar_url" "$username" "$title" "$description" "$color" "$url" "$thumbnail" "$footer_text" "$footer_image")"
                     ;;
+                sonarr-restart)
+                    avatar_url="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/nixos.png"
+                    username="Sonarr Healthcheck"
+                    title="Sonarr a été redémarré"
+                    description="Sonarr ne répondait plus et a été redémarré automatiquement.\n> $(date +"%Y-%m-%d")\n> $(date +"%H:%M:%S")"
+                    color="15158332"
+                    url="https://sonarr.${secrets.main_domain}"
+                    thumbnail="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/sonarr.png"
+                    footer_text=""
+                    footer_image=""
+                    echo "$(json "$avatar_url" "$username" "$title" "$description" "$color" "$url" "$thumbnail" "$footer_text" "$footer_image")"
+                    ;;
                 *)
                     exit 1
                     ;;
