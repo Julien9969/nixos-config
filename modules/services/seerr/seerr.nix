@@ -1,49 +1,49 @@
 { config, lib, pkgs, unstable-pkgs, ... }:
 let
-  cfg = config.services.jellyseerr;
+  cfg = config.services.seerr;
 in {
 
-  options.services.jellyseerr = {
+  options.services.seerr = {
     enable = lib.mkOption {
       type = lib.types.bool;
       default = false;
       example = true;
       description = ''
-        Enable jellyseerr service.
+        Enable seerr service.
       '';
     };
 
-    package = lib.mkPackageOption pkgs "jellyseerr" {};
+    package = lib.mkPackageOption pkgs "seerr" {};
 
     user = lib.mkOption {
       type = lib.types.str;
-      default = "jellyseerr";
-      description = "User account under which jellyseerr runs.";
+      default = "seerr";
+      description = "User account under which seerr runs.";
     };
 
     group = lib.mkOption {
       type = lib.types.str;
-      default = "jellyseerr";
-      description = "Group under which jellyseerr runs.";
+      default = "seerr";
+      description = "Group under which seerr runs.";
     };
 
     port = lib.mkOption {
       type = lib.types.port;
       default = 5055;
-      description = "jellyseerr Port";
+      description = "seerr Port";
     };
 
     configDir = lib.mkOption {
       type = lib.types.path;
-      default = "/var/lib/jellyseerr";
-      description = "jellyseerr data directory";
+      default = "/var/lib/seerr";
+      description = "seerr data directory";
     };
 
     openFirewall = lib.mkOption {
       type = lib.types.bool;
       default = false;
       example = true;
-      description = "Open firewall for jellyseerr";
+      description = "Open firewall for seerr";
     };
   };
 
@@ -52,8 +52,8 @@ in {
       "d '${cfg.configDir}' 0750 ${cfg.user} ${cfg.group} - -"
     ];
 
-    systemd.services.jellyseerr = {
-      description = "jellyseerr";
+    systemd.services.seerr = {
+      description = "seerr";
       after = ["network.target"];
       wantedBy = ["multi-user.target"];
       environment = {
@@ -75,14 +75,14 @@ in {
       allowedTCPPorts = [ cfg.port ];
     };
 
-    users.users.jellyseerr = lib.mkIf (cfg.user == "jellyseerr") {
+    users.users.seerr = lib.mkIf (cfg.user == "seerr") {
       isSystemUser = true;
       group = cfg.group;
       home = cfg.configDir;
     };
 
-    users.groups = lib.mkIf (cfg.group == "jellyseerr") {
-      jellyseerr = {};
+    users.groups = lib.mkIf (cfg.group == "seerr") {
+      seerr = {};
     };
   };
 }

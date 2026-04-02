@@ -54,6 +54,7 @@
             ./modules/common/bash.nix
             ./modules/common/nix.nix
             ./modules/common/crontab.nix
+            ./modules/common/clock-sanity.nix
 
             ({ config, ... }: {
               _module.args.secrets = secrets;

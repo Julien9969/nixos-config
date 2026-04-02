@@ -5,7 +5,7 @@
     ./services/openssh.nix
     ./services/jellyfin.nix
     ./services/servarr
-    ./services/jellyseerr
+    ./services/seerr
     ./services/reverse-proxy.nix
     ./services/cockpit.nix
     ./services/qbittorrent-vpn.nix
@@ -20,6 +20,7 @@
 
     ./services/global-scripts.nix
     # ./services/dashy.nix
+    ./services/corsica.nix
   ];  
 
   # TODO remove logs after dev
@@ -62,7 +63,7 @@
     enableProxy = true; 
   };
 
-  config.services.myServices.jellyseerr = {
+  config.services.myServices.seerr = {
     enable = true;
     enableProxy = true; 
   };
@@ -96,4 +97,9 @@
   config.services.myServices.restic-backup.enable = true;
   
   config.services.myServices.enableZipline = false;
+
+  config.services.myServices.corsica = {
+    enable = true;
+    enableProxy = true;
+  };
 }

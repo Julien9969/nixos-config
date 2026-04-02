@@ -39,6 +39,7 @@ in
         "**/MediaCover/**"
         "**/logs/**"
         "**/qBittorrent/cache/**"
+        "/home/trizotto/cms/**"
       ];
       timerConfig = {
         OnCalendar = "Sun,Wed,Fri *-*-* 03:00:00";

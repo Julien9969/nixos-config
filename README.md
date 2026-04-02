@@ -47,7 +47,7 @@ nixos-config/
 - [X] Proxy from service options
 - [X] cockpit web interface
 - [X] Enable and disable services more flexibly
-- [X] Services sonarr, radarr, jellyseerr, prowlarr 
+- [X] Services sonarr, radarr, seerr, prowlarr 
 - [X] WireGuard + qbittorrent 
 - [X] Automated Backups: restic ~~or borg~~
 - [ ] Auto reboot
