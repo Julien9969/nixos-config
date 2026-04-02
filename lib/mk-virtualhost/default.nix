@@ -1,12 +1,13 @@
 # lib/mk-virtualhost.nix
-{ locations, 
+{ locations ? {}, 
   useACMEHost, 
   forceSSL ? true, 
   extraConfig ? "", 
   blockCommonExploit ? false, 
-  cacheAssets ? false }:
+  cacheAssets ? false,
+  globalRedirect ? null }:
 {
-  inherit locations forceSSL useACMEHost;
+  inherit locations forceSSL useACMEHost globalRedirect;
   extraConfig = ''
     ${if blockCommonExploit then "include ${./block-exploits.conf};" else ""}
     ${if cacheAssets then "set $proxyPass ${locations."/".proxyPass};\ninclude ${./cache-asset.conf};" else ""}
