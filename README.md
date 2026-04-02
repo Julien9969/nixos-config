@@ -50,12 +50,10 @@ nixos-config/
 - [X] Services sonarr, radarr, seerr, prowlarr 
 - [X] WireGuard + qbittorrent 
 - [X] Automated Backups: restic ~~or borg~~
-- [ ] Auto reboot
-- [ ] [Port forwarding](https://github.com/tenseiken/docker-qbittorrent-wireguard/blob/d3ad09a0551194f5d2efc35e637b248d380d6ff7/qbittorrent/portfwd.sh
-- [ ] Docker services wizarr, flaresolverr
-- [ ] Multiple WireGuard clients
+- [X] Auto reboot
+- [X] [Port forwarding](https://github.com/tenseiken/docker-qbittorrent-wireguard/blob/d3ad09a0551194f5d2efc35e637b248d380d6ff7/qbittorrent/portfwd.sh
+- [X] Docker services wizarr, flaresolverr
 - [ ] User name and info from file
-- [ ] Monitoring: Grafana, Prometheus, or Zabbix
 - [ ] ail2Ban: Add Fail2Ban to protect against brute-force attacks
 ) 
 ## Getting Started
@@ -63,7 +61,6 @@ nixos-config/
 ### Prerequisites
 
 - A system running [NixOS](https://nixos.org/).
-- Familiarity with the Nix language and NixOS configuration.
 
 ### Installation
 
