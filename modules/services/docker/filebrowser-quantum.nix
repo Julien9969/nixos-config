@@ -38,7 +38,7 @@ in
 
       environment = {
         FILEBROWSER_CONFIG = "/home/filebrowser/data/config.yaml";
-        FILEBROWSER_ADMIN_PASSWORD = "admin";
+        FILEBROWSER_ADMIN_PASSWORD = secrets.filebrowser_pwd;
         TZ = "Europe/Paris";
       };
 

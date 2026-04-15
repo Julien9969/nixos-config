@@ -2,27 +2,16 @@
 
 # On power failure the hardware clock can reset to 2019, which breaks
 # DNSSEC validation and therefore all DNS / NTP sync.
-# This service runs very early at boot and bumps the clock to at least
-# a known-good minimum date so that TLS/DNSSEC certificates are valid
-# and NTP can then correct it to the real time.
+# This service enforces a known-good minimum date so that TLS/DNSSEC
+# certificates remain valid and NTP can then correct to real time.
 
 let
   # Bump this value whenever you rebuild so the floor stays recent.
-  minimumDate = "2026-02-20 00:00:00";
+  minimumDate = "2026-04-15 00:00:00";
 in
 {
   systemd.services."clock-sanity" = {
     description = "Ensure system clock is not stuck in the past";
-    wantedBy = [ "sysinit.target" ];
-    before = [
-      "systemd-resolved.service"
-      "systemd-timesyncd.service"
-      "network-pre.target"
-    ];
-    after = [ "systemd-modules-load.service" ];
-    unitConfig = {
-      DefaultDependencies = false;
-    };
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -37,6 +26,16 @@ in
         echo "System clock is OK ($(date))"
       fi
     '';
+  };
+
+  systemd.timers."clock-sanity" = {
+    description = "Run clock-sanity every hour";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnBootSec = "5m";
+      OnUnitActiveSec = "1h";
+      Persistent = true;
+    };
   };
 
   # Make sure NTP is enabled so the real time is set after the floor is applied
