@@ -27,7 +27,7 @@ in
     config = lib.mkIf cfg.enable {
         services.paperless = {
             enable = true;
-            package = unstable-pkgs.paperless-ngx;
+            package = pkgs.paperless-ngx;
 
             dataDir = "/var/lib/my-config/paperless";
             database.createLocally = true;
@@ -59,7 +59,7 @@ in
         };
 
         services.gotenberg = lib.mkIf cfg.enableTika {
-            package = unstable-pkgs.gotenberg;
+            package = pkgs.gotenberg;
             enable = true;
             port = 3081;
             timeout = "45s";
@@ -69,6 +69,7 @@ in
         };
 
         services.tika = lib.mkIf cfg.enableTika {
+            package = pkgs.tika;
             enable = true;
             port = 9998;
             listenAddress = "127.0.0.1";
