@@ -144,7 +144,7 @@ in {
               ExcludedFileNames = "";
               FinishedTorrentExportDirectory = "/media/DSK/torrent-save";
               GlobalDLSpeedLimit = 40000;
-              GlobalUPSpeedLimit = 4000;
+              GlobalUPSpeedLimit = 6000;
               IgnoreSlowTorrentsForQueueing = true;
               Interface = "wg-proton";
               InterfaceAddress = "10.2.0.2";
@@ -153,8 +153,8 @@ in {
               MaxActiveDownloads = 7;
               MaxActiveTorrents = 999;
               MaxActiveUploads = 10;
-              MaxConnections = 400;
-              MaxConnectionsPerTorrent = 100;
+              # MaxConnections = 2000;
+              MaxConnectionsPerTorrent = 15;
               MaxUploads = 20;
               MaxUploadsPerTorrent = 5;
               PerformanceWarning = false;
