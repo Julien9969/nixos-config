@@ -2,16 +2,30 @@
 {
   systemd.services.natpmp-keepalive = {
     description = "Keep NAT-PMP port mapping alive for qBittorrent";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "network.target" "qbittorrent.service" ];
-    bindsTo = [ "qbittorrent.service" ];
+    wantedBy = [ "qbittorrent.service" ];
+    requires = [
+      "qbittorrent.service"
+      "wireguard-${selectedVpn.interface}.service"
+    ];
+    after = [
+      "qbittorrent.service"
+      "wireguard-${selectedVpn.interface}.service"
+    ];
+    bindsTo = [
+      "qbittorrent.service"
+      "wireguard-${selectedVpn.interface}.service"
+    ];
+    partOf = [
+      "qbittorrent.service"
+      "wireguard-${selectedVpn.interface}.service"
+    ];
     
     serviceConfig = {
       Type = "simple";
       Restart = "always";
       RestartSec = 10;
       ExecStart = pkgs.writeShellScript "natpmp-keepalive" ''
-        set -eu
+        set -euo pipefail
         while true; do
           echo "[NAT-PMP] $(date)"
           ${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.2.0.1
