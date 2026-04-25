@@ -32,32 +32,46 @@ in {
         "/etc/netns/${selectedVpn.namespace}/resolv.conf:/etc/resolv.conf:norbind"
       ];
       ExecStart = pkgs.writeShellScript "qbittorrent-firewall" ''
+        set -euo pipefail
+
         echo [PortForward] Retrieve forwarded port
-        
-        for i in {1..2}; do 
-          port=$(${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.2.0.1 | ${pkgs.gawk}/bin/awk '/Mapped public port/ {print $4}')
+
+        port=""
+        vpnIP=""
+
+        for i in {1..5}; do
+          natpmp_out="$(${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.2.0.1 || true)"
+          port="$(printf '%s\n' "$natpmp_out" | ${pkgs.gawk}/bin/awk '/Mapped public port/ {print $4}')"
           if [ -n "$port" ]; then
             echo "Using NAT-PMP port: $port"
-            sed -i -r "s/^(Session\\\\Port=).*/\\1$port/" /var/lib/my-config/qbittorrent/qBittorrent/config/qBittorrent.conf
-            cat 
+            if grep -q '^Session\\Port=' /var/lib/my-config/qbittorrent/qBittorrent/config/qBittorrent.conf; then
+              sed -i -r "s/^(Session\\\\Port=).*/\\1$port/" /var/lib/my-config/qbittorrent/qBittorrent/config/qBittorrent.conf
+            else
+              echo "Session\\Port=$port" >> /var/lib/my-config/qbittorrent/qBittorrent/config/qBittorrent.conf
+            fi
           else
             echo "[WARN] Failed to retrieve port"
-            port=6881
-            sleep 5
           fi
-          vpnIP=$(${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.2.0.1 | ${pkgs.gawk}/bin/awk -F': ' '/Public IP address/ { print $2 }' | tr -d '\n')
+
+          vpnIP="$(printf '%s\n' "$natpmp_out" | ${pkgs.gawk}/bin/awk -F': ' '/Public IP address/ { print $2 }' | tr -d '\n')"
           if [ -n "$vpnIP" ]; then
             echo "VPN IP: $vpnIP"
           else
             echo "[ERROR] Failed to retrieve vpn IP"
-            sleep 5
           fi
 
           if [ -n "$port" ] && [ -n "$vpnIP" ]; then
             echo "[INFO] Successfully retrieved port and VPN IP, exiting loop."
             break
           fi
+
+          sleep 5
         done
+
+        if [ -z "$port" ] || [ -z "$vpnIP" ]; then
+          echo "[ERROR] NAT-PMP negotiation failed; refusing to start qBittorrent without a valid forwarded port."
+          exit 1
+        fi
 
         ${pkgs.iptables}/bin/iptables -F
         ${pkgs.iptables}/bin/iptables -P INPUT DROP
@@ -70,25 +84,14 @@ in {
         
         ${pkgs.iptables}/bin/iptables -A INPUT -i ${selectedVpn.interface} -p tcp --dport $port -j ACCEPT
         ${pkgs.iptables}/bin/iptables -A INPUT -i ${selectedVpn.interface} -p udp --dport $port -j ACCEPT
-        
-        ${pkgs.iptables}/bin/iptables -t filter -A INPUT -p tcp --dport $port -j ACCEPT
-        ${pkgs.iptables}/bin/iptables -t filter -A INPUT -p udp --dport $port -j ACCEPT
-        
+
         ${pkgs.iptables}/bin/iptables -A OUTPUT -o lo -j ACCEPT
         ${pkgs.iptables}/bin/iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
         ${pkgs.iptables}/bin/iptables -A OUTPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-        ${pkgs.iptables}/bin/iptables -A OUTPUT -p udp -d $vpnIP --dport 51820 -j ACCEPT
         ${pkgs.iptables}/bin/iptables -A OUTPUT -o ${selectedVpn.interface} -j ACCEPT
 
-        # Allow incoming TCP connections on port 8085 from veth interface in the namespace
+        # Allow reverse proxy access from host namespace over the veth link
         ${pkgs.iptables}/bin/iptables -A INPUT -i vt-${selectedVpn.namespace} -p tcp --dport 8085 -j ACCEPT
-
-        # Allow incoming TCP connections on port 8085 from host side veth interface
-        ${pkgs.iptables}/bin/iptables -A INPUT -i vt-host-${selectedVpn.namespace} -p tcp --dport 8085 -j ACCEPT
-
-        # Allow outgoing traffic to return
-        ${pkgs.iptables}/bin/iptables -A OUTPUT -o vt-${selectedVpn.namespace} -j ACCEPT
-        ${pkgs.iptables}/bin/iptables -A OUTPUT -o vt-host-${selectedVpn.namespace} -j ACCEPT
       '';
     };
   };
