@@ -19,7 +19,21 @@
     tree
     smartmontools 
   ];
- 
+  system.activationScripts.diff = {
+    supportsDryActivation = true;
+    deps = [ ]; 
+    text = ''
+      export PATH=$PATH:${pkgs.nix}/bin
+      if [[ -e /run/current-system ]]; then
+        # \e[32m starts green text
+        # \e[0m resets the color to default
+        echo -e "\e[32m"
+        ${pkgs.nvd}/bin/nvd diff /run/current-system "$systemConfig"
+        echo -e "\e[0m"
+      fi
+    '';
+  };
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
