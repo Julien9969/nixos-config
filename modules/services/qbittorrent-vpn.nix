@@ -171,6 +171,8 @@ in {
               UseAlternativeGlobalSpeedLimit = false;
               UseCategoryPathsInManualMode = true;
               ValidateHTTPSTrackerCertificate = true;
+              AnnounceToAllTrackers = true;
+              AnnounceToAllTiers = true;
             };
           };
 
