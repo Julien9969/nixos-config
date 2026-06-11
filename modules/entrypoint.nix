@@ -88,6 +88,13 @@
     enableProxy = true;
   };
 
+  config.services.myServices.crafty = {
+    enable = true;
+    enableProxy = true;
+  };
+  config.services.myServices.playit.enable = true;
+
+
   config.services.myServices.paperless = {
     enable = true;
     enableProxy = true;
@@ -98,8 +105,5 @@
   
   config.services.myServices.enableZipline = false;
 
-  config.services.myServices.corsica = {
-    enable = true;
-    enableProxy = true;
-  };
+  config.services.myServices.playit.enable = true;
 }

@@ -19,6 +19,8 @@
 
   imports = 
   [
+    ./crafty.nix
+    ./playit.nix
     ./flaresolverr.nix
     ./wizarr.nix
     ./dash.nix
