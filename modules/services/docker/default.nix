@@ -3,6 +3,7 @@
   virtualisation = {
     docker = {
       enable = true;
+      package = pkgs.docker_29;
       autoPrune = {
         enable = true;
         dates = "weekly";
@@ -10,6 +11,7 @@
 
       rootless = {
         enable = true;
+        package = pkgs.docker_29;
       };
     };
   };
@@ -27,5 +29,6 @@
     ./filebrowser-quantum.nix
     ./omni-tools.nix
     ./ygege.nix
+  #  ./cross-seed.nix
   ];
 }
