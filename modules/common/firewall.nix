@@ -2,7 +2,7 @@
 
 {
   networking.useDHCP = false;
-  networking.nameservers = [ "1.1.1.1" "1.0.0.1" ];
+  networking.nameservers = [ "9.9.9.9" ];
   networking.enableIPv6 = false;
 
   # === Ethernet (LAN) - Primary ===
@@ -29,7 +29,7 @@
     enable = true;
     dnssec = "true";
     dnsovertls = "true";
-    fallbackDns = [ "8.8.4.4" ];
+    fallbackDns = [ "1.1.1.1" "1.0.0.1" ];
   };
 
   networking.firewall = {

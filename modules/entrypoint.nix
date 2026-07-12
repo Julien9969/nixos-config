@@ -17,10 +17,11 @@
     # ./services/netdata.nix
     ./services/glances.nix
     ./services/paperless.nix
+    ./services/beszel.nix
 
     ./services/global-scripts.nix
     # ./services/dashy.nix
-    ./services/corsica.nix
+    # ./services/corsica.nix
   ];  
 
   # TODO remove logs after dev
@@ -29,6 +30,11 @@
   config.services.minecraft-neoforge.enable = false;
   
   config.services.myServices.jellyfin = {
+    enable = true;
+    enableProxy = true; 
+  };
+
+  config.services.myServices.beszel = {
     enable = true;
     enableProxy = true; 
   };
@@ -54,12 +60,7 @@
   };
 
   config.services.myServices.dash = {
-    enable = true;
-    enableProxy = true; 
-  };
-
-  config.services.myServices.ygege = {
-    enable = true;
+    enable = false;
     enableProxy = true; 
   };
 
@@ -74,6 +75,11 @@
   };
 
   config.services.myServices.filebrowser-quantum = {
+    enable = false;
+    enableProxy = true;
+  };
+
+  config.services.myServices.fankarr = {
     enable = true;
     enableProxy = true;
   };
@@ -94,6 +100,10 @@
   };
   config.services.myServices.playit.enable = true;
 
+  # config.services.myServices.cross-seed = {
+  #   enable = true;
+  #   enableProxy = true;
+  # };
 
   config.services.myServices.paperless = {
     enable = true;
@@ -105,5 +115,8 @@
   
   config.services.myServices.enableZipline = false;
 
-  config.services.myServices.playit.enable = true;
+  # config.services.myServices.corsica = {
+  #   enable = true;
+  #   enableProxy = true;
+  # };
 }

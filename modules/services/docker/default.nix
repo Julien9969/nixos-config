@@ -24,6 +24,7 @@
     ./crafty.nix
     ./playit.nix
     ./flaresolverr.nix
+    ./fankarr.nix
     ./wizarr.nix
     ./dash.nix
     ./filebrowser-quantum.nix
