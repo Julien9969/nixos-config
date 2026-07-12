@@ -10,6 +10,8 @@ in {
       ./wireguard-client
     ];
 
+  # systemd.services.qbittorrent.unitConfig.RequiresMountsFor = [ "/media/EXOS" ];
+
   options.services.myServices.qbittorrent-vpn = {
     enable = lib.mkOption {
       type = lib.types.bool;

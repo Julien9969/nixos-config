@@ -27,7 +27,9 @@ in
     config = lib.mkIf cfg.enable {
         services.paperless = {
             enable = true;
-            package = pkgs.paperless-ngx;
+            # package = pkgs.paperless-ngx.overridePythonAttrs (_: {
+            #     doCheck = false;
+            # });
 
             dataDir = "/var/lib/my-config/paperless";
             database.createLocally = true;

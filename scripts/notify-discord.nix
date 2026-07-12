@@ -85,6 +85,21 @@
                     footer_image=""
                     echo "$(json "$avatar_url" "$username" "$title" "$description" "$color" "$url" "$thumbnail" "$footer_text" "$footer_image")"
                     ;;
+                exos-remount)
+                    avatar_url="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/nixos.png"
+                    username="EXOS Watchdog"
+                    title="/media/EXOS a été remonté"
+                    description="Le point de montage /media/EXOS n'était plus accessible et a été relancé automatiquement.\n> $(date +"%Y-%m-%d")\n> $(date +"%H:%M:%S")"
+                    if [ "$#" -ge 2 ] && [ -n "$2" ]; then
+                        description="$description\n> Temps de remontage: $2s"
+                    fi
+                    color="15105570"
+                    url="https://dash.${secrets.main_domain}"
+                    thumbnail="https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons@master/png/server.png"
+                    footer_text=""
+                    footer_image=""
+                    echo "$(json "$avatar_url" "$username" "$title" "$description" "$color" "$url" "$thumbnail" "$footer_text" "$footer_image")"
+                    ;;
                 *)
                     exit 1
                     ;;
