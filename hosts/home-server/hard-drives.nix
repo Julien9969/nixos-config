@@ -24,10 +24,12 @@ in
       "nofail"
     ];
   };
+  # SET DISK QUIRKS
   # boot.kernelParams = [ "usb-storage.quirks=7825:a2a4:u" ];
-  boot.extraModprobeConfig = ''
-    options usb-storage quirks=7825:a2a4:u,174c:1153:u
-  '';
+  # boot.extraModprobeConfig = ''
+  #   options usb-storage quirks=7825:a2a4:u,174c:1153:u
+  # '';
+
   fileSystems."/media/EXOS" = {
     device = "/dev/disk/by-uuid/335fff74-08ab-4dad-9cb7-9d719106076c";
     fsType = "ext4";
@@ -121,11 +123,11 @@ in
   };
 
   systemd.timers."exos-mount-watchdog" = {
-    description = "Check /media/EXOS every 20 seconds";
+    description = "Check /media/EXOS every 60 seconds";
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnBootSec = "20s";
-      OnUnitActiveSec = "20s";
+      OnBootSec = "120s";
+      OnUnitActiveSec = "60s";
       Unit = "exos-mount-watchdog.service";
       Persistent = true;
     };
