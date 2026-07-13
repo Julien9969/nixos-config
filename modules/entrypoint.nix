@@ -36,6 +36,7 @@
 
   config.services.myServices.beszel = {
     enable = true;
+    enableSmartmon = true;
     enableProxy = true; 
   };
 

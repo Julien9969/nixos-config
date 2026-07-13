@@ -17,6 +17,7 @@
       "dynu_api_key" = {};
       "restic_passwd" = {};
       "paperless_admin_password" = {};
+      "beszel_agent_env_file" = {};
     };
   };
 }

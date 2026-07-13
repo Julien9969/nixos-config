@@ -7,7 +7,7 @@
   ];
 
   networking.hostName = "nixtrizottoserver";
-  
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -15,7 +15,7 @@
     wget
     micro
     git
-#    net-tools
+    net-tools
     tree
     smartmontools 
   ];
