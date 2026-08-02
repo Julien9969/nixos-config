@@ -39,7 +39,7 @@ in {
         cacheDir = "/var/cache/my-config/jellyfin"; 
         logDir = "/var/log/jellyfin"; 
       };
-      users.users.jellyfin.extraGroups = [ "media" ];
+      users.users.jellyfin.extraGroups = [ "media" "render" "video" ];
       systemd.services.jellyfin.serviceConfig.IOSchedulingPriority = 0;
     })
 

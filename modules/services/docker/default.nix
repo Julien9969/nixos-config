@@ -17,7 +17,6 @@
   };
 
   virtualisation.oci-containers.backend = "docker";
-  hardware.nvidia-container-toolkit.enable = true;
 
   imports = 
   [
@@ -29,7 +28,6 @@
     ./dash.nix
     ./filebrowser-quantum.nix
     ./omni-tools.nix
-    ./ygege.nix
   #  ./cross-seed.nix
   ];
 }

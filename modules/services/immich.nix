@@ -22,8 +22,7 @@ in
     services.immich = {
     enable = true;
     package = unstable-pkgs.immich;
-
-
+    
     user = "immich";
     group = "media";
 
@@ -48,7 +47,7 @@ in
     # };
 
     accelerationDevices = [
-      "/dev/dri/renderD129"
+      "/dev/dri/renderD128"
     ];
 
     machine-learning = {

@@ -20,9 +20,6 @@
     Defaults timestamp_timeout=360
   '';
 
-  # Don't sleep on lid close
-  services.logind.settings.Login.HandleLidSwitchExternalPower = "ignore";
-
   environment.variables.EDITOR = "micro";
   zramSwap.enable = true;
 

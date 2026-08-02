@@ -61,7 +61,7 @@ in {
     '';
 
     virtualHosts = {
-      "192.168.1.200" = {
+      "192.168.1.150" = {
         forceSSL = false;
         locations."/" = {
           proxyPass = "http://10.200.200.1:8080";
@@ -69,6 +69,23 @@ in {
           # extraConfig = '''';
         };
       };
+    };
+
+    virtualHosts."mc.${secrets.main_domain}" = mkVirtualHost {
+      forceSSL    = true;
+      useACMEHost = secrets.main_domain;
+
+      locations."/" = {
+        proxyPass = "https://192.168.1.118:8443";
+        proxyWebsockets = true;
+      };
+
+      extraConfig = ''
+        proxy_ssl_verify off;
+      '';
+
+      blockCommonExploit = true;
+      cacheAssets = false;
     };
 
     virtualHosts."random.${mainDomain}" = mkVirtualHost {

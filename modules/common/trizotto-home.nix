@@ -113,6 +113,8 @@
       exos = "cd /media/EXOS";
       dsk = "cd /media/DSK";
       nas = "cd /media/NAS";
+      kfc = "cd /media/KFC";
+      pfk = "cd /media/PFK";
       # mambaenv = ''
       #   eval "$(micromamba shell hook --shell bash)"
       # '';
