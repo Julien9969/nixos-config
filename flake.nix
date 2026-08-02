@@ -43,7 +43,7 @@
         nixtrizottoserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
-            ./hosts/home-server/configuration.nix
+            ./hosts/proxmox-nixos/configuration.nix
             ./overlays/jellyfin-overlay.nix
 
             ./modules/sops.nix
@@ -54,7 +54,6 @@
             ./modules/common/bash.nix
             ./modules/common/nix.nix
             ./modules/common/crontab.nix
-            ./modules/common/clock-sanity.nix
 
             ({ config, ... }: {
               _module.args.secrets = secrets;
