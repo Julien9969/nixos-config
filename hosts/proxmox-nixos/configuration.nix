@@ -71,7 +71,9 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
+   
+  services.qemuGuest.enable = true;
+  
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -84,7 +86,7 @@
     smartmontools
     libva-utils
     intel-gpu-tools
-    lm_sensors 
+    lm_sensors
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
