@@ -112,8 +112,9 @@
     enableTika = true;
   };
 
-  config.services.myServices.restic-backup.enable = true;
-  
+  config.services.myServices.restic-backup.enable-config = true;
+  config.services.myServices.restic-backup.enable-data = true;
+
   config.services.myServices.enableZipline = false;
 
   # config.services.myServices.corsica = {
