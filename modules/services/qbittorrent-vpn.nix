@@ -146,7 +146,7 @@ in {
               ExcludedFileNames = "";
               FinishedTorrentExportDirectory = "/media/DSK/torrent-save";
               GlobalDLSpeedLimit = 40000;
-              GlobalUPSpeedLimit = 6000;
+              GlobalUPSpeedLimit = 1;
               IgnoreSlowTorrentsForQueueing = true;
               Interface = "wg-proton";
               InterfaceAddress = "10.2.0.2";
@@ -204,8 +204,11 @@ in {
               StatusbarExternalIPDisplayed = true;
             };
             Scheduler = {
-              end_time = "@Variant(\\0\\0\\0\\xf\\x1\\xee\\x62\\x80)";
-              start_time = "@Variant(\\0\\0\\0\\xf\\0m\\xdd\\0)";
+              start_time = "@Variant(\\0\\0\\0\\xf\\x4\\xefm\\x80)";
+              # start_time = "@Variant(\\0\\0\\0\\xf\\0m\\xdd\\0)";
+
+              end_time = "@Variant(\\0\\0\\0\\xf\\x1\\x80\\x85\\x80)";
+              # end_time = "@Variant(\\0\\0\\0\\xf\\x1\\xee\\x62\\x80)";
             };
             WebUI = {
               CSRFProtection = "";
