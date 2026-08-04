@@ -88,6 +88,23 @@ in {
       cacheAssets = false;
     };
 
+    virtualHosts."pvemenu.${secrets.main_domain}" = mkVirtualHost {
+      forceSSL    = true;
+      useACMEHost = secrets.main_domain;
+
+      locations."/" = {
+        proxyPass = "http://192.168.1.100:8008";
+        proxyWebsockets = true;
+      };
+
+      extraConfig = ''
+        proxy_ssl_verify off;
+      '';
+
+      blockCommonExploit = true;
+      cacheAssets = false;
+    };
+
     virtualHosts."random.${mainDomain}" = mkVirtualHost {
       useACMEHost = mainDomain;
       forceSSL = true;

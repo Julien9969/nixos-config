@@ -38,11 +38,11 @@ in
       options = [ "nofail" "noatime" ];
     };
 
-    "/media/KFC" = {
-      device = "/dev/disk/by-uuid/50257994-d2c1-4110-bec2-b5ed78b89df3";
-      fsType = "ext4";
-      options = [ "nofail" "noatime" ];
-    };
+    # "/media/KFC" = {
+    #   device = "/dev/disk/by-uuid/50257994-d2c1-4110-bec2-b5ed78b89df3";
+    #   fsType = "ext4";
+    #   options = [ "nofail" "noatime" ];
+    # };
   };
 
   # Gestion de la mise en veille HDD (hdparm)
