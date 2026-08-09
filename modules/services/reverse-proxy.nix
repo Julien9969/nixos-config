@@ -81,8 +81,23 @@ in {
       };
 
       extraConfig = ''
-        proxy_ssl_verify off;
+        client_max_body_size 10G;
+        proxy_request_buffering off;  
+        proxy_buffering off;
       '';
+
+      blockCommonExploit = true;
+      cacheAssets = false;
+    };
+
+    virtualHosts."adguard.${secrets.main_domain}" = mkVirtualHost {
+      forceSSL    = true;
+      useACMEHost = secrets.main_domain;
+
+      locations."/" = {
+        proxyPass = "http://192.168.1.135:80";
+        proxyWebsockets = true;
+      };
 
       blockCommonExploit = true;
       cacheAssets = false;
