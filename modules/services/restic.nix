@@ -44,7 +44,7 @@ in
       };
 
       pruneOpts = [
-        "--keep-last 3"
+        "--keep-last 10"
       ];
 
       # TODO: Add a cleanup command to notify Discord when the backup is complete
@@ -106,7 +106,7 @@ in
       # ];
 
       pruneOpts = [
-        "--keep-last 3"
+        "--keep-last 10"
       ];
 
       backupCleanupCommand = ''

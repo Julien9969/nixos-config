@@ -32,10 +32,10 @@ in
       options = [ "nofail" "noatime" ];
     };
 
-    "/media/DSK" = {
-      device = "/dev/disk/by-uuid/620be3b7-1f13-4602-b740-23ad4e03456c";
-      fsType = "ext4";
-      options = [ "nofail" "noatime" ];
+    "/media/DSK/mediaserver-data" = {
+      device = "backup-disk-map";
+      fsType = "virtiofs";
+      options = [ "nofail" ];
     };
 
     "/media/KFC" = {
