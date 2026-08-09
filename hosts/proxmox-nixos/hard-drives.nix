@@ -6,7 +6,7 @@ in
   # Création des points de montage avec les permissions appropriées
   systemd.tmpfiles.rules = [
     "d /media 0775 root media - -"
-    "d /media/DSK 0775 root media - -"
+    "d /media/DSK/mediaserver-data 0775 root media - -"
     "d /media/NAS 0775 root media - -"
     "d /media/EXOS 0775 root media - -"
     "d /media/KFC 0775 root media - -"
@@ -33,16 +33,16 @@ in
     };
 
     "/media/DSK" = {
-      device = "/dev/disk/by-uuid/a4cac6f4-51c7-4378-a608-c5710e5ae31a";
+      device = "/dev/disk/by-uuid/620be3b7-1f13-4602-b740-23ad4e03456c";
       fsType = "ext4";
       options = [ "nofail" "noatime" ];
     };
 
-    # "/media/KFC" = {
-    #   device = "/dev/disk/by-uuid/50257994-d2c1-4110-bec2-b5ed78b89df3";
-    #   fsType = "ext4";
-    #   options = [ "nofail" "noatime" ];
-    # };
+    "/media/KFC" = {
+      device = "/dev/disk/by-uuid/afec2fe1-0921-41fb-9d8a-5edb0d1e2576";
+      fsType = "ext4";
+      options = [ "nofail" "noatime" ];
+    };
   };
 
   # Gestion de la mise en veille HDD (hdparm)
