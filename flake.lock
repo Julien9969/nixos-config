@@ -42,11 +42,11 @@
     "nix-private": {
       "flake": false,
       "locked": {
-        "lastModified": 1781201289,
-        "narHash": "sha256-lxS/jCfazd3av3WnYPEV4AdnEplhk6WLIZnJVSzw92Q=",
+        "lastModified": 1786305104,
+        "narHash": "sha256-T+cdOsVYDyWCrRORPXTOr0/KJ6UkdX6v9DnbF5ldSlw=",
         "ref": "refs/heads/master",
-        "rev": "a5395c66704215112fab30f6faaa1df0757d3a0c",
-        "revCount": 16,
+        "rev": "449d7514b0664cddf87e1e5a6ac1148929075de8",
+        "revCount": 17,
         "type": "git",
         "url": "ssh://git@github.com/Julien9969/nix-private.git"
       },
@@ -73,11 +73,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1785454630,
-        "narHash": "sha256-LQy14TZp77TwbQf40gg1V3jo8FwJG0jGDkAH+zRHqg8=",
+        "lastModified": 1786106723,
+        "narHash": "sha256-zDSUbpoeo/9ZmD2+wXnzxoo1+uhL8vxc0b8yuYMKYq0=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "1559d3daa3ecc813a650b79375ea61b6741b8746",
+        "rev": "f13ff45afd1bb73e640eaa08a7066dbed07e3238",
         "type": "github"
       },
       "original": {

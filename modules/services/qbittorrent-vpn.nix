@@ -146,7 +146,7 @@ in {
               ExcludedFileNames = "";
               FinishedTorrentExportDirectory = "/media/DSK/mediaserver-data/torrent-save";
               GlobalDLSpeedLimit = 40000;
-              GlobalUPSpeedLimit = 10;
+              GlobalUPSpeedLimit = 100;
               IgnoreSlowTorrentsForQueueing = true;
               Interface = "wg-proton";
               InterfaceAddress = "10.2.0.2";

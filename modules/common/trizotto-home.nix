@@ -66,6 +66,7 @@
     nvd
     ffmpeg
     # micromamba
+    qbittorrent-cli
   ];
 
   programs.git = {

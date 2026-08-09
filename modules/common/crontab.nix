@@ -1,6 +1,7 @@
 { config, lib, pkgs, secrets, ... }:
 let
   notify-discord = import ../../scripts/notify-discord.nix { inherit secrets pkgs; };
+  qbittorrent-cron = import ../../scripts/qbittorrent-cron.nix { inherit config secrets pkgs; };
 in
 {
   #### On reboot ####
@@ -97,4 +98,47 @@ in
   #   };
   # };
   ###################
+
+  # #### Stop qbitorrent at night ####
+  # resume all qBittorrent torrents at 23:00
+  systemd.timers."resume-qbittorrent-night" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*-*-* 23:00";  # Every day at 23:00
+      Persistent = true;
+      Unit = "resume-qbittorrent-night.service";
+    };
+  };
+
+  systemd.services."resume-qbittorrent-night" = {
+    script = ''
+      set -eu
+      ${qbittorrent-cron.scripts.resume}/bin/resume-torrents
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+
+  # Pause all qBittorrent torrents at 07:00
+  systemd.timers."pause-qbittorrent-morning" = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*-*-* 07:00";  # Every day at 07:00
+      Persistent = true;
+      Unit = "pause-qbittorrent-morning.service";
+    };
+  };
+
+  systemd.services."pause-qbittorrent-morning" = {
+    script = ''
+      set -eu
+      ${qbittorrent-cron.scripts.pause}/bin/pause-torrents
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
 }
