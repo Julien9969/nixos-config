@@ -2,8 +2,8 @@
 let
   notify-discord = import ../../scripts/notify-discord.nix { inherit secrets pkgs; };
   cfg = config.services.myServices.restic-backup;
-  config-backup-folder = "/media/DSK/backups/restic";
-  data-backup-folder = "/media/PFK/backups/restic";
+  config-backup-folder = "/media/DSK/mediaserver-data/config-backups/restic";
+  data-backup-folder = "/media/DSK/mediaserver-data/data-backups/restic";
 in
 {
   options.services.myServices.restic-backup = {
@@ -120,7 +120,7 @@ in
       repository = data-backup-folder;
       passwordFile = config.sops.secrets.restic_passwd.path;
       paths = [
-        "/media/DSK/immich"
+        "/media/KFC/immich"
       ];
       exclude = [
         # Immich generated & cached assets (can be rebuilt anytime)

@@ -54,7 +54,7 @@ in {
         openFirewall = false;
         environmentFile = config.sops.secrets.beszel_agent_env_file.path;
         environment = {
-          EXTRA_FILESYSTEMS = "/media/EXOS,/media/NAS,/media/DSK,/media/KFC,/media/PFK,/media/DSK";
+          EXTRA_FILESYSTEMS = "/media/EXOS,/media/NAS,/media/DSK,/media/KFC,/media/PFK";
           # LOG_LEVEL = "debug";
         };        
         #extraPath = [ pkgs.smartmontools ];

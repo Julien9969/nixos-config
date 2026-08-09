@@ -18,60 +18,60 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     services.immich = {
-    enable = true;
-    package = unstable-pkgs.immich;
-    
-    user = "immich";
-    group = "media";
-
-    port = 2283;
-    # host = "0.0.0.0";
-    # openFirewall = true;
-
-    # Répertoires
-    mediaLocation = "/media/DSK/immich";
-
-    # secretsFile = "/var/lib/immich/secrets.env";
-
-    # database = {
-    #   enable = true;
-    #   createDB = true;
-    #   enableVectors = true;
-    #   enableVectorChord = false;
-    #   host = "127.0.0.1";
-    #   port = 5432;
-    #   name = "immich";
-    #   user = "immich";
-    # };
-
-    accelerationDevices = [
-      "/dev/dri/renderD128"
-    ];
-
-    machine-learning = {
       enable = true;
-      environment = {};
-    };
+      package = unstable-pkgs.immich;
+      
+      user = "immich";
+      group = "media";
 
-    settings.server.externalDomain = "https://immich.${secrets.main_domain}";
-  };
+      port = 2283;
+      # host = "0.0.0.0";
+      # openFirewall = true;
 
-  services.nginx.virtualHosts."immich.${secrets.main_domain}" = 
-    lib.mkIf (cfg.enable && cfg.enableProxy ) (mkVirtualHost {
-      forceSSL    = true;
-      useACMEHost = secrets.main_domain;
+      # Répertoires
+      mediaLocation = "/media/KFC/immich";
 
-      locations."/" = {
-        proxyPass = "http://localhost:2283";
-        proxyWebsockets = true;
+      # secretsFile = "/var/lib/immich/secrets.env";
+
+      # database = {
+      #   enable = true;
+      #   createDB = true;
+      #   enableVectors = true;
+      #   enableVectorChord = false;
+      #   host = "127.0.0.1";
+      #   port = 5432;
+      #   name = "immich";
+      #   user = "immich";
+      # };
+
+      accelerationDevices = [
+        "/dev/dri/renderD128"
+      ];
+
+      machine-learning = {
+        enable = true;
+        environment = {};
       };
 
-      extraConfig = '''';
+      settings.server.externalDomain = "https://immich.${secrets.main_domain}";
+    };
 
-      blockCommonExploit = true;
-      cacheAssets = true;
+    services.nginx.virtualHosts."immich.${secrets.main_domain}" = 
+      lib.mkIf cfg.enableProxy (mkVirtualHost {
+        forceSSL    = true;
+        useACMEHost = secrets.main_domain;
+
+        locations."/" = {
+          proxyPass = "http://localhost:2283";
+          proxyWebsockets = true;
+        };
+
+        extraConfig = '''';
+
+        blockCommonExploit = true;
+        cacheAssets = true;
     });
   };
 }

@@ -111,7 +111,7 @@
       dir-size = "du -h --max-depth=1 | sort -hr";
       ccd = "cd /etc/nixos";
       exos = "cd /media/EXOS";
-      dsk = "cd /media/DSK";
+      dsk = "cd /media/DSK/mediaserver-data";
       nas = "cd /media/NAS";
       kfc = "cd /media/KFC";
       pfk = "cd /media/PFK";

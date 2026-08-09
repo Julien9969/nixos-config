@@ -140,13 +140,13 @@ in {
               AlternativeGlobalUPSpeedLimit = 0;
               BTProtocol = "Both";
               BandwidthSchedulerEnabled = true;
-              DefaultSavePath = "/media/DSK/downloads";
+              DefaultSavePath = "/media/EXOS/downloads";
               DisableAutoTMMByDefault = false;
               DisableAutoTMMTriggers.CategoryChanged = true;
               ExcludedFileNames = "";
-              FinishedTorrentExportDirectory = "/media/DSK/torrent-save";
+              FinishedTorrentExportDirectory = "/media/DSK/mediaserver-data/torrent-save";
               GlobalDLSpeedLimit = 40000;
-              GlobalUPSpeedLimit = 1;
+              GlobalUPSpeedLimit = 10;
               IgnoreSlowTorrentsForQueueing = true;
               Interface = "wg-proton";
               InterfaceAddress = "10.2.0.2";
