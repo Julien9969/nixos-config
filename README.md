@@ -106,6 +106,17 @@ or
 sops-edit # (alias)
 ```
 
+Migration from machine only with ssh keys
+```
+# 1. Create the sops age directory
+mkdir -p ~/.config/sops/age
+
+# 2. Convert your SSH private key to age format and save it to keys.txt
+nix-shell -p ssh-to-age --run "ssh-to-age -private-key -i ~/.ssh/id_ed25519" > ~/.config/sops/age/keys.txt
+
+# 3. Set strict permissions (required for security)
+chmod 600 ~/.config/sops/age/keys.txt
+```
 
 If you add a new host to your .sops.yaml file, you will need to update the keys for all secrets that are used by the new host. This can be done like so:
 ```bash
@@ -166,10 +177,10 @@ restore a backup:
 ```bash
 nix-shell -p restic
 # list the snapshots:
-sudo restic -r /media/DSK/backups/restic snapshots
+sudo restic -r /media/DSK/mediaserver-data/<backups>/restic snapshots
 
 # restore the latest snapshot:
-sudo restic -r /media/DSK/backups/restic restore <latest or id> --target <destination_directory> # --include <path_to_restore>
+sudo restic -r /media/DSK/mediaserver-data/backups/restic restore <latest or id> --target <destination_directory> # --include <path_to_restore>
 ```
 
 ## License

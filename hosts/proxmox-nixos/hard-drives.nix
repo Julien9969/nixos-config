@@ -11,6 +11,7 @@ in
     "d /media/EXOS 0775 root media - -"
     "d /media/KFC 0775 root media - -"
     "d /media/PFK 0775 root media - -"
+    "d /media/FBI 0775 root media - -"
   ];
 
   fileSystems = {
@@ -42,6 +43,24 @@ in
       device = "/dev/disk/by-uuid/afec2fe1-0921-41fb-9d8a-5edb0d1e2576";
       fsType = "ext4";
       options = [ "nofail" "noatime" ];
+    };
+
+    # SMART STATUS - Seagate Exos X16 16TB (SN: ZL2AX1QF) | Checked: 14 Aug 2026
+    # -----------------------------------------------------------------------
+    # Power-On Hours : 176h (~7 days)
+    # Self-Test Log  : FAILED (Extended test @ 167h failed: read failure)
+    # 
+    # VALUES TO WATCH:
+    # - ID 197 (Current_Pending_Sector) : 16  [CRITICAL: Baseline is 16]
+    # - ID 198 (Offline_Uncorrectable)  : 16  [CRITICAL: Baseline is 16]
+    # - ID 5   (Reallocated_Sector_Ct)  : 0   [WATCH: If > 0, bad sectors remapped]
+    # - ID 187 (Reported_Uncorrect)     : 0   [WATCH: If > 0, unreadable sectors]
+    # - ID 199 (UDMA_CRC_Error_Count)   : 0   [WATCH: If > 0, check SATA cable]
+    # -----------------------------------------------------------------------
+    "/media/FBI" = {
+      device = "fbi-disk-map";
+      fsType = "virtiofs";
+      options = [ "nofail" ];
     };
   };
 

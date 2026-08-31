@@ -21,7 +21,10 @@
   '';
 
   environment.variables.EDITOR = "micro";
-  zramSwap.enable = true;
+  zramSwap = {
+  	enable = true;
+  	memoryPercent = 100;
+  };
 
   nix.package = pkgs.nixVersions.stable;
   

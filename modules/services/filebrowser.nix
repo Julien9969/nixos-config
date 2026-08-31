@@ -23,7 +23,7 @@ in
       enable = true;
       package = unstable-pkgs.filebrowser;
 
-      user = "filebrowser";
+      user = "servarr";
       group = "media";
       settings=  {
         root = "/media";

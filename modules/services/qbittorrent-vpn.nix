@@ -100,7 +100,7 @@ in {
         enable = true;
         package = unstable-pkgs.qbittorrent-nox;
 
-        user = "qbittorrent";
+        user = "servarr";
         group = "media";
         profileDir = "/var/lib/my-config/qbittorrent";
         extraArgs = [

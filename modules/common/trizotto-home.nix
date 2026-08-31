@@ -66,6 +66,7 @@
     nvd
     ffmpeg
     # micromamba
+    opencode
     qbittorrent-cli
   ];
 
@@ -113,6 +114,7 @@
       ccd = "cd /etc/nixos";
       exos = "cd /media/EXOS";
       dsk = "cd /media/DSK/mediaserver-data";
+      fbi = "cd /media/FBI";
       nas = "cd /media/NAS";
       kfc = "cd /media/KFC";
       pfk = "cd /media/PFK";
