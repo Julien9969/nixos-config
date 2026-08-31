@@ -18,6 +18,11 @@
       "restic_passwd" = {};
       "paperless_admin_password" = {};
       "beszel_agent_env_file" = {};
+      "tailscale_key" = {
+        # owner = "root";
+        # group = "root";
+        # mode = "0400";
+      };
     };
   };
 }

@@ -22,6 +22,7 @@
     ./services/global-scripts.nix
     # ./services/dashy.nix
     # ./services/corsica.nix
+    ./services/tailscale.nix
   ];  
 
   # TODO remove logs after dev
@@ -117,6 +118,10 @@
 
   config.services.myServices.enableZipline = false;
 
+  config.services.myServices.tailscale = {
+    enable = true;
+  };
+  
   # config.services.myServices.corsica = {
   #   enable = true;
   #   enableProxy = true;
