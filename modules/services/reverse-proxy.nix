@@ -76,7 +76,7 @@ in {
       useACMEHost = secrets.main_domain;
 
       locations."/" = {
-        proxyPass = "https://192.168.1.118:8443";
+        proxyPass = "https://192.168.1.117:8443";
         proxyWebsockets = true;
       };
 
@@ -103,6 +103,19 @@ in {
       cacheAssets = false;
     };
 
+	virtualHosts."wireguard.${secrets.main_domain}" = mkVirtualHost {
+	  forceSSL    = true;
+	  useACMEHost = secrets.main_domain;
+
+	  locations."/" = {
+	    proxyPass = "http://192.168.1.22:10086";
+	    proxyWebsockets = true;
+	  };
+
+	  blockCommonExploit = true;
+	  cacheAssets = false;
+	};
+	
     virtualHosts."pvemenu.${secrets.main_domain}" = mkVirtualHost {
       forceSSL    = true;
       useACMEHost = secrets.main_domain;
@@ -130,6 +143,18 @@ in {
       blockCommonExploit = true;
       cacheAssets = true;
     };
+
+    virtualHosts."villacorsica.${mainDomain}" = mkVirtualHost {
+      useACMEHost = mainDomain;
+      forceSSL = true;
+      locations."/" = {
+        proxyPass = "http://192.168.1.4:3000";
+        proxyWebsockets = true;
+      };
+      blockCommonExploit = true;
+      cacheAssets = true; 
+};
+
 
     virtualHosts."infos.${mainDomain}" = {
       useACMEHost = mainDomain;

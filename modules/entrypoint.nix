@@ -77,7 +77,7 @@
   };
 
   config.services.myServices.filebrowser-quantum = {
-    enable = false;
+    enable = true;
     enableProxy = true;
   };
 

@@ -21,6 +21,7 @@ in
       options = [ "nofail" "noatime" ];
     };
 
+    # Reallocated_Sector_Ct	152
     "/media/EXOS" = {
       device = "/dev/disk/by-uuid/335fff74-08ab-4dad-9cb7-9d719106076c";
       fsType = "ext4";

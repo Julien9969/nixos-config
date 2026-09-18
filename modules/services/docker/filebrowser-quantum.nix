@@ -23,6 +23,7 @@ in
     systemd.tmpfiles.rules = [
       "d /var/lib/my-config/filebrowser-quantum 0775 servarr media - -"
       "d /var/lib/my-config/filebrowser-quantum/data 0775 servarr media - -"
+      "d /var/cache/filebrowser 0775 servarr media - -"
     ];
 
     virtualisation.oci-containers.containers.filebrowser = {
@@ -47,6 +48,7 @@ in
       volumes = [
         "/media:/media"
         "/var/lib/my-config/filebrowser-quantum/data:/home/filebrowser/data"
+        "/var/cache/filebrowser:/tmp/filebrowser"
       ];
 
       extraOptions = [
