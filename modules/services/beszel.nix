@@ -74,7 +74,12 @@ in {
           proxyPass = "http://localhost:8090";
           proxyWebsockets = true;
         };
-        extraConfig = ''proxy_buffering off; sendfile on;'';
+        extraConfig = ''
+          proxy_buffering off;
+          proxy_read_timeout 3600s;
+          proxy_send_timeout 3600s;
+          sendfile on;
+        '';
         blockCommonExploit = true;
         cacheAssets = true;
       };

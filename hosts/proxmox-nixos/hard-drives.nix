@@ -29,9 +29,9 @@ in
     };
 
     "/media/NAS" = {
-      device = "/dev/disk/by-uuid/728adc7c-630e-4ef5-9c77-368d5c500eac";
-      fsType = "ext4";
-      options = [ "nofail" "noatime" ];
+      device = "nas-disk-map";
+      fsType = "virtiofs";
+      options = [ "nofail" ];
     };
 
     "/media/DSK/mediaserver-data" = {
