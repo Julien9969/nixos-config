@@ -15,17 +15,17 @@ in
   ];
 
   fileSystems = {
+    # Reallocated_Sector_Ct	152
     "/media/PFK" = {
-      device = "/dev/disk/by-uuid/21bd99d5-f303-4b50-b8b1-5bcad6cc2ce2";
-      fsType = "ext4";
-      options = [ "nofail" "noatime" ];
+      device = "pfk-disk-map";
+      fsType = "virtiofs";
+      options = [ "nofail" ];
     };
 
-    # Reallocated_Sector_Ct	152
     "/media/EXOS" = {
-      device = "/dev/disk/by-uuid/335fff74-08ab-4dad-9cb7-9d719106076c";
-      fsType = "ext4";
-      options = [ "nofail" "noatime" "errors=remount-ro" ];
+      device = "exos-disk-map";
+      fsType = "virtiofs";
+      options = [ "nofail" ];
     };
 
     "/media/NAS" = {
@@ -41,9 +41,9 @@ in
     };
 
     "/media/KFC" = {
-      device = "/dev/disk/by-uuid/afec2fe1-0921-41fb-9d8a-5edb0d1e2576";
-      fsType = "ext4";
-      options = [ "nofail" "noatime" ];
+      device = "kfc-disk-map";
+      fsType = "virtiofs";
+      options = [ "nofail" ];
     };
 
     # SMART STATUS - Seagate Exos X16 16TB (SN: ZL2AX1QF) | Checked: 14 Aug 2026
