@@ -80,3 +80,47 @@ in
   #     ])
   #   ];
 }
+
+
+# bash -c '
+# set -euo pipefail
+
+# NAME="disk-EXOS"
+# UUID="335fff74-08ab-4dad-9cb7-9d719106076c"
+# MOUNT_PATH="/mnt/pve/${NAME}"
+# UNIT_NAME="mnt-pve-disk\\x2dEXOS.mount"
+# UNIT_FILE="/etc/systemd/system/${UNIT_NAME}"
+
+# echo "==> Création du point de montage (${MOUNT_PATH})..."
+# mkdir -p "${MOUNT_PATH}"
+
+# echo "==> Génération de l unité systemd..."
+# cat <<EOF > "${UNIT_FILE}"
+# [Unit]
+# Description=Mount disk ${NAME} to ${MOUNT_PATH}
+# Before=pve-cluster.service
+
+# [Mount]
+# What=/dev/disk/by-uuid/${UUID}
+# Where=${MOUNT_PATH}
+# Type=ext4
+# Options=defaults
+
+# [Install]
+# WantedBy=multi-user.target
+# EOF
+
+# echo "==> Rechargement et activation du montage..."
+# systemctl daemon-reload
+# systemctl enable --now "${UNIT_NAME}"
+
+# echo "==> Enregistrement du stockage dans Proxmox..."
+# if ! pvesm status --storage "${NAME}" &>/dev/null; then
+#     pvesm add dir "${NAME}" --path "${MOUNT_PATH}" --content images,iso,backup
+# else
+#     echo "Le stockage \"${NAME}\" est déjà enregistré dans PVE."
+# fi
+
+# echo "==> Terminé ! Statut du montage :"
+# df -h "${MOUNT_PATH}"
+# '

@@ -12,7 +12,7 @@ let
         "qbittorrent:http://CHANGE_ME:CHANGE_ME@localhost:8085",
       ],
       linkDirs: [
-        "/media/DSK/torrents/cross-seed-links",
+        "/media/DSK/mediaserver-data/torrents/cross-seed-links",
       ],
     };
   '';

@@ -4,13 +4,14 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-unstable-small.url = "github:nixos/nixpkgs/nixos-unstable-small";
     flake-utils.url = "github:numtide/flake-utils";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
-      url = "github:Mic92/sops-nix";
+      url = "github:Mic92/sops-nix/5c23dc81a7b13890e9d9e81b39ff1bafa84b5637";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # nix-minecraft.url = "github:Infinidoge/nix-minecraft";
@@ -20,7 +21,7 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, flake-utils, home-manager, sops-nix, nix-private, ... }: 
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-unstable-small, flake-utils, home-manager, sops-nix, nix-private, ... }: 
     let
       secrets = import "${inputs.nix-private}/secrets.nix";
       #! A voir si on vire pas secrets de vars
@@ -33,6 +34,11 @@
       };
 
       unstable-pkgs = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
+
+      unstable-small-pkgs = import nixpkgs-unstable-small {
         inherit system;
         config.allowUnfree = true;
       };
@@ -75,7 +81,7 @@
               home-manager.backupFileExtension = "backup";
             } 
           ];
-          specialArgs = { inherit inputs unstable-pkgs; };
+          specialArgs = { inherit inputs unstable-pkgs unstable-small-pkgs; };
         };
       };
     };

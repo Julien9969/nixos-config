@@ -18,6 +18,7 @@
     ./services/glances.nix
     ./services/paperless.nix
     ./services/beszel.nix
+    ./services/licence-server
 
     ./services/global-scripts.nix
     # ./services/dashy.nix
@@ -71,11 +72,6 @@
     enableProxy = true; 
   };
 
-  config.services.myServices.filebrowser = {
-    enable = true;
-    enableProxy = true;
-  };
-
   config.services.myServices.filebrowser-quantum = {
     enable = true;
     enableProxy = true;
@@ -120,6 +116,12 @@
 
   config.services.myServices.tailscale = {
     enable = true;
+  };
+
+  config.services.myServices.licence-server = {
+    enable = true;
+    trustProxy = true;
+    enableProxy = true;
   };
   
   # config.services.myServices.corsica = {

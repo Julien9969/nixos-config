@@ -40,7 +40,7 @@ in {
 
       services.beszel.hub = {
         enable = true;
-        package = unstable-pkgs.beszel;
+        # package = unstable-pkgs.beszel;
         dataDir = "/var/lib/my-config/beszel-hub";
         host = "0.0.0.0";
         port = 8090;
@@ -54,7 +54,7 @@ in {
         openFirewall = false;
         environmentFile = config.sops.secrets.beszel_agent_env_file.path;
         environment = {
-          EXTRA_FILESYSTEMS = "/media/EXOS,/media/NAS,/media/DSK,/media/KFC,/media/PFK";
+          EXTRA_FILESYSTEMS = "/media/EXOS,/media/NAS,/media/DSK,/media/KFC,/media/PFK,/media/FBI";
           # LOG_LEVEL = "debug";
         };        
         #extraPath = [ pkgs.smartmontools ];
