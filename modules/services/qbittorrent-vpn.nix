@@ -41,36 +41,20 @@ in {
         address = "10.2.0.2/32";
         dns = [
           "10.2.0.1"
-          "1.1.1.1"
-          "9.9.9.9"
-          "8.8.8.8"
-          # "149.112.112.112"
-          # "2620:fe::9"
-          # "2620:fe::10"
         ];
         
         listenPort = 51820;
         openFirewall = true; #? maybe unecessary
 
-        # NL
+        # CH-DE#8
         peers = [
           {
-            publicKey = "YgGdHIXeCQgBc4nXKJ4vct8S0fPqBpTgk4I8gh3uMEg=";
-            endpoint = "185.107.44.110:51820";
-            allowedIPs = [ "0.0.0.0/0" ];
+            publicKey = "hOoBBy//7mddXPz1SybzWB3zK95SQCcPyI/DmxfULXk=";
+            endpoint = "79.135.104.38:51820";
+            allowedIPs = [ "0.0.0.0/0" "::/0" ];
             persistentKeepalive = 25;
           }
         ];
-
-        # Luxembourg
-        # peers = [
-        #   {
-        #     publicKey = "buYqE3X8Wf8X/v5NtHVXYgLk45+2og8MVEbgQAkEyBw="; # "YgGdHIXeCQgBc4nXKJ4vct8S0fPqBpTgk4I8gh3uMEg=";
-        #     endpoint = "5.253.204.162:51820"; # "185.107.44.110:51820";
-        #     allowedIPs = [ "0.0.0.0/0" "::/0" ];
-        #     persistentKeepalive = 25;
-        #   }
-        # ];
       };
     })
 

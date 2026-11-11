@@ -10,7 +10,6 @@
     ./services/cockpit.nix
     ./services/qbittorrent-vpn.nix
     ./services/zipline.nix
-    ./services/filebrowser.nix
     ./services/minecraft-neoforge.nix
     ./services/restic.nix
     ./services/immich.nix
