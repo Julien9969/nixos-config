@@ -45,6 +45,7 @@
     enable = true;
     enableVpn = true;
     enableProxy = true;
+    enablePortForwarding = false;
   };
   
   config.services.myServices.servarr = {

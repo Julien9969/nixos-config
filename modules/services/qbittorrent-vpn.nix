@@ -28,6 +28,11 @@ in {
       default = true;
       description = "Enable reverse proxy for qBittorrent";
     };
+    enablePortForwarding = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable NAT-PMP port forwarding and the qBittorrent port-forwarding firewall";
+    };
   };
 
   config = lib.mkMerge [
@@ -38,20 +43,18 @@ in {
         enable = true;
         name = "proton";
         privateKeyFile = config.sops.secrets.wg_private_key.path;
-        address = "10.2.0.2/32";
-        dns = [
-          "10.2.0.1"
-        ];
+        address = "10.5.0.2/16";
+        dns = [ "103.86.96.100" ];
         
         listenPort = 51820;
         openFirewall = true; #? maybe unecessary
 
-        # CH-DE#8
+        # Amsterdam
         peers = [
           {
-            publicKey = "hOoBBy//7mddXPz1SybzWB3zK95SQCcPyI/DmxfULXk=";
-            endpoint = "79.135.104.38:51820";
-            allowedIPs = [ "0.0.0.0/0" "::/0" ];
+            publicKey = "5p4RkybdRU5uaDi90eu4KZPTFif0lKCg4Qp6t1c4F30=";
+            endpoint = "amsterdam.nl.wg.nordhold.net:51820";
+            allowedIPs = [ "0.0.0.0/0" ];
             persistentKeepalive = 25;
           }
         ];
@@ -133,7 +136,7 @@ in {
               GlobalUPSpeedLimit = 100;
               IgnoreSlowTorrentsForQueueing = true;
               Interface = "wg-proton";
-              InterfaceAddress = "10.2.0.2";
+              InterfaceAddress = "10.5.0.2";
               InterfaceName = "wg-proton";
               MaxActiveCheckingTorrents = 3;
               MaxActiveDownloads = 7;
@@ -170,7 +173,7 @@ in {
           Meta.MigrationVersion = 8;
 
           Network = {
-            PortForwardingEnabled = "";
+            PortForwardingEnabled = if cfg.enablePortForwarding then "true" else "";
             Proxy = { 
               HostnameLookupEnabled = false;
               Profiles = { 

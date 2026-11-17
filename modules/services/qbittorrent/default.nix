@@ -5,16 +5,60 @@ let
       config.services.wireguardVpn.exposed."proton" 
     else 
       null;
+  enablePortForwarding =
+    config.services.myServices.qbittorrent-vpn.enablePortForwarding;
 in {
-  imports =
-  [
-    (import ./portforwarding.nix { inherit selectedVpn pkgs lib; })
-  ];
-
   # Make sure resolvconf path exists
   systemd.tmpfiles.rules = [ "d /run/resolvconf 0755 root root" ];
 
-  systemd.services.qbittorrent-firewall = {
+  systemd.services.natpmp-keepalive = lib.mkIf enablePortForwarding {
+    description = "Keep NAT-PMP port mapping alive for qBittorrent";
+    wantedBy = [ "qbittorrent.service" ];
+    requires = [
+      "qbittorrent.service"
+      "wireguard-${selectedVpn.interface}.service"
+    ];
+    after = [
+      "qbittorrent.service"
+      "wireguard-${selectedVpn.interface}.service"
+    ];
+    bindsTo = [
+      "qbittorrent.service"
+      "wireguard-${selectedVpn.interface}.service"
+    ];
+    partOf = [
+      "qbittorrent.service"
+      "wireguard-${selectedVpn.interface}.service"
+    ];
+
+    serviceConfig = {
+      Type = "simple";
+      Restart = "always";
+      RestartSec = 10;
+      ExecStart = pkgs.writeShellScript "natpmp-keepalive" ''
+        set -euo pipefail
+        while true; do
+          echo "[NAT-PMP] $(date)"
+          ${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.5.0.1
+          ${pkgs.libnatpmp}/bin/natpmpc -a 1 0 tcp 60 -g 10.5.0.1
+          sleep 45
+        done
+      '';
+
+      NetworkNamespacePath = "/run/netns/${selectedVpn.namespace}";
+
+      InaccessiblePaths = [
+        "/run/nscd"
+        "/run/resolvconf"
+      ];
+
+      BindReadOnlyPaths = [
+        "/etc/netns/${selectedVpn.namespace}/resolv.conf:/etc/resolv.conf:norbind"
+      ];
+    };
+  };
+
+  systemd.services.qbittorrent-firewall = lib.mkIf enablePortForwarding {
     description = "qBittorrent firewall and NAT-PMP setup";
     wantedBy = [ "qbittorrent.service" ];
     after = [ "wireguard-${selectedVpn.interface}.service" ];
@@ -40,7 +84,7 @@ in {
         vpnIP=""
 
         for i in {1..5}; do
-          natpmp_out="$(${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.2.0.1 || true)"
+          natpmp_out="$(${pkgs.libnatpmp}/bin/natpmpc -a 1 0 udp 60 -g 10.5.0.1 || true)"
           port="$(printf '%s\n' "$natpmp_out" | ${pkgs.gawk}/bin/awk '/Mapped public port/ {print $4}')"
           if [ -n "$port" ]; then
             echo "Using NAT-PMP port: $port"
@@ -99,15 +143,12 @@ in {
 
   systemd.services.qbittorrent = {
     bindsTo = [ "wireguard-${selectedVpn.interface}.service" ];
-    after = [ 
-      "wireguard-${selectedVpn.interface}.service" 
-      "qbittorrent-firewall.service" 
-    ];
+    after =
+      [ "wireguard-${selectedVpn.interface}.service" ]
+      ++ lib.optionals enablePortForwarding [ "qbittorrent-firewall.service" ];
+    requires =
+      lib.optionals enablePortForwarding [ "qbittorrent-firewall.service" ];
 
-    requires  = [ 
-      "qbittorrent-firewall.service" 
-    ];
-    
     serviceConfig = {
       NetworkNamespacePath = "/run/netns/${selectedVpn.namespace}";
 
