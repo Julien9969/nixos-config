@@ -1,0 +1,48 @@
+[Unit]
+Description=Self-hosted license server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=licserver
+Group=licserver
+WorkingDirectory=/opt/licserver
+ExecStart=/opt/licserver/venv/bin/python /opt/licserver/server.py serve
+
+# Configuration
+Environment=LICENSE_DATA_DIR=/var/lib/licserver
+Environment=LICENSE_HOST=127.0.0.1
+Environment=LICENSE_PORT=8787
+# 0 = unlimited: if this service is shut down, nobody loses access.
+Environment=LICENSE_GRACE_DAYS=0
+Environment=LICENSE_UNREACHABLE_GRACE_HOURS=0
+# Set to 1 if behind nginx/caddy that sets X-Forwarded-For
+Environment=LICENSE_TRUST_PROXY=0
+
+Restart=on-failure
+RestartSec=3
+
+# /var/lib/licserver, created and owned by the service user
+StateDirectory=licserver
+StateDirectoryMode=0700
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallFilter=@system-service
+CapabilityBoundingSet=
+ReadWritePaths=/var/lib/licserver
+
+[Install]
+WantedBy=multi-user.target
