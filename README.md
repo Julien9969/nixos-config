@@ -106,8 +106,8 @@ or
 sops-edit # (alias)
 ```
 
-Migration from machine only with ssh keys
-```
+Migration from machine only with ssh keys !!!!
+```bash
 # 1. Create the sops age directory
 mkdir -p ~/.config/sops/age
 

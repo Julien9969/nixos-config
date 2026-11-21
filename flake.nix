@@ -46,6 +46,42 @@
       devShells.${system}.default = import ./devshell/default.nix { inherit pkgs; };
 
       nixosConfigurations = {
+        nixtrizottoserver-lxc = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            "${nixpkgs}/nixos/modules/virtualisation/proxmox-lxc.nix"
+            ./hosts/proxmox-lxc/configuration.nix
+
+            ./modules/sops.nix
+            ./modules/entrypoint.nix
+
+            ./modules/common/users.nix
+            ./modules/common/bash.nix
+            ./modules/common/nix.nix
+
+            ({ config, ... }: {
+              _module.args.secrets = secrets;
+            })
+            
+            sops-nix.nixosModules.sops
+
+            # make home-manager as a module of nixos
+            # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              
+              home-manager.users.trizotto = import ./modules/common/trizotto-home.nix;
+              home-manager.extraSpecialArgs = { inherit vars; };
+              
+              # Automatically back up conflicting files with `.backup` extension
+              home-manager.backupFileExtension = "backup";
+            } 
+          ];
+          specialArgs = { inherit inputs unstable-pkgs unstable-small-pkgs; };
+        };
+
         nixtrizottoserver = nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
           modules = [
