@@ -78,6 +78,7 @@ in {
     users.users.seerr = lib.mkIf (cfg.user == "seerr") {
       isSystemUser = true;
       group = cfg.group;
+      uid = 985;
       home = cfg.configDir;
     };
 

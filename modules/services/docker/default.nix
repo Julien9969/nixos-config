@@ -20,14 +20,14 @@
 
   imports = 
   [
-    ./crafty.nix
-    ./playit.nix
-    ./flaresolverr.nix
+    # ./crafty.nix
+    # ./playit.nix
+    # ./flaresolverr.nix
     ./fankarr.nix
     ./wizarr.nix
-    ./dash.nix
+    # ./dash.nix
     ./filebrowser-quantum.nix
-    ./omni-tools.nix
+    # ./omni-tools.nix
   #  ./cross-seed.nix
   ];
 }

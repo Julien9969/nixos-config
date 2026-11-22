@@ -1,6 +1,11 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports =
+    [
+      ./mount.nix
+    ];
+
   # Proxmox reste responsable du nom d'hote, du reseau et du materiel.
   proxmoxLXC = {
     manageNetwork = false;
@@ -8,8 +13,22 @@
     privileged = true;
   };
 
+  networking.hostName = "nixtrizottoserver-lxc";
+
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-driver
+      libva-utils
+      intel-compute-runtime
+      vpl-gpu-rt
+      libvpl
+    ];
+  };
+
   # Cette option est specifique aux conteneurs non privilegies.
   nix.settings.sandbox = false;
+  nixpkgs.config.allowUnfree = true;
 
   time.timeZone = "Europe/Paris";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -38,6 +57,21 @@
     tree
   ];
 
+  system.activationScripts.diff = {
+    supportsDryActivation = true;
+    deps = [ ]; 
+    text = ''
+      export PATH=$PATH:${pkgs.nix}/bin
+      if [[ -e /run/current-system ]]; then
+        # \e[32m starts green text
+        # \e[0m resets the color to default
+        echo -e "\e[32m"
+        ${pkgs.nvd}/bin/nvd diff /run/current-system "$systemConfig"
+        echo -e "\e[0m"
+      fi
+    '';
+  };
+
   # Les modules communs sont importes par le flake, afin d'appliquer les
   # utilisateurs et les reglages simples sans importer les services applicatifs.
   users.users.trizotto.extraGroups = lib.mkForce [ "wheel" "media" ];
@@ -53,14 +87,8 @@
   services.fstrim.enable = false;
   # services.resolved.enable = false;
   networking.firewall.enable = false;
-  networking.networkmanager.enable = false;
-  networking.enableIPv6 = false;
-
-  system.autoUpgrade.enable = lib.mkForce false;
-  nix.gc.automatic = lib.mkForce false;
-  zramSwap.enable = lib.mkForce false;
-  powerManagement.enable = lib.mkForce false;
-  powerManagement.cpuFreqGovernor = lib.mkForce null;
+  # networking.networkmanager.enable = false;
+  # networking.enableIPv6 = false;
 
   # Elements potentiellement dangereux, volontairement non appliques:
   # - DHCP/adresse statique/gateway: geres par Proxmox;

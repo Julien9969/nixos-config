@@ -27,7 +27,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-    system.activationScripts.diff = {
+  system.activationScripts.diff = {
     supportsDryActivation = true;
     deps = [ ]; 
     text = ''

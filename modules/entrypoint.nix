@@ -1,91 +1,91 @@
 { config, lib, pkgs, secrets, ... }:
 {
   imports = [
-    # ./services/docker
+    ./services/docker
     ./services/openssh.nix
-    # ./services/jellyfin.nix
-    # ./services/servarr
-    # ./services/seerr
-    # ./services/reverse-proxy.nix
-    # ./services/cockpit.nix
-    # ./services/qbittorrent-vpn.nix
+    ./services/jellyfin.nix
+    ./services/servarr
+    ./services/seerr
+    ./services/reverse-proxy.nix
+    ./services/cockpit.nix
+    ./services/qbittorrent-vpn.nix
     # ./services/zipline.nix
     # ./services/minecraft-neoforge.nix
-    # ./services/restic.nix
-    # ./services/immich.nix
+    ./services/restic.nix
+    ./services/immich.nix
     # ./services/netdata.nix
     # ./services/glances.nix
-    # ./services/paperless.nix
-    # ./services/beszel.nix
-    # ./services/licence-server
+    ./services/paperless.nix
+    ./services/beszel.nix
+    ./services/licence-server
 
-    # ./services/global-scripts.nix
+    ./services/global-scripts.nix
     # ./services/dashy.nix
     # ./services/corsica.nix
     # ./services/tailscale.nix
   ];
 
   # # TODO remove logs after dev
-  # config.services.myServices.enableCockpit = builtins.trace secrets false;
+  config.services.myServices.enableCockpit = builtins.trace secrets false;
 
   # config.services.minecraft-neoforge.enable = false;
 
-  # config.services.myServices.jellyfin = {
-  #   enable = true;
-  #   enableProxy = true;
-  # };
+  config.services.myServices.jellyfin = {
+    enable = true;
+    enableProxy = true;
+  };
 
-  # config.services.myServices.beszel = {
-  #   enable = true;
-  #   enableSmartmon = true;
-  #   enableProxy = true;
-  # };
+  config.services.myServices.beszel = {
+    enable = true;
+    enableSmartmon = true;
+    enableProxy = true;
+  };
 
-  # config.services.myServices.qbittorrent-vpn = {
-  #   enable = true;
-  #   enableVpn = true;
-  #   enableProxy = true;
-  #   enablePortForwarding = false;
-  # };
+  config.services.myServices.qbittorrent-vpn = {
+    enable = true;
+    enableVpn = true;
+    enableProxy = true;
+    enablePortForwarding = false;
+  };
 
-  # config.services.myServices.servarr = {
-  #   enableSonarr = true;
-  #   enableRadarr = true;
-  #   enableProwlarr = true;
-  #   enableProxy = true;
-  # };
+  config.services.myServices.servarr = {
+    enableSonarr = true;
+    enableRadarr = true;
+    enableProwlarr = true;
+    enableProxy = true;
+  };
 
   # config.services.myServices.flaresolverr.enable = false;
 
-  # config.services.myServices.wizarr = {
-  #   enable = true;
-  #   enableProxy = true;
-  # };
+  config.services.myServices.wizarr = {
+    enable = true;
+    enableProxy = true;
+  };
 
   # config.services.myServices.dash = {
   #   enable = false;
   #   enableProxy = true;
   # };
 
-  # config.services.myServices.seerr = {
-  #   enable = true;
-  #   enableProxy = true;
-  # };
+  config.services.myServices.seerr = {
+    enable = true;
+    enableProxy = true;
+  };
 
-  # config.services.myServices.filebrowser-quantum = {
-  #   enable = true;
-  #   enableProxy = true;
-  # };
+  config.services.myServices.filebrowser-quantum = {
+    enable = true;
+    enableProxy = true;
+  };
 
-  # config.services.myServices.fankarr = {
-  #   enable = true;
-  #   enableProxy = true;
-  # };
+  config.services.myServices.fankarr = {
+    enable = true;
+    enableProxy = true;
+  };
 
-  # config.services.myServices.immich = {
-  #   enable = true;
-  #   enableProxy = true;
-  # };
+  config.services.myServices.immich = {
+    enable = true;
+    enableProxy = true;
+  };
 
   # config.services.myServices.omniTools = {
   #   enable = true;
@@ -103,14 +103,14 @@
   # #   enableProxy = true;
   # # };
 
-  # config.services.myServices.paperless = {
-  #   enable = true;
-  #   enableProxy = true;
-  #   enableTika = true;
-  # };
+  config.services.myServices.paperless = {
+    enable = true;
+    enableProxy = true;
+    enableTika = true;
+  };
 
-  # config.services.myServices.restic-backup.enable-config = true;
-  # config.services.myServices.restic-backup.enable-data = true;
+  config.services.myServices.restic-backup.enable-config = true;
+  config.services.myServices.restic-backup.enable-data = true;
 
   # config.services.myServices.enableZipline = false;
 
@@ -118,11 +118,11 @@
   #   enable = true;
   # };
 
-  # config.services.myServices.licence-server = {
-  #   enable = true;
-  #   trustProxy = true;
-  #   enableProxy = true;
-  # };
+  config.services.myServices.licence-server = {
+    enable = true;
+    trustProxy = true;
+    enableProxy = true;
+  };
 
   # config.services.myServices.corsica = {
   #   enable = true;

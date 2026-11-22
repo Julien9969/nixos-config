@@ -1,9 +1,15 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   # networking.useDHCP = false;
   networking.nameservers = [ "9.9.9.9" ];
   networking.enableIPv6 = false;
+
+  # Keep networkd: Proxmox writes the container's IP/gateway as networkd config.
+  networking.useNetworkd = lib.mkForce true;
+  # WireGuard lifecycle hooks and interface namespaces need the scripted
+  # backend, so only WireGuard opts out of networkd.
+  networking.wireguard.useNetworkd = false;
 
   # # === Ethernet (LAN) - Primary ===
   # networking.interfaces.enp3s0f1 = {
@@ -25,11 +31,15 @@
     dnssec = "true";
     dnsovertls = "true";
     fallbackDns = [ "1.1.1.1" "1.0.0.1" ];
+    # settings.Resolve = {
+    #   Cache = true;
+    #   CacheFromLocalhost = true;
+    # };
   };
 
   networking.firewall = {
     enable = false;
-    trustedInterfaces = [ "ens18" ];
+    trustedInterfaces = [ "eth0" ];
     
     allowedTCPPorts = [ 80 443 554 ];
     allowedUDPPorts = [ 443 554 ];

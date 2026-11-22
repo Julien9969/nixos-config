@@ -55,9 +55,11 @@
             ./modules/sops.nix
             ./modules/entrypoint.nix
 
+            ./modules/common/firewall.nix
             ./modules/common/users.nix
             ./modules/common/bash.nix
             ./modules/common/nix.nix
+            ./modules/common/crontab.nix
 
             ({ config, ... }: {
               _module.args.secrets = secrets;
