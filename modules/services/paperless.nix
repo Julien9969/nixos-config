@@ -30,7 +30,7 @@ in
             # package = pkgs.paperless-ngx.overridePythonAttrs (_: {
             #     doCheck = false;
             # });
-
+            package = pkgs.paperless-ngx;
             dataDir = "/var/lib/my-config/paperless";
             database.createLocally = true;
             port = 28981;

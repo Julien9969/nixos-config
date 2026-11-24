@@ -8,6 +8,10 @@
     options = "--delete-older-than 30d";
   };
 
+  services.journald.extraConfig = ''
+    SystemMaxUse=400M
+  '';
+
   system.autoUpgrade = {
     enable = true;
     allowReboot = true; # Reboot if needed
@@ -22,7 +26,7 @@
 
   environment.variables.EDITOR = "micro";
   zramSwap = {
-  	enable = true;
+  	enable = false; # useless on proxmox lxc
   	memoryPercent = 100;
   };
 

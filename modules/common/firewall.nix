@@ -28,13 +28,24 @@
 
   services.resolved = {
     enable = true;
-    dnssec = "true";
-    dnsovertls = "true";
-    fallbackDns = [ "1.1.1.1" "1.0.0.1" ];
-    # settings.Resolve = {
-    #   Cache = true;
-    #   CacheFromLocalhost = true;
-    # };
+    dnssec = "allow-downgrade";
+    dnsovertls = "opportunistic";
+    fallbackDns = [ "1.1.1.1" "8.8.8.8" ];
+    extraConfig = ''
+      DNS=9.9.9.9 1.1.1.1
+    '';
+  };
+
+  # 2. Prevent eth0 from accepting DHCP or IPv6 Router Advertisement (RDNSS) DNS servers
+  systemd.network.networks."10-eth0" = {
+    matchConfig.Name = "eth0";
+    networkConfig = {
+      DHCP = "yes";
+      IPv6AcceptRA = true;
+    };
+    dhcpV4Config.UseDNS = false;
+    dhcpV6Config.UseDNS = false;
+    ipv6AcceptRAConfig.UseDNS = false;
   };
 
   networking.firewall = {
